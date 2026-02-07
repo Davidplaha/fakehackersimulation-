@@ -5,8 +5,9 @@ Safe, fictional UI simulation for visual demos. No real hacking occurs and no re
 ## Run Locally
 
 ```powershell
-cd "c:\Users\USER\fake hacking simulation"
-node .\server.js 3001
+git clone https://github.com/Davidplaha/fakehackersimulation-.git
+cd fakehackersimulation-
+node server.js 3001
 ```
 
 Open `http://localhost:3001/`.
@@ -17,4 +18,3 @@ Suggested donation: **$5 USD**.
 
 - Bitcoin (BTC): `1EyVGQorCXhjAqF8Ry9ADcJLgUr1fqjCem`
 - USDT (TRC20): `TKnAsvAnkzguMqq9GrrQz2UFq4wFkrCVSh`
-
