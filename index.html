@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SimDeck — Fake Hacking Simulation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <!-- Top Navigation Bar -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <div class="brand">
+          <div class="brand-mark">SD</div>
+          <div>
+            <div class="brand-name">SimDeck</div>
+            <div class="brand-tag">Simulation / Fake</div>
+          </div>
+        </div>
+      </div>
+      <div class="top-bar-center">
+        <div class="crumbs" id="crumbs">Home ▸ Choose Scenario</div>
+      </div>
+      <div class="top-bar-right">
+        <div class="theme-dropdown">
+          <button class="btn compact" id="themeDropdownBtn">🎨 Theme: <span id="currentThemeName">Hollywood</span>
+            ▾</button>
+          <div class="theme-dropdown-menu" id="themeDropdownMenu">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+        <button class="btn compact" id="fullscreenBtn">🔲 Fullscreen</button>
+        <button class="btn compact" id="settingsBtn">⚙️</button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <!-- Category Sidebar -->
+      <aside class="category-sidebar">
+        <div class="category-list" id="categoryList">
+          <button class="category-item active" data-category="all">
+            <span class="cat-icon">🎯</span>
+            <span class="cat-name">All Scenarios</span>
+            <span class="cat-count" id="countAll">9</span>
+          </button>
+          <button class="category-item" data-category="phone">
+            <span class="cat-icon">📱</span>
+            <span class="cat-name">Phone</span>
+            <span class="cat-count">6</span>
+          </button>
+          <button class="category-item" data-category="email">
+            <span class="cat-icon">📧</span>
+            <span class="cat-name">Email</span>
+            <span class="cat-count">2</span>
+          </button>
+          <button class="category-item" data-category="desktop">
+            <span class="cat-icon">🖥️</span>
+            <span class="cat-name">Desktop</span>
+            <span class="cat-count">2</span>
+          </button>
+          <button class="category-item" data-category="prank">
+            <span class="cat-icon">🎭</span>
+            <span class="cat-name">Pranks</span>
+            <span class="cat-count">3</span>
+          </button>
+          <button class="category-item" data-category="scare">
+            <span class="cat-icon">🚨</span>
+            <span class="cat-name">Scares</span>
+            <span class="cat-count">2</span>
+          </button>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="section-title">⏱️ Recent</div>
+          <ul id="recentList" class="recent-list"></ul>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="safety-badge">
+            <span>🛡️</span>
+            <span>100% Safe Simulation</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Scenario Grid / Stage Area -->
+      <main class="stage-panel">
+        <div class="scenario-grid" id="scenarioGrid">
+          <!-- Populated by JS -->
+        </div>
+        <div class="stage-canvas" id="stageCanvas">
+          <!-- Simulation content appears here -->
+        </div>
+        <div class="tray" id="miniTray"></div>
+        <button class="mobile-tray-toggle" id="mobileToggleTray">⚙️ Tools</button>
+        <div class="watermark" id="watermark">SIMULATION / FAKE</div>
+      </main>
+    </div>
+
+    <!-- Bottom Control Bar -->
+    <footer class="bottom-bar">
+      <div class="bottom-bar-left">
+        <button class="btn primary" id="startSimulationBtn">▶️ Start Simulation</button>
+        <button class="btn ghost" id="resetStageBtn">↻ Reset</button>
+      </div>
+      <div class="bottom-bar-center">
+        <div class="control-group">
+          <label>Speed</label>
+          <input type="range" min="0.5" max="3" step="0.1" value="1" id="speedSlider">
+          <span id="speedValue">1x</span>
+        </div>
+        <div class="control-group">
+          <label>Intensity</label>
+          <input type="range" min="1" max="3" step="1" value="2" id="intensitySlider">
+          <span id="intensityValue">Med</span>
+        </div>
+        <div class="duration-chips" id="durationChips">
+          <button class="chip active" data-duration="30">30s</button>
+          <button class="chip" data-duration="60">60s</button>
+          <button class="chip" data-duration="120">2m</button>
+          <button class="chip" data-duration="0">∞</button>
+        </div>
+      </div>
+      <div class="bottom-bar-right">
+        <label class="toggle-pill"><input type="checkbox" id="soundToggle"> 🔊</label>
+        <label class="toggle-pill"><input type="checkbox" id="watermarkToggle" checked> 💧</label>
+        <label class="toggle-pill"><input type="checkbox" id="motionToggle" checked> ✨</label>
+      </div>
+    </footer>
+  </div>
+
+  <div class="exit-pill" id="exitPill">Exit to Home (ESC / Tap 5x / Hold 2s)</div>
+
+  <!-- Settings Modal -->
+  <div class="modal" id="settingsModal">
+    <div class="modal-content">
+      <div class="modal-title">⚙️ Settings</div>
+      <div class="settings-grid">
+        <label class="toggle-row"><input type="checkbox" id="autoModeToggle" checked> <span>Auto Mode</span></label>
+        <label class="toggle-row"><input type="checkbox" id="randomSeedToggle" checked> <span>Randomize
+            Output</span></label>
+        <label class="toggle-row"><input type="checkbox" id="demoModeToggle"> <span>Demo Mode</span></label>
+        <label class="toggle-row"><input type="checkbox" id="filmModeToggle"> <span>Film Mode (move
+            watermark)</span></label>
+        <label class="toggle-row"><input type="checkbox" id="languageToggle"> <span>Language: English
+            (alt)</span></label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn primary" id="closeSettingsBtn">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="disclaimerModal">
+    <div class="modal-content">
+      <div class="modal-title">Simulation Disclaimer</div>
+      <p>This is a simulation. No real hacking occurs. No data is accessed. All content is fictional and for visual
+        demonstration only.</p>
+      <p>Watermark is on by default. Quick exit is always available.</p>
+      <div class="modal-actions">
+        <button class="btn ghost" id="cancelDisclaimerBtn">Cancel</button>
+        <button class="btn primary" id="acceptDisclaimerBtn">Proceed</button>
+      </div>
+    </div>
+  </div>
+
+  <template id="scenarioWindowTemplate">
+    <div class="window">
+      <div class="window-titlebar">
+        <div class="window-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="window-title">Window</div>
+        <div class="window-actions">
+          <button class="win-btn" data-action="min">—</button>
+          <button class="win-btn" data-action="max">□</button>
+          <button class="win-btn" data-action="close">✕</button>
+        </div>
+      </div>
+      <div class="window-body"></div>
+    </div>
+  </template>
+
+  <div class="toast-stack" id="toastStack"></div>
+  <script src="app.js"></script>
+</body>
+
+</html>
