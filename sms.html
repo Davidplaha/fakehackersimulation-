@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages (Simulated) → SimDeck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="sms.css">
+</head>
+
+<body>
+  <main class="sms-screen" role="main">
+    <div class="sms-phone" aria-label="Message thread (simulation)">
+      <div class="sms-status" aria-hidden="true">
+        <div class="sms-time" id="smsTime">9:41</div>
+        <div class="sms-status-icons">
+          <span class="sms-signal"></span>
+          <span class="sms-wifi"></span>
+          <span class="sms-battery"><span class="sms-battery-fill"></span></span>
+        </div>
+      </div>
+
+      <div class="sms-top">
+        <a class="sms-back" href="index.html" aria-label="Back to SimDeck">Back</a>
+        <div class="sms-contact">
+          <div class="sms-avatar" aria-hidden="true">B</div>
+          <div class="sms-contact-text">
+            <div class="sms-contact-name">Boyfriend <span class="sms-sim">(Simulated)</span></div>
+            <div class="sms-contact-sub">Tap the message to open</div>
+          </div>
+        </div>
+        <div class="sms-top-right" aria-hidden="true"></div>
+      </div>
+
+      <div class="sms-thread">
+        <div class="sms-bubble them">hey babe, i sent you something</div>
+        <div class="sms-bubble them">tap the link.</div>
+
+        <a class="sms-link" id="openLink" href="index.html?from=sms">
+          <div class="sms-link-title">Open link</div>
+          <div class="sms-link-url">simdeck.local</div>
+        </a>
+
+        <div class="sms-footnote">
+          Simulation only. This is not a real message or a real text thread.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const timeEl = document.getElementById('smsTime');
+      const updateTime = () => {
+        if (!timeEl) return;
+        try {
+          const t = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+          timeEl.textContent = t.replace(/\s?(AM|PM)$/i, '');
+        } catch {
+          timeEl.textContent = '9:41';
+        }
+      };
+      updateTime();
+      setInterval(updateTime, 30 * 1000);
+    })();
+  </script>
+</body>
+
+</html>
+

@@ -229,64 +229,11 @@ function init() {
     console.log("Calling updateCrumbs...");
     updateCrumbs();
     console.log("=== SimDeck Init Complete ===");
-    const introActive = setupSmsIntro();
-    if (!introActive) {
-      showToast("Welcome to SimDeck! Pick a scenario to start.", "info");
-    }
+    showToast("Welcome to SimDeck! Pick a scenario to start.", "info");
   } catch (error) {
     console.error("=== SimDeck Init ERROR ===", error);
     alert("SimDeck Init Error: " + error.message);
   }
-}
-
-function setupSmsIntro() {
-  const intro = document.getElementById("smsIntro");
-  if (!intro) return false;
-
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("skipIntro") === "1") {
-    intro.remove();
-    document.body.classList.remove("intro-active");
-    return false;
-  }
-
-  const timeEl = document.getElementById("smsIntroTime");
-  const updateTime = () => {
-    if (!timeEl) return;
-    try {
-      // Match common phone status-bar style: "9:41"
-      const t = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-      timeEl.textContent = t.replace(/\\s?(AM|PM)$/i, "");
-    } catch {
-      timeEl.textContent = "9:41";
-    }
-  };
-  updateTime();
-  const timeTimer = setInterval(updateTime, 30_000);
-
-  document.body.classList.add("intro-active");
-
-  const dismiss = () => {
-    clearInterval(timeTimer);
-    intro.classList.add("hidden");
-    document.body.classList.remove("intro-active");
-    setTimeout(() => intro.remove(), 240);
-    showToast("Welcome to SimDeck! Pick a scenario to start.", "info");
-  };
-
-  document.getElementById("smsIntroOpen")?.addEventListener("click", dismiss);
-  document.getElementById("smsIntroSkip")?.addEventListener("click", dismiss);
-
-  // Capture ESC while intro is up so it doesn't trigger other ESC handlers.
-  document.addEventListener("keydown", (e) => {
-    if (!document.body.classList.contains("intro-active")) return;
-    if (e.key !== "Escape") return;
-    e.preventDefault();
-    e.stopPropagation();
-    dismiss();
-  }, true);
-
-  return true;
 }
 
 function renderThemes() {
