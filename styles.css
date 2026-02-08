@@ -267,6 +267,13 @@ body.ui-fullscreen .category-sidebar {
   border-radius: 8px;
 }
 
+.seo-note {
+  margin: 10px 2px 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
 /* Stage Panel */
 .stage-panel {
   position: relative;
@@ -1111,6 +1118,150 @@ body.ui-fullscreen .category-sidebar {
 .trk-signal span.on {
   background: linear-gradient(180deg, var(--accent), var(--accent-2));
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), 0 0 12px var(--accent);
+}
+
+/* Phone Terminal (SIMULATED) */
+.trm-screen {
+  background: #000;
+}
+
+.trm-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.32;
+  filter: blur(0.4px) saturate(1.2) contrast(1.05);
+  transform: scale(1.03);
+  pointer-events: none;
+}
+
+.trm-terminal {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 28px; /* below the notch */
+  bottom: 0;
+  padding: 10px 12px 12px;
+  font-family: var(--mono);
+  color: rgba(190, 255, 210, 0.95);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.trm-banner {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.trm-banner-title {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  background: linear-gradient(90deg, #22c55e, #38bdf8, #a855f7, #f97316, #22c55e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 18px rgba(34, 197, 94, 0.25);
+}
+
+.trm-banner-ver {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.trm-meta {
+  font-size: 11px;
+  line-height: 1.45;
+  padding: 0 4px;
+}
+
+.trm-meta .g { color: #22c55e; }
+.trm-meta .w { color: rgba(255, 255, 255, 0.88); }
+
+.trm-menu {
+  font-size: 11px;
+  line-height: 1.45;
+  padding: 10px 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.trm-menu .n { color: rgba(56, 189, 248, 0.95); }
+.trm-menu .d { color: rgba(255, 255, 255, 0.62); }
+
+.trm-log {
+  flex: 1;
+  overflow: auto;
+  padding: 10px 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.trm-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.trm-input .p {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 11px;
+}
+
+.trm-opt {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--mono);
+  color: rgba(190, 255, 210, 0.95);
+  font-size: 12px;
+}
+
+.trm-opt::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.trm-run {
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+
+.trm-cursor {
+  width: 8px;
+  height: 14px;
+  background: rgba(190, 255, 210, 0.95);
+  border-radius: 2px;
+  animation: trmBlink 0.95s steps(2, end) infinite;
+}
+
+@keyframes trmBlink {
+  50% { opacity: 0; }
+}
+
+.trm-foot {
+  text-align: center;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.55);
+  padding: 0 4px;
 }
 
 /* Glitch Effect */

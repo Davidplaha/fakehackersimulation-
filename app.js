@@ -1065,6 +1065,12 @@ function showScenarioSelection() {
       icon: "💻"
     },
     {
+      id: "phone_terminal",
+      name: "Phone Terminal",
+      desc: "Termux-style toolkit menu (simulated)",
+      icon: "⌨️"
+    },
+    {
       id: "phone_track",
       name: "Phone Tracking",
       desc: "Live pings + triangulation map (simulated)",
@@ -1258,6 +1264,7 @@ function updateCrumbs(showtime = false) {
     const phoneNames = {
       phone_basic: "Basic Scan",
       phone_matrix: "Matrix Style",
+      phone_terminal: "Phone Terminal",
       phone_track: "Phone Tracking",
       phone_corporate: "Corporate SOC",
       phone_forensic: "Forensic Scan",
@@ -1411,6 +1418,7 @@ const scenarioRunners = {
   phone: runPhoneScenario,
   phone_basic: runPhoneScenario,
   phone_matrix: runPhoneMatrixScenario,
+  phone_terminal: runPhoneTerminalScenario,
   phone_track: runPhoneTrackingScenario,
   phone_corporate: runPhoneCorporateScenario,
   phone_forensic: runPhoneForensicScenario,
@@ -1474,6 +1482,14 @@ function runPhoneTrackingScenario() {
   els.stage.appendChild(frame);
   addGlitch();
   startPhoneTrackingSimulation(frame);
+}
+
+function runPhoneTerminalScenario() {
+  clearStage();
+  const frame = buildPhoneTerminalFrame();
+  els.stage.appendChild(frame);
+  addGlitch();
+  startPhoneTerminalSimulation(frame);
 }
 
 // ---------- Email Hacking Scenario ----------
@@ -3739,6 +3755,210 @@ function startPhoneTrackingSimulation(frame) {
   };
 
   tick();
+}
+
+function buildPhoneTerminalFrame() {
+  const frame = document.createElement("div");
+  frame.className = "mobile-frame trm-frame";
+
+  const carrier = state.customTargetCarrier || "Demo LTE";
+  const target = state.customTargetNumber || "+1 (555) 123-4567";
+
+  frame.innerHTML = `
+    <div class="mobile-notch"></div>
+    <div class="mobile-screen trm-screen">
+      <img class="trm-bg" src="/assets/phone-terminal-bg.jfif" alt="" aria-hidden="true" />
+      <div class="status-bar">
+        <span>14:42</span>
+        <div style="display: flex; gap: 6px;">
+          <span>${carrier}</span>
+          <span>${state.customTargetNetwork || "4G"}</span>
+          <span>${state.customTargetBattery || 78}%</span>
+        </div>
+      </div>
+
+      <div class="trm-terminal" role="region" aria-label="Phone terminal (simulated)">
+        <div class="trm-banner">
+          <div class="trm-banner-title">SIMDECK-TOOL</div>
+          <div class="trm-banner-ver">v2.3</div>
+        </div>
+
+        <div class="trm-meta">
+          <div><span class="g">[+]</span> company : <span class="w">${state.customTargetName || "Demo Target"}</span></div>
+          <div><span class="g">[+]</span> target  : <span class="w">${target}</span></div>
+          <div><span class="g">[+]</span> mode    : <span class="w">SIMULATION ONLY</span></div>
+        </div>
+
+        <div class="trm-menu">
+          <div><span class="n">[01]</span> Profile Scan  <span class="d">: fake device metadata</span></div>
+          <div><span class="n">[02]</span> Signal Probe  <span class="d">: animated pings</span></div>
+          <div><span class="n">[03]</span> App Audit     <span class="d">: mock app list</span></div>
+          <div><span class="n">[04]</span> Message Tease <span class="d">: prank preview</span></div>
+          <div><span class="n">[05]</span> Camera Feed   <span class="d">: simulated CCTV</span></div>
+          <div><span class="n">[06]</span> Data Export   <span class="d">: fake transfer bar</span></div>
+          <div style="margin-top: 10px;"><span class="n">[99]</span> Exit System  <span class="d">: return to home</span></div>
+        </div>
+
+        <div class="trm-log" id="trmLog" aria-live="polite"></div>
+
+        <div class="trm-input">
+          <span class="p">Options:</span>
+          <input class="trm-opt" id="trmOpt" inputmode="numeric" autocomplete="off" maxlength="2" placeholder="01" />
+          <button class="chip trm-run" id="trmRunBtn">Run</button>
+          <span class="trm-cursor" aria-hidden="true"></span>
+        </div>
+
+        <div class="trm-foot">SIMULATION ONLY. NO REAL TOOLS. NO REAL ACCESS.</div>
+      </div>
+    </div>
+  `;
+
+  return frame;
+}
+
+function startPhoneTerminalSimulation(frame) {
+  const log = frame?.querySelector("#trmLog");
+  const opt = frame?.querySelector("#trmOpt");
+  const runBtn = frame?.querySelector("#trmRunBtn");
+  if (!log || !opt || !runBtn) return;
+
+  const nowTime = () => {
+    const d = new Date();
+    const hh = String(d.getHours()).padStart(2, "0");
+    const mm = String(d.getMinutes()).padStart(2, "0");
+    const ss = String(d.getSeconds()).padStart(2, "0");
+    return `${hh}:${mm}:${ss}`;
+  };
+
+  const write = (line) => {
+    if (!state.running || !frame.isConnected) return;
+    const el = document.createElement("div");
+    el.textContent = line;
+    log.appendChild(el);
+    log.scrollTop = log.scrollHeight;
+  };
+
+  const burst = (lines, baseDelay = 180) => {
+    const factor = 1 / state.speed;
+    let i = 0;
+    const step = () => {
+      if (!state.running || !frame.isConnected) return;
+      if (i >= lines.length) return;
+      write(lines[i]);
+      i += 1;
+      setTimeout(step, (baseDelay + randomInt(-40, 90)) * factor);
+    };
+    step();
+  };
+
+  const runOption = (code) => {
+    if (!state.running || !frame.isConnected) return;
+    const c = String(code || "").trim();
+    if (!c) return;
+    const n = c.padStart(2, "0");
+
+    write(``);
+    write(`> [${nowTime()}] SELECT ${n}`);
+
+    if (n === "99") {
+      burst([
+        "> Closing session...",
+        "> Clearing simulated buffers...",
+        "> Bye.",
+      ], 210);
+      setTimeout(() => {
+        if (!state.running) return;
+        exitToHome();
+      }, (900 / state.speed));
+      return;
+    }
+
+    const programs = {
+      "01": () => burst([
+        "> Initializing profile scan...",
+        "> Reading demo headers...",
+        "> Device: DemoPhone X",
+        `> Carrier: ${state.customTargetCarrier || "Demo LTE"}`,
+        "> OS: locked (simulated)",
+        "> Result: profile captured (fake)",
+      ], 190),
+      "02": () => burst([
+        "> Starting signal probe...",
+        "> Ping: ok",
+        "> Ping: ok",
+        "> Triangulation: stable (simulated)",
+        "> Accuracy: " + randomInt(12, 140) + " m",
+      ], 170),
+      "03": () => burst([
+        "> Auditing apps (fake)...",
+        "> com.social.app   [ok]",
+        "> com.bank.demo    [locked]",
+        "> com.photos.demo  [ok]",
+        "> Summary: 3 apps listed (simulated)",
+      ], 185),
+      "04": () => burst([
+        "> Opening message tease...",
+        "> Loading preview...",
+        `> Last text: "Where are you?" (fake)`,
+        "> Sending typing indicator... (prank)",
+        "> Done.",
+      ], 175),
+      "05": () => burst([
+        "> Linking camera feed...",
+        "> Stream: simulated",
+        "> Buffering frames...",
+        "> No real camera access.",
+      ], 195),
+      "06": () => burst([
+        "> Preparing export channel...",
+        "> Establishing tunnel (simulated)...",
+        "> Uploading: 0%",
+        "> Uploading: 27%",
+        "> Uploading: 61%",
+        "> Uploading: 100%",
+        "> Export complete (fake)",
+      ], 165),
+    };
+
+    if (!programs[n]) {
+      burst([
+        "> Unknown option.",
+        "> Tip: choose 01-06 or 99.",
+      ], 190);
+      return;
+    }
+
+    programs[n]();
+  };
+
+  runBtn.addEventListener("click", () => runOption(opt.value));
+  opt.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") runOption(opt.value);
+  });
+
+  // Boot sequence
+  burst([
+    "> Booting mobile terminal...",
+    "> Loading modules (simulated)...",
+    "> Ready.",
+    "> Type an option and press Run.",
+  ], 200);
+
+  // Ambient activity
+  const ambient = () => {
+    if (!state.running || !frame.isConnected) return;
+    if (Math.random() < 0.35) {
+      const msg = [
+        "> Heartbeat: ok",
+        "> Socket: stable (simulated)",
+        "> Cache: warmed",
+        "> Trace: placeholder",
+      ][randomInt(0, 3)];
+      write(msg);
+    }
+    setTimeout(ambient, (1400 + randomInt(-400, 800)) / state.speed);
+  };
+  setTimeout(ambient, 1600 / state.speed);
 }
 
 function buildPhonePrankFrame() {
