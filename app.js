@@ -1035,7 +1035,6 @@ function showScenarioSelection() {
     overflow-y: auto;
     padding-bottom: 100px;
   `;
-  showToast("Showing 6 Phone Scenarios", "info");
 
   // Add a back button to return to scenario selection
   const backButton = document.createElement("button");
@@ -1068,6 +1067,12 @@ function showScenarioSelection() {
       icon: "💻"
     },
     {
+      id: "phone_track",
+      name: "Phone Tracking",
+      desc: "Live pings + triangulation map (simulated)",
+      icon: "📡"
+    },
+    {
       id: "phone_corporate",
       name: "Corporate SOC",
       desc: "Professional security operations center view",
@@ -1092,6 +1097,8 @@ function showScenarioSelection() {
       icon: "📤"
     }
   ];
+
+  showToast(`Showing ${phoneScenarios.length} Phone Scenarios`, "info");
 
   phoneScenarios.forEach(scenario => {
     const card = document.createElement("div");
@@ -1226,9 +1233,9 @@ function closeDisclaimer() { els.disclaimerModal.classList.remove("show"); }
 
 function startScenario(force = false) {
   if (!force && !state.scenario) { showToast("Choose a scenario.", "warning"); return; }
-  state.running = true;
-  clearTimers();
   resetStage(true);
+  // resetStage() intentionally stops any previous loop; re-enable for the next run.
+  state.running = true;
   // Ensure the current theme is applied
   if (state.theme) {
     setTheme(state.theme);
@@ -1248,7 +1255,20 @@ function startScenario(force = false) {
 
 function updateCrumbs(showtime = false) {
   const themeName = themes.find((t) => t.id === state.theme)?.name || "Choose Theme";
-  const sc = scenarios.find((s) => s.id === state.scenario)?.name || (showtime ? "Showtime" : "Choose Scenario");
+  let sc = scenarios.find((s) => s.id === state.scenario)?.name;
+  if (!sc && String(state.scenario || "").startsWith("phone_")) {
+    const phoneNames = {
+      phone_basic: "Basic Scan",
+      phone_matrix: "Matrix Style",
+      phone_track: "Phone Tracking",
+      phone_corporate: "Corporate SOC",
+      phone_forensic: "Forensic Scan",
+      phone_prank: "Prank Mode",
+      phone_exfil: "Data Exfiltration",
+    };
+    sc = phoneNames[state.scenario] ? `Phone Hacking / ${phoneNames[state.scenario]}` : "Phone Hacking";
+  }
+  sc = sc || (showtime ? "Showtime" : "Choose Scenario");
   els.crumbs.textContent = `Home > ${themeName} > ${sc}`;
 }
 
@@ -1393,6 +1413,7 @@ const scenarioRunners = {
   phone: runPhoneScenario,
   phone_basic: runPhoneScenario,
   phone_matrix: runPhoneMatrixScenario,
+  phone_track: runPhoneTrackingScenario,
   phone_corporate: runPhoneCorporateScenario,
   phone_forensic: runPhoneForensicScenario,
   phone_prank: runPhonePrankScenario,
@@ -1447,6 +1468,14 @@ function runPhoneForensicScenario() {
   const frame = buildPhoneForensicFrame();
   els.stage.appendChild(frame);
   addGlitch();
+}
+
+function runPhoneTrackingScenario() {
+  clearStage();
+  const frame = buildPhoneTrackingFrame();
+  els.stage.appendChild(frame);
+  addGlitch();
+  startPhoneTrackingSimulation(frame);
 }
 
 // ---------- Email Hacking Scenario ----------
@@ -3406,6 +3435,312 @@ function buildPhoneForensicFrame() {
   });
 
   return frame;
+}
+
+function getSimTrackingBaseLocation(locationText) {
+  const raw = String(locationText || "").trim();
+  const q = raw.toLowerCase();
+
+  const presets = [
+    { match: ["new york", "nyc"], label: "New York, NY", lat: 40.7128, lon: -74.0060 },
+    { match: ["los angeles", "la", "hollywood"], label: "Los Angeles, CA", lat: 34.0522, lon: -118.2437 },
+    { match: ["san francisco", "sf"], label: "San Francisco, CA", lat: 37.7749, lon: -122.4194 },
+    { match: ["miami"], label: "Miami, FL", lat: 25.7617, lon: -80.1918 },
+    { match: ["chicago"], label: "Chicago, IL", lat: 41.8781, lon: -87.6298 },
+    { match: ["london"], label: "London, UK", lat: 51.5072, lon: -0.1276 },
+    { match: ["paris"], label: "Paris, FR", lat: 48.8566, lon: 2.3522 },
+    { match: ["tokyo"], label: "Tokyo, JP", lat: 35.6762, lon: 139.6503 },
+    { match: ["lagos"], label: "Lagos, NG", lat: 6.5244, lon: 3.3792 },
+  ];
+
+  const hit = presets.find((p) => p.match.some((m) => q.includes(m)));
+  if (hit) return hit;
+
+  const pool = [
+    { label: "Seattle, WA", lat: 47.6062, lon: -122.3321 },
+    { label: "Austin, TX", lat: 30.2672, lon: -97.7431 },
+    { label: "Denver, CO", lat: 39.7392, lon: -104.9903 },
+    { label: "Atlanta, GA", lat: 33.7490, lon: -84.3880 },
+    { label: "Boston, MA", lat: 42.3601, lon: -71.0589 },
+  ];
+
+  const fallback = pool[randomInt(0, pool.length - 1)];
+  return raw ? { ...fallback, label: raw } : fallback;
+}
+
+function buildPhoneTrackingFrame() {
+  const frame = document.createElement("div");
+  frame.className = "mobile-frame trk-frame";
+
+  const carrier = state.customTargetCarrier || "Demo LTE";
+  const target = state.customTargetNumber || "+1 (555) 123-4567";
+  const base = getSimTrackingBaseLocation(state.customTargetLocation);
+
+  frame.innerHTML = `
+    <div class="mobile-notch"></div>
+    <div class="mobile-screen trk-screen">
+      <div class="status-bar">
+        <span>09:43</span>
+        <div style="display: flex; gap: 6px;">
+          <span>${carrier}</span>
+          <span>${state.customTargetNetwork || "5G"}</span>
+          <span>${state.customTargetBattery || 85}%</span>
+        </div>
+      </div>
+
+      <div class="trk-head">
+        <div>
+          <div class="trk-title">PHONE TRACKING</div>
+          <div class="trk-sub">Target: <span class="trk-target">${target}</span></div>
+        </div>
+        <div class="trk-badges">
+          <span class="trk-badge live">LIVE</span>
+          <span class="trk-badge">SIM</span>
+        </div>
+      </div>
+
+      <div class="trk-map" aria-label="Tracking map (simulated)">
+        <svg class="trk-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <polyline class="trk-route-line" points=""></polyline>
+        </svg>
+
+        <div class="trk-tower t1" aria-hidden="true"></div>
+        <div class="trk-tower t2" aria-hidden="true"></div>
+        <div class="trk-tower t3" aria-hidden="true"></div>
+
+        <div class="trk-dot" style="left: 50%; top: 55%;" aria-hidden="true">
+          <div class="trk-dot-core"></div>
+        </div>
+      </div>
+
+      <div class="trk-metrics">
+        <div class="trk-metric">
+          <div class="k">Area</div>
+          <div class="v" id="trkArea">${base.label}</div>
+        </div>
+        <div class="trk-metric">
+          <div class="k">Accuracy</div>
+          <div class="v"><span id="trkAcc">--</span> m</div>
+        </div>
+        <div class="trk-metric">
+          <div class="k">Lat</div>
+          <div class="v" id="trkLat">--</div>
+        </div>
+        <div class="trk-metric">
+          <div class="k">Lon</div>
+          <div class="v" id="trkLon">--</div>
+        </div>
+        <div class="trk-metric">
+          <div class="k">Signal</div>
+          <div class="v" style="display: flex; align-items: center; gap: 8px;">
+            <div class="trk-signal" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <span id="trkDbm">-- dBm</span>
+          </div>
+        </div>
+        <div class="trk-metric">
+          <div class="k">Last Ping</div>
+          <div class="v" id="trkPing">--</div>
+        </div>
+      </div>
+
+      <div class="trk-actions">
+        <button class="chip" data-action="ping">Ping</button>
+        <button class="chip" data-action="triangulate">Triangulate</button>
+        <button class="chip" data-action="lockon">Lock-On</button>
+      </div>
+
+      <div class="terminal trk-log" id="trkLog" style="
+        margin: 12px 14px 10px;
+        height: 120px;
+        border-radius: 10px;
+        padding: 10px;
+        overflow: auto;
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(255,255,255,0.08);
+        font-family: var(--mono);
+        font-size: 11px;
+        line-height: 1.35;
+      "></div>
+
+      <div style="padding: 0 14px 14px; font-size: 11px; color: var(--muted);">
+        SIMULATION ONLY. DOES NOT TRACK REAL DEVICES.
+      </div>
+    </div>
+  `;
+
+  return frame;
+}
+
+function startPhoneTrackingSimulation(frame) {
+  const map = frame?.querySelector(".trk-map");
+  const dot = frame?.querySelector(".trk-dot");
+  const poly = frame?.querySelector(".trk-route-line");
+  const towers = Array.from(frame?.querySelectorAll(".trk-tower") || []);
+  const bars = Array.from(frame?.querySelectorAll(".trk-signal span") || []);
+
+  const log = frame?.querySelector("#trkLog");
+  const latEl = frame?.querySelector("#trkLat");
+  const lonEl = frame?.querySelector("#trkLon");
+  const accEl = frame?.querySelector("#trkAcc");
+  const pingEl = frame?.querySelector("#trkPing");
+  const areaEl = frame?.querySelector("#trkArea");
+  const dbmEl = frame?.querySelector("#trkDbm");
+
+  if (!map || !dot || !poly || !log) return;
+
+  const base = getSimTrackingBaseLocation(state.customTargetLocation);
+  if (areaEl) areaEl.textContent = base.label;
+
+  const fmtTime = (d) => {
+    const hh = String(d.getHours()).padStart(2, "0");
+    const mm = String(d.getMinutes()).padStart(2, "0");
+    const ss = String(d.getSeconds()).padStart(2, "0");
+    return `${hh}:${mm}:${ss}`;
+  };
+
+  const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+
+  const setBars = (level) => {
+    bars.forEach((b, i) => b.classList.toggle("on", i < level));
+  };
+
+  const setDot = (x, y) => {
+    dot.style.left = `${x}%`;
+    dot.style.top = `${y}%`;
+  };
+
+  const addPulse = (x, y) => {
+    const pulse = document.createElement("div");
+    pulse.className = "trk-pulse";
+    pulse.style.left = `${x}%`;
+    pulse.style.top = `${y}%`;
+    map.appendChild(pulse);
+    setTimeout(() => pulse.remove(), 1400);
+  };
+
+  const route = [];
+  const maxRoute = 22;
+
+  const updateRoute = () => {
+    const pts = route.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+    poly.setAttribute("points", pts);
+  };
+
+  let x = randomInt(28, 72);
+  let y = randomInt(26, 78);
+  let tx = randomInt(12, 88);
+  let ty = randomInt(16, 90);
+
+  let lockOn = true;
+  let accuracy = randomInt(70, 180);
+  let lastPing = null;
+
+  const pickTarget = () => {
+    // Bias toward center to keep the dot in view.
+    tx = randomInt(16, 84);
+    ty = randomInt(18, 88);
+  };
+
+  const setTelemetry = () => {
+    const lat = base.lat + ((50 - y) / 50) * 0.035 + (Math.random() - 0.5) * 0.0016;
+    const lon = base.lon + ((x - 50) / 50) * 0.035 + (Math.random() - 0.5) * 0.0016;
+    if (latEl) latEl.textContent = lat.toFixed(5);
+    if (lonEl) lonEl.textContent = lon.toFixed(5);
+
+    accuracy = clamp(accuracy + (lockOn ? randomInt(-6, 2) : randomInt(-1, 7)), 6, 260);
+    if (accEl) accEl.textContent = String(Math.round(accuracy));
+
+    const level = clamp(lockOn ? randomInt(3, 5) : randomInt(2, 4), 1, 5);
+    setBars(level);
+    if (dbmEl) dbmEl.textContent = `${-95 + (level * 6) + randomInt(-3, 2)} dBm`;
+
+    if (lastPing && pingEl) pingEl.textContent = fmtTime(lastPing);
+  };
+
+  const ping = (reason = "PING") => {
+    if (!state.running || !frame.isConnected) return;
+    lastPing = new Date();
+    appendLog(log, `> ${reason}: ping ok (${fmtTime(lastPing)})`);
+    if (pingEl) pingEl.textContent = fmtTime(lastPing);
+    addPulse(x, y);
+  };
+
+  const flashTowers = () => {
+    towers.forEach((t, idx) => {
+      const delay = (idx * 110) / state.speed;
+      setTimeout(() => {
+        if (!state.running) return;
+        t.classList.add("active");
+        setTimeout(() => t.classList.remove("active"), 520);
+      }, delay);
+    });
+  };
+
+  const triangulate = (manual = false) => {
+    if (!state.running || !frame.isConnected) return;
+    appendLog(log, `> TRIANGULATE: syncing towers... ${manual ? "(manual)" : ""}`.trim());
+    flashTowers();
+    accuracy = clamp(accuracy - randomInt(18, 42), 6, 260);
+    addPulse(x, y);
+    addToastBanner("Triangulation complete (simulated).", "info");
+  };
+
+  frame.querySelector(".trk-actions")?.addEventListener("click", (e) => {
+    if (!(e.target instanceof HTMLElement)) return;
+    const action = e.target.dataset.action;
+    if (!action) return;
+
+    if (action === "ping") ping("MANUAL");
+    if (action === "triangulate") triangulate(true);
+    if (action === "lockon") {
+      lockOn = !lockOn;
+      e.target.classList.toggle("active", lockOn);
+      addToastBanner(lockOn ? "Lock-on enabled (simulated)." : "Lock-on released (simulated).", "info");
+      appendLog(log, `> LOCK-ON: ${lockOn ? "ON" : "OFF"}`);
+    }
+  });
+
+  // Boot sequence
+  appendLog(log, "> Booting tracker module...");
+  appendLog(log, `> Target: ${state.customTargetNumber || "UNKNOWN"}`);
+  appendLog(log, "> Establishing passive pings...");
+
+  route.push({ x, y });
+  setDot(x, y);
+  setTelemetry();
+  updateRoute();
+
+  setTimeout(() => { if (state.running) ping("AUTO"); }, 650 / state.speed);
+  setTimeout(() => { if (state.running) triangulate(false); }, 1200 / state.speed);
+
+  // Live tracking loop (simulation only)
+  const tick = () => {
+    if (!state.running || !frame.isConnected) return;
+
+    const ease = lockOn ? 0.09 : 0.07;
+    x += (tx - x) * ease + (Math.random() - 0.5) * (lockOn ? 0.7 : 1.0);
+    y += (ty - y) * ease + (Math.random() - 0.5) * (lockOn ? 0.7 : 1.0);
+
+    x = clamp(x, 6, 94);
+    y = clamp(y, 6, 94);
+
+    if (Math.hypot(tx - x, ty - y) < 3.3 || Math.random() < 0.02) pickTarget();
+
+    route.push({ x, y });
+    if (route.length > maxRoute) route.shift();
+    updateRoute();
+    setDot(x, y);
+    setTelemetry();
+
+    // Passive pings every few seconds (randomized)
+    if (Math.random() < 0.08) ping("PASSIVE");
+
+    setTimeout(tick, 420 / state.speed);
+  };
+
+  tick();
 }
 
 function buildPhonePrankFrame() {

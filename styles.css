@@ -849,6 +849,270 @@ body.ui-fullscreen .category-sidebar {
   color: #fff;
 }
 
+/* Phone Tracking (SIMULATED) */
+.trk-screen {
+  background:
+    radial-gradient(80% 60% at 20% 10%, rgba(255, 255, 255, 0.06), transparent),
+    radial-gradient(80% 80% at 90% 20%, rgba(255, 255, 255, 0.05), transparent),
+    linear-gradient(180deg, #101426 0%, #070812 100%);
+}
+
+.trk-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 14px 14px 10px;
+}
+
+.trk-title {
+  font-family: var(--mono);
+  font-weight: 800;
+  letter-spacing: 0.9px;
+  font-size: 13px;
+}
+
+.trk-sub {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.trk-target {
+  color: var(--text);
+}
+
+.trk-badges {
+  display: flex;
+  gap: 6px;
+}
+
+.trk-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+}
+
+.trk-badge.live {
+  color: var(--accent);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.trk-map {
+  position: relative;
+  margin: 0 14px;
+  height: 240px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background:
+    radial-gradient(90px 90px at 25% 35%, rgba(255, 255, 255, 0.06), transparent 60%),
+    radial-gradient(110px 110px at 75% 60%, rgba(255, 255, 255, 0.05), transparent 65%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.2));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.trk-map::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.trk-map::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  left: -45%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  opacity: 0.45;
+  animation: trkScan 3.2s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes trkScan {
+  from { transform: translateX(0); }
+  to { transform: translateX(260%); }
+}
+
+.trk-route {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.trk-route-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.2;
+  opacity: 0.55;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.4));
+}
+
+.trk-tower {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transform: rotate(45deg);
+  z-index: 3;
+}
+
+.trk-tower::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.trk-tower.t1 { left: 14%; top: 22%; }
+.trk-tower.t2 { left: 78%; top: 30%; }
+.trk-tower.t3 { left: 28%; top: 78%; }
+
+.trk-tower.active {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.35), 0 0 24px var(--accent);
+}
+
+.trk-dot {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+}
+
+.trk-dot-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08), 0 0 24px var(--accent);
+}
+
+.trk-dot::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  opacity: 0.8;
+  animation: trkHalo 1.2s ease-in-out infinite;
+}
+
+@keyframes trkHalo {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.45; }
+  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.9; }
+}
+
+.trk-pulse {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  opacity: 0.7;
+  z-index: 3;
+  animation: trkPulse 1.4s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes trkPulse {
+  from { opacity: 0.85; transform: translate(-50%, -50%) scale(0.8); }
+  to { opacity: 0; transform: translate(-50%, -50%) scale(9); }
+}
+
+.trk-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 12px 14px 0;
+}
+
+.trk-metric {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 8px 10px;
+  min-height: 44px;
+}
+
+.trk-metric .k {
+  font-size: 10px;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.trk-metric .v {
+  margin-top: 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+}
+
+.trk-actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 14px 0;
+}
+
+.trk-actions .chip {
+  flex: 1;
+  justify-content: center;
+}
+
+.trk-signal {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: 14px;
+}
+
+.trk-signal span {
+  width: 3px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 3px;
+  transition: background 120ms ease, box-shadow 120ms ease;
+}
+
+.trk-signal span:nth-child(2) { height: 8px; }
+.trk-signal span:nth-child(3) { height: 10px; }
+.trk-signal span:nth-child(4) { height: 12px; }
+.trk-signal span:nth-child(5) { height: 14px; }
+
+.trk-signal span.on {
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2), 0 0 12px var(--accent);
+}
+
 /* Glitch Effect */
 .glitch-overlay {
   position: fixed;
