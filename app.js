@@ -585,7 +585,7 @@ function showModeSelection() {
           Experience the simulation with randomly generated fake data
         </p>
         <ul style="text-align: left; color: var(--text); font-size: 13px; list-style: none; padding: 0; margin: 0 0 20px 0;">
-          <li style="padding: 5px 0;">✅ All 6 phone scenarios</li>
+          <li style="padding: 5px 0;">✅ All 8 phone scenarios</li>
           <li style="padding: 5px 0;">✅ Realistic animations</li>
           <li style="padding: 5px 0;">⚠️ Random target data only</li>
           <li style="padding: 5px 0; color: var(--muted);">❌ No customization</li>
