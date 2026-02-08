@@ -10,6 +10,9 @@ Thumbs.db
 # Node
 node_modules/
 
+# Vercel
+.vercel/
+
 # Local exports / backups
 backups/
 

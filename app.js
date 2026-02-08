@@ -230,6 +230,7 @@ function init() {
     updateCrumbs();
     console.log("=== SimDeck Init Complete ===");
     showToast("Welcome to SimDeck! Pick a scenario to start.", "info");
+    handleDonationReturnFromCoinbase();
   } catch (error) {
     console.error("=== SimDeck Init ERROR ===", error);
     alert("SimDeck Init Error: " + error.message);
@@ -410,16 +411,112 @@ function showPhoneScenarioOptions() {
 
 // Check if user has premium unlocked
 function isPremiumUnlocked() {
-  return localStorage.getItem('simdeck_premium') === 'unlocked';
+  return localStorage.getItem(STORAGE_KEYS.premium) === 'unlocked';
 }
 
 const DONATION_USD = 5;
-const DONATION_BTC_ADDRESS = "1EyVGQorCXhjAqF8Ry9ADcJLgUr1fqjCem";
-const DONATION_USDT_TRC20_ADDRESS = "TKnAsvAnkzguMqq9GrrQz2UFq4wFkrCVSh";
+const STORAGE_KEYS = {
+  premium: "simdeck_premium",
+  premiumUnlockedAt: "simdeck_premium_unlocked_at",
+  deviceId: "simdeck_device_id",
+  lastChargeCode: "simdeck_last_charge_code",
+  premiumChargeCode: "simdeck_premium_charge_code",
+};
+
+function getDeviceId() {
+  let id = localStorage.getItem(STORAGE_KEYS.deviceId);
+  if (!id) {
+    const c = (typeof globalThis !== "undefined" && globalThis.crypto) ? globalThis.crypto : null;
+    id = (c && typeof c.randomUUID === "function")
+      ? c.randomUUID()
+      : `dev_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    localStorage.setItem(STORAGE_KEYS.deviceId, id);
+  }
+  return id;
+}
+
+async function createCoinbaseDonationCharge() {
+  const deviceId = getDeviceId();
+  const resp = await fetch("/api/coinbase/create-charge", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ deviceId }),
+  });
+  const data = await resp.json().catch(() => ({}));
+  if (!resp.ok) {
+    const msg = data && data.error ? data.error : "Failed to create donation checkout.";
+    throw new Error(msg);
+  }
+  if (!data || !data.hosted_url || !data.code) throw new Error("Unexpected donation response.");
+  localStorage.setItem(STORAGE_KEYS.lastChargeCode, data.code);
+  return data;
+}
+
+async function fetchCoinbaseDonationStatus(code) {
+  const deviceId = getDeviceId();
+  const resp = await fetch("/api/coinbase/status", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code, deviceId }),
+  });
+  const data = await resp.json().catch(() => ({}));
+  if (!resp.ok) {
+    const msg = data && data.error ? data.error : "Failed to verify donation.";
+    throw new Error(msg);
+  }
+  return data;
+}
+
+async function handleDonationReturnFromCoinbase() {
+  const params = new URLSearchParams(window.location.search);
+  const donation = params.get("donation");
+  if (!donation) return;
+
+  // Remove the flag so refresh doesn't keep re-triggering it.
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("donation");
+    const next = url.pathname + (url.search ? url.search : "") + (url.hash ? url.hash : "");
+    window.history.replaceState({}, "", next);
+  } catch {
+    // ignore
+  }
+
+  if (donation === "cancel") {
+    showToast("Donation canceled.", "info");
+    return;
+  }
+
+  if (donation !== "success") return;
+
+  const code = localStorage.getItem(STORAGE_KEYS.lastChargeCode) || "";
+  if (!code) {
+    showToast("Return received. Click Donate and verify the charge.", "info");
+    showPaymentModal();
+    return;
+  }
+
+  showToast("Verifying donation...", "info");
+  try {
+    const st = await fetchCoinbaseDonationStatus(code);
+    if (st && st.paid) {
+      localStorage.setItem(STORAGE_KEYS.premiumChargeCode, String(st.code || code));
+      unlockPremium("donation");
+      return;
+    }
+    showToast(`Charge status: ${st.status || "UNKNOWN"}. You can verify again in a minute.`, "info");
+    showPaymentModal();
+  } catch (err) {
+    console.warn(err);
+    showToast("Could not verify donation yet. Open Donate and click Verify.", "warning");
+    showPaymentModal();
+  }
+}
 
 // Unlock premium (called after donation)
 function unlockPremium(reason = "donation") {
-  localStorage.setItem('simdeck_premium', 'unlocked');
+  localStorage.setItem(STORAGE_KEYS.premium, 'unlocked');
+  localStorage.setItem(STORAGE_KEYS.premiumUnlockedAt, String(Date.now()));
   if (reason === "test") {
     showToast("Test mode: Premium unlocked on this device.", "success");
     return;
@@ -571,7 +668,7 @@ function showModeSelection() {
     if (isPremiumUnlocked()) {
       showCustomizationForm();
     } else {
-      showPaymentModal();
+      showPaymentModal({ afterUnlock: "customize" });
     }
   });
 
@@ -580,9 +677,13 @@ function showModeSelection() {
   });
 }
 
-// Donation Modal (Premium Unlock)
-function showPaymentModal() {
+// Donation Modal (Coinbase Commerce)
+function showPaymentModal(opts = {}) {
+  const afterUnlock = opts && opts.afterUnlock ? opts.afterUnlock : null;
   const isLocal = ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
+
+  const lastCode = localStorage.getItem(STORAGE_KEYS.lastChargeCode) || "";
+
   const modal = document.createElement("div");
   modal.className = "donation-modal";
   modal.style.cssText = `
@@ -620,81 +721,60 @@ function showPaymentModal() {
 
       <div style="font-size: 48px; margin-bottom: 15px;">❤️</div>
       <h2 style="color: #ffd700; margin: 0 0 10px 0;">Support SimDeck</h2>
-      <p style="color: var(--muted); margin: 0 0 25px 0; font-size: 14px;">
-        Suggested donation • Helps keep the site running • Unlocks Premium Mode on this device
+      <p style="color: var(--muted); margin: 0 0 18px 0; font-size: 14px;">
+        Donate via Coinbase Commerce to unlock Premium Mode on this device.
       </p>
 
       <div style="
         background: rgba(255, 215, 0, 0.1);
         border: 1px solid rgba(255, 215, 0, 0.3);
         border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 25px;
+        padding: 18px;
+        margin-bottom: 14px;
       ">
-        <div style="font-size: 36px; font-weight: bold; color: #ffd700;">$${DONATION_USD} USD</div>
-        <div style="color: var(--muted); font-size: 13px; margin-top: 5px;">Pay with Bitcoin (BTC) or USDT (TRC20)</div>
+        <div style="font-size: 34px; font-weight: bold; color: #ffd700;">$${DONATION_USD} USD</div>
+        <div style="color: var(--muted); font-size: 13px; margin-top: 6px;">Secure crypto checkout</div>
       </div>
 
-      <div style="text-align: left; margin-bottom: 20px;">
-        <div style="color: var(--text); font-size: 14px; font-weight: bold; margin-bottom: 10px;">
-          Send your donation to one of these addresses:
+      <div style="text-align:left; margin: 0 0 14px 0;">
+        <div style="color: var(--text); font-size: 13px; font-weight: bold; margin-bottom: 8px;">
+          Steps
         </div>
-        
-        <!-- Bitcoin -->
-        <div style="
-          background: rgba(247, 147, 26, 0.1);
-          border: 1px solid rgba(247, 147, 26, 0.3);
-          border-radius: 12px;
-          padding: 12px;
-          margin-bottom: 10px;
-        ">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-            <div style="color: #f7931a; font-size: 12px; font-weight: bold;">Bitcoin (BTC)</div>
-            <button class="btn ghost compact" id="copyBtcAddress" type="button">Copy</button>
-          </div>
-          <div style="color: var(--text); font-size: 11px; font-family: var(--mono); word-break: break-all; margin-top: 8px;">
-            ${DONATION_BTC_ADDRESS}
-          </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px;">
-            <a class="btn ghost compact" href="https://blockstream.info/address/${DONATION_BTC_ADDRESS}" target="_blank" rel="noreferrer">View on Explorer</a>
-          </div>
-        </div>
-
-        <!-- USDT TRC20 -->
-        <div style="
-          background: rgba(34, 197, 94, 0.10);
-          border: 1px solid rgba(34, 197, 94, 0.25);
-          border-radius: 12px;
-          padding: 12px;
-          margin-bottom: 10px;
-        ">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-            <div style="color: #22c55e; font-size: 12px; font-weight: bold;">USDT (TRC20)</div>
-            <button class="btn ghost compact" id="copyUsdtAddress" type="button">Copy</button>
-          </div>
-          <div style="color: var(--text); font-size: 11px; font-family: var(--mono); word-break: break-all; margin-top: 8px;">
-            ${DONATION_USDT_TRC20_ADDRESS}
-          </div>
-          <div style="color: var(--muted); font-size: 11px; margin-top: 6px;">
-            Network: TRON (TRC20). Send exactly ${DONATION_USD} USDT.
-          </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px;">
-            <a class="btn ghost compact" href="https://tronscan.org/#/address/${DONATION_USDT_TRC20_ADDRESS}" target="_blank" rel="noreferrer">View on Explorer</a>
-          </div>
-        </div>
+        <ol style="margin:0; padding-left: 18px; color: var(--muted); font-size: 12.5px; line-height: 1.5;">
+          <li>Open the Coinbase checkout</li>
+          <li>Send crypto payment</li>
+          <li>Return here and click Verify</li>
+        </ol>
       </div>
 
-      <button id="confirmDonation" class="btn" style="
+      <button id="openCoinbaseCheckout" class="btn primary" style="
         width: 100%;
-        padding: 14px;
+        padding: 12px;
+        margin-bottom: 10px;
+      ">Donate with Coinbase</button>
+
+      <button id="verifyDonation" class="btn" style="
+        width: 100%;
+        padding: 12px;
         background: linear-gradient(90deg, #ffd700, #ff8c00);
         color: #000;
         font-weight: bold;
-        font-size: 16px;
+        font-size: 15px;
+        margin-bottom: 10px;
+      ">Verify Donation</button>
+
+      <div id="donationStatus" style="
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 10px 12px;
+        text-align: left;
+        color: var(--muted);
+        font-size: 12px;
         margin-bottom: 10px;
       ">
-        ✓ I've Donated
-      </button>
+        ${lastCode ? `Last charge code: <span style="font-family: var(--mono); color: var(--text);">${lastCode}</span>` : "No checkout started yet."}
+      </div>
 
       ${isLocal ? `
         <button id="testDonation" class="btn ghost" style="
@@ -702,78 +782,95 @@ function showPaymentModal() {
           padding: 12px;
           margin-bottom: 10px;
           border-color: rgba(255, 255, 255, 0.18);
-        ">
-          Test Unlock (Localhost)
-        </button>
+        ">Test Unlock (Localhost)</button>
         <button id="resetPremium" class="btn ghost compact" style="
           width: 100%;
           padding: 10px;
           margin-bottom: 10px;
           border-color: rgba(255, 255, 255, 0.12);
           color: var(--muted);
-        ">
-          Reset Premium (Localhost)
-        </button>
+        ">Reset Premium (Localhost)</button>
       ` : ``}
 
       <p style="color: var(--muted); font-size: 11px; margin: 0;">
-        Note: this demo does not automatically verify blockchain transactions yet. Clicking "I've Donated" unlocks Premium on this device.
+        Premium unlock happens only after Coinbase confirms the charge.
       </p>
     </div>
   `;
 
   document.body.appendChild(modal);
 
-  const copyText = async (text) => {
+  const statusEl = document.getElementById("donationStatus");
+
+  document.getElementById("closeDonationModal")?.addEventListener("click", () => modal.remove());
+
+  document.getElementById("openCoinbaseCheckout")?.addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    btn.disabled = true;
+    const prev = btn.textContent;
+    btn.textContent = "Creating checkout...";
     try {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
-      } else {
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        ta.style.position = "fixed";
-        ta.style.top = "-1000px";
-        ta.style.left = "-1000px";
-        document.body.appendChild(ta);
-        ta.focus();
-        ta.select();
-        document.execCommand("copy");
-        ta.remove();
+      const charge = await createCoinbaseDonationCharge();
+      if (statusEl) {
+        statusEl.innerHTML = `Last charge code: <span style="font-family: var(--mono); color: var(--text);">${charge.code}</span>`;
       }
-      showToast("Address copied.", "success");
+      showToast("Redirecting to Coinbase checkout...", "info");
+      window.location.href = charge.hosted_url;
     } catch (err) {
-      console.warn("Copy failed:", err);
-      showToast("Copy failed. Please copy manually.", "warning");
+      console.warn(err);
+      showToast(`${err && err.message ? err.message : "Could not start checkout."} (Requires Vercel /api)`, "warning");
+      btn.disabled = false;
+      btn.textContent = prev;
     }
-  };
-
-  document.getElementById("copyBtcAddress")?.addEventListener("click", () => copyText(DONATION_BTC_ADDRESS));
-  document.getElementById("copyUsdtAddress")?.addEventListener("click", () => copyText(DONATION_USDT_TRC20_ADDRESS));
-
-  document.getElementById('closeDonationModal').addEventListener('click', () => {
-    modal.remove();
   });
 
-  document.getElementById('confirmDonation').addEventListener('click', () => {
-    unlockPremium("donation");
-    modal.remove();
-    showCustomizationForm();
+  document.getElementById("verifyDonation")?.addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    const code = localStorage.getItem(STORAGE_KEYS.lastChargeCode) || "";
+    if (!code) {
+      showToast("No charge found. Click 'Donate with Coinbase' first.", "warning");
+      return;
+    }
+    btn.disabled = true;
+    const prev = btn.textContent;
+    btn.textContent = "Verifying...";
+    try {
+      const st = await fetchCoinbaseDonationStatus(code);
+      if (statusEl) statusEl.textContent = `Charge ${st.code || code}: ${st.status || "UNKNOWN"}`;
+      if (st && st.paid) {
+        localStorage.setItem(STORAGE_KEYS.premiumChargeCode, String(st.code || code));
+        unlockPremium("donation");
+        modal.remove();
+        if (afterUnlock === "customize") showCustomizationForm();
+      } else {
+        showToast(`Not confirmed yet (${st.status || "UNKNOWN"}). Try again shortly.`, "info");
+      }
+    } catch (err) {
+      console.warn(err);
+      showToast(err && err.message ? err.message : "Verify failed.", "warning");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = prev;
+    }
   });
 
   if (isLocal) {
     document.getElementById("testDonation")?.addEventListener("click", () => {
       unlockPremium("test");
       modal.remove();
-      showCustomizationForm();
+      if (afterUnlock === "customize") showCustomizationForm();
     });
     document.getElementById("resetPremium")?.addEventListener("click", () => {
-      localStorage.removeItem("simdeck_premium");
+      localStorage.removeItem(STORAGE_KEYS.premium);
+      localStorage.removeItem(STORAGE_KEYS.premiumUnlockedAt);
+      localStorage.removeItem(STORAGE_KEYS.lastChargeCode);
+      localStorage.removeItem(STORAGE_KEYS.premiumChargeCode);
       showToast("Premium reset on this device.", "info");
       modal.remove();
     });
   }
 
-  modal.addEventListener('click', (e) => {
+  modal.addEventListener("click", (e) => {
     if (e.target === modal) modal.remove();
   });
 }
