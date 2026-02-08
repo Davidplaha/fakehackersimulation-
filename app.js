@@ -101,9 +101,7 @@ const scripts = {
     { t: 12, action: "overlay", payload: "Access Granted" },
   ],
   tv: [
-    { t: 0, action: "crack", payload: "corner" },
-    { t: 5, action: "crack", payload: "spider" },
-    { t: 10, action: "crack", payload: "center" },
+    { t: 0, action: "crack", payload: "phone" },
   ],
   emailHijack: [
     { t: 0, action: "step", payload: "Suspicious session detected (SIMULATED)" },
@@ -2814,7 +2812,7 @@ function showWindows11BSOD(container) {
 
 function runTVScenario() {
   clearStage();
-  const overlay = buildCrackOverlay("corner");
+  const overlay = buildCrackOverlay("phone");
   els.stage.appendChild(overlay);
   overlay.addEventListener("click", cycleCrackPattern);
   addGlitch();
@@ -4327,26 +4325,30 @@ function buildCrackOverlay(style) {
   hint.className = "overlay";
   hint.style.background = "transparent";
   hint.style.pointerEvents = "none";
-  hint.innerHTML = `<div class="overlay-card"><div class="title">Tap to switch crack pattern</div><div class="subtitle">Quick exit always available.</div></div>`;
+  hint.innerHTML = `<div class="overlay-card"><div class="title">Tap to switch crack pattern</div><div class="subtitle">Simulated screen damage. Quick exit always available.</div></div>`;
   overlay.appendChild(hint);
   return overlay;
 }
 
 function setCrackPattern(el, style) {
   const patterns = {
+    phone: "url('/assets/phone-cracked-screen.jfif')",
     corner: "radial-gradient(circle at 0% 0%, rgba(255,255,255,0.4), transparent 35%), radial-gradient(circle at 20% 20%, rgba(255,255,255,0.15), transparent 25%)",
     spider: "radial-gradient(circle at 50% 40%, rgba(255,255,255,0.35), transparent 38%), radial-gradient(circle at 55% 45%, rgba(255,255,255,0.25), transparent 32%)",
     center: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4), transparent 40%), radial-gradient(circle at 48% 52%, rgba(255,255,255,0.2), transparent 28%)",
   };
-  el.style.backgroundImage = patterns[style] || patterns.corner;
+  const key = patterns[style] ? style : "phone";
+  el.dataset.pattern = key;
+  el.style.backgroundImage = patterns[key] || patterns.phone;
 }
 
 function cycleCrackPattern() {
   const overlay = els.stage.querySelector(".crack-overlay");
   if (!overlay) return;
-  const seq = ["corner", "spider", "center"];
-  const currentIdx = seq.findIndex((s) => overlay.style.backgroundImage.includes(s));
-  const next = seq[(currentIdx + 1 + seq.length) % seq.length];
+  const seq = ["phone", "corner", "spider", "center"];
+  const current = overlay.dataset.pattern || "phone";
+  const currentIdx = seq.indexOf(current);
+  const next = seq[(currentIdx + 1) % seq.length];
   setCrackPattern(overlay, next);
 }
 
