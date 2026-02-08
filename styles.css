@@ -82,6 +82,9 @@ body {
 .brand-name {
   font-weight: 700;
   letter-spacing: 0.4px;
+  margin: 0;
+  font-size: inherit;
+  line-height: 1.1;
 }
 
 .brand-tag {

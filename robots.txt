@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap location for crawlers
+Sitemap: https://www.hackerprank.online/sitemap.xml
