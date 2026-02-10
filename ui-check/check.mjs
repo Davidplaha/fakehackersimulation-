@@ -2,7 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {chromium} from 'playwright';
 
-const outDir = path.resolve('..', 'backups', 'ui-check-latest');
+// Resolve relative to the current working directory (repo root when invoked via `node ui-check/check.mjs`).
+const outDir = path.resolve('backups', 'ui-check-latest');
 fs.mkdirSync(outDir, {recursive: true});
 
 const baseURL = process.env.BASE_URL || 'http://127.0.0.1:3001/';
@@ -23,8 +24,9 @@ const shots = async () => {
     }
   });
 
-  await page.goto(baseURL, {waitUntil: 'networkidle'});
-  await page.waitForTimeout(400);
+  await page.goto(baseURL, {waitUntil: 'load'});
+  await page.waitForSelector('[data-id="phone"]', {timeout: 15_000});
+  await page.waitForTimeout(250);
 
   await page.screenshot({path: path.join(outDir, '01-home.png'), fullPage: true});
 
@@ -101,12 +103,21 @@ const shots = async () => {
   await page.waitForTimeout(1400);
   await page.screenshot({path: path.join(outDir, '08-matrix-style.png'), fullPage: true});
 
-  // Back to home and open FBI Lock.
-  await page.click('#resetStageBtn', {timeout: 10_000}).catch(() => {});
-  await page.waitForTimeout(800);
+  // Back to home and open FBI Lock (hard reload to avoid UI state differences).
+  await page.goto(baseURL, {waitUntil: 'networkidle'});
+  await page.waitForTimeout(350);
   await page.click('[data-id="fbi"]', {timeout: 10_000});
   await page.waitForTimeout(900);
   await page.screenshot({path: path.join(outDir, '09-fbi-lock.png'), fullPage: true});
+
+  // Back to home and open Critical Data.
+  await page.goto(baseURL, {waitUntil: 'networkidle'});
+  await page.waitForTimeout(350);
+  const criticalCard = page.locator('[data-id="critical"]').first();
+  await criticalCard.scrollIntoViewIfNeeded();
+  await criticalCard.click({timeout: 10_000});
+  await page.waitForTimeout(1400);
+  await page.screenshot({path: path.join(outDir, '10-critical-data.png'), fullPage: true});
 
   // Try to open trace visualizer (button inside the phone frame).
   const traceBtn = page.locator('.mobile-frame [data-action="trace"]').first();

@@ -19,6 +19,8 @@ const scenarios = [
   { id: "tv", name: "Cracked Screen", desc: "Prank cracked glass overlay.", icon: "📺", category: "prank", tags: ["Prank"], intensity: "Low" },
   { id: "emailHijack", name: "Email Hijack", desc: "Account recovery theater.", icon: "🔓", category: "email", tags: ["Desktop"], intensity: "Med" },
   { id: "fbi", name: "FBI Lock", desc: "Fake lock with countdown timer.", icon: "🚨", category: "scare", tags: ["Prank", "Scare"], intensity: "Med", isHot: true },
+  { id: "critical", name: "Critical Data", desc: "Global data heist simulation.", icon: "💾", category: "desktop", tags: ["New", "Cinematic"], intensity: "High", isNew: true },
+  { id: "globalnet", name: "Global Network", desc: "Cinematic city-by-city takeover.", icon: "🌐", category: "desktop", tags: ["Cinematic", "New"], intensity: "High", isNew: true },
 ];
 
 const miniPrograms = [
@@ -122,6 +124,29 @@ const scripts = {
     { t: 40, action: "overlay", payload: "Access Granted" },
     { t: 55, action: "final-card", payload: "Simulation Complete" },
     { t: 60, action: "loop-check" },
+  ],
+  critical: [
+    { t: 0, action: "critical-init" },
+    { t: 1, action: "critical-progress", payload: 10 },
+    { t: 3, action: "critical-progress", payload: 30 },
+    { t: 5, action: "critical-progress", payload: 55 },
+    { t: 7, action: "critical-progress", payload: 80 },
+    { t: 9, action: "critical-progress", payload: 100 },
+    { t: 10, action: "complete", payload: "Download Complete" },
+  ],
+  globalnet: [
+    { t: 0, action: "gn-init" },
+    { t: 2, action: "gn-hack", payload: 0 },
+    { t: 6, action: "gn-hack", payload: 1 },
+    { t: 10, action: "gn-hack", payload: 2 },
+    { t: 14, action: "gn-hack", payload: 3 },
+    { t: 18, action: "gn-hack", payload: 4 },
+    { t: 22, action: "gn-hack", payload: 5 },
+    { t: 26, action: "gn-hack", payload: 6 },
+    { t: 30, action: "gn-hack", payload: 7 },
+    { t: 34, action: "gn-hack", payload: 8 },
+    { t: 38, action: "gn-hack", payload: 9 },
+    { t: 42, action: "gn-dashboard" },
   ],
 };
 
@@ -1402,6 +1427,8 @@ function dispatchScriptAction(phase) {
     case "tv": tvAction(phase); break;
     case "emailHijack": emailHijackAction(phase); break;
     case "fbi": fbiAction(phase); break;
+    case "critical": criticalAction(phase); break;
+    case "globalnet": globalnetAction(phase); break;
     case "showtime": showtimeAction(phase); break;
     default: break;
   }
@@ -1427,6 +1454,8 @@ const scenarioRunners = {
   tv: runTVScenario,
   emailHijack: runEmailHijackScenario,
   fbi: runFBIScenario,
+  critical: runCriticalScenario,
+  globalnet: runGlobalNetScenario,
 };
 
 function runPhonePrankScenario() {
@@ -1528,8 +1557,8 @@ function renderCustomizationPayNudge() {
     <div class="pay-nudge-title">${unlocked ? "Customize Target" : `Unlock Custom Target ($${price})`}</div>
     <div class="pay-nudge-sub">
       ${unlocked
-        ? "Set friend name, phone, and email for this simulation."
-        : "Pay $5 to set friend name, phone, and email for this simulation."}
+      ? "Set friend name, phone, and email for this simulation."
+      : "Pay $5 to set friend name, phone, and email for this simulation."}
     </div>
     <div class="pay-nudge-actions">
       <button class="btn ${unlocked ? "primary" : ""}" data-action="customize" type="button">
@@ -5618,3 +5647,451 @@ function setupMobileTrayToggle() {
 // Initialize the application when the script loads
 init();
 setupMobileTrayToggle();
+
+// ---------- Critical Data Scenario ----------
+
+function runCriticalScenario() {
+  clearStage();
+
+  const container = document.createElement("div");
+  container.className = "sim-critical-data";
+  const segCount = 44;
+  container.innerHTML = `
+    <div class="crit-map" aria-hidden="true">
+      <div class="crit-map-land"></div>
+      <div class="crit-map-grid"></div>
+      <div class="crit-map-noise"></div>
+    </div>
+
+    <div class="crit-box" role="status" aria-live="polite" aria-label="Critical data download simulation">
+      <div class="crit-output mono" aria-hidden="true"></div>
+
+      <div class="crit-title">Downloading...</div>
+      <div class="crit-sub">Critical Data</div>
+
+      <div class="crit-bar-wrap" aria-label="Transfer progress">
+        <div class="crit-bar-head mono" aria-hidden="true">
+          <span class="crit-bar-k">TRANSFER</span>
+          <span class="crit-bar-v" id="critPct">0%</span>
+        </div>
+        <div class="crit-bar" id="criticalProgressBar" role="progressbar" aria-label="Progress bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <!-- segments injected by JS -->
+        </div>
+      </div>
+
+      <div class="crit-stats mono" aria-hidden="true">
+        <div>PACKETS <span id="critPackets">0</span></div>
+        <div>RATE <span id="critRate">0.0</span> TB/s</div>
+        <div>NODE <span id="critNode">EU-WEST</span></div>
+      </div>
+    </div>
+  `;
+
+  els.stage.appendChild(container);
+
+  // Build segments
+  const bar = container.querySelector("#criticalProgressBar");
+  bar.dataset.pct = "0";
+  for (let i = 0; i < segCount; i++) {
+    const seg = document.createElement("div");
+    seg.className = "progress-segment";
+    bar.appendChild(seg);
+  }
+}
+
+function criticalAction(phase) {
+  const container = document.querySelector(".sim-critical-data");
+  if (!container) return;
+
+  if (phase.action === "critical-init") {
+    // Already handled by runner
+    addToast("Initiating critical transfer protocol...", "warning");
+  } else if (phase.action === "critical-progress") {
+    const pct = Number(phase.payload || 0);
+    const bar = container.querySelector("#criticalProgressBar");
+    if (!bar) return;
+
+    const fromPct = Number(bar.dataset.pct || "0");
+    const toPct = Math.max(0, Math.min(100, pct));
+    bar.dataset.pct = String(toPct);
+    bar.setAttribute("aria-valuenow", String(toPct));
+
+    const pctEl = container.querySelector("#critPct");
+    if (pctEl) pctEl.textContent = `${Math.round(toPct)}%`;
+
+    const segments = Array.from(bar.querySelectorAll(".progress-segment"));
+    const total = segments.length;
+
+    // Smoothly interpolate between values so it "feels" like downloading, not jumping.
+    if (bar._critRaf) cancelAnimationFrame(bar._critRaf);
+    const start = performance.now();
+    const dur = 520 / Math.max(0.6, state.speed);
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / dur);
+      const eased = t * t * (3 - 2 * t);
+      const cur = fromPct + (toPct - fromPct) * eased;
+      const filled = Math.floor((cur / 100) * total);
+      segments.forEach((seg, i) => {
+        seg.classList.toggle("filled", i < filled);
+      });
+      if (t < 1) {
+        bar._critRaf = requestAnimationFrame(step);
+      } else {
+        bar._critRaf = 0;
+      }
+    };
+    bar._critRaf = requestAnimationFrame(step);
+
+    // Randomize stats
+    container.querySelector("#critPackets").textContent = String(Math.floor(toPct * 942));
+    container.querySelector("#critRate").textContent = (Math.random() * 50 + 10).toFixed(1);
+    const nodes = ["EU-WEST", "US-EAST", "AP-SG", "ME-DXB", "SA-SP"];
+    container.querySelector("#critNode").textContent = nodes[Math.floor(Math.random() * nodes.length)];
+
+    // Optional: Add random tech output
+    const output = container.querySelector(".crit-output");
+    if (output) {
+      output.innerHTML = `
+        SEG_${Math.floor(Math.random() * 9000)}.${Math.floor(Math.random() * 9000)}<br>
+        BLK_${Math.floor(Math.random() * 9000)}.${Math.floor(Math.random() * 9000)}<br>
+        LINK: STABLE<br>
+        ENCRYPTION: SIMULATED
+      `;
+    }
+  } else if (phase.action === "complete") {
+    const bar = container.querySelector("#criticalProgressBar");
+    const title = container.querySelector(".crit-title");
+    if (title) title.textContent = String(phase.payload || "Download Complete");
+
+    // Ensure the bar shows full completion.
+    if (bar) {
+      bar.dataset.pct = "100";
+      bar.setAttribute("aria-valuenow", "100");
+      const pctEl = container.querySelector("#critPct");
+      if (pctEl) pctEl.textContent = "100%";
+      const segments = Array.from(bar.querySelectorAll(".progress-segment"));
+      segments.forEach((seg) => seg.classList.add("filled"));
+    }
+
+    addToast(String(phase.payload || "Download Complete"), "success");
+  }
+}
+
+// ---------- Global Network Hack Scenario ----------
+
+const GN_CITIES = [
+  { name: "New York", x: 24, y: 40, ip: "192.168.42.17", coord: "40.7128° N, 74.0060° W" },
+  { name: "London", x: 47, y: 30, ip: "10.0.88.201", coord: "51.5074° N, 0.1278° W" },
+  { name: "Berlin", x: 52, y: 28, ip: "172.16.55.33", coord: "52.5200° N, 13.4050° E" },
+  { name: "Tokyo", x: 84, y: 38, ip: "10.42.99.104", coord: "35.6762° N, 139.6503° E" },
+  { name: "Sydney", x: 87, y: 76, ip: "192.168.7.42", coord: "33.8688° S, 151.2093° E" },
+  { name: "Dubai", x: 62, y: 48, ip: "172.20.14.88", coord: "25.2048° N, 55.2708° E" },
+  { name: "São Paulo", x: 30, y: 72, ip: "10.99.12.67", coord: "23.5505° S, 46.6333° W" },
+  { name: "Singapore", x: 76, y: 58, ip: "192.168.200.5", coord: "1.3521° N, 103.8198° E" },
+  { name: "Moscow", x: 58, y: 24, ip: "10.55.77.201", coord: "55.7558° N, 37.6173° E" },
+  { name: "Lagos", x: 48, y: 56, ip: "172.31.44.19", coord: "6.5244° N, 3.3792° E" },
+];
+
+function runGlobalNetScenario() {
+  clearStage();
+
+  const container = document.createElement("div");
+  container.className = "gn-container";
+
+  container.innerHTML = `
+    <svg class="gn-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <defs>
+        <filter id="gnGlow">
+          <feGaussianBlur stdDeviation="0.4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <radialGradient id="gnPulse" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(255,60,60,0.9)"/>
+          <stop offset="100%" stop-color="rgba(255,60,60,0)"/>
+        </radialGradient>
+      </defs>
+      <g class="gn-lines"></g>
+      <g class="gn-nodes"></g>
+    </svg>
+
+    <!-- City labels layer (HTML for crisp text) -->
+    <div class="gn-labels"></div>
+
+    <!-- Top-left: status panel -->
+    <div class="gn-status-panel">
+      <div class="gn-status-title">ACQUIRING SYSTEM</div>
+      <div class="gn-status-target">Initializing...</div>
+      <div class="gn-status-bar"><div class="gn-status-fill"></div></div>
+    </div>
+
+    <!-- Right: data stream -->
+    <div class="gn-data-stream">
+      <div class="gn-stream-header">ACCESS LOG</div>
+      <div class="gn-stream-body"></div>
+    </div>
+
+    <!-- Bottom: live stats ticker -->
+    <div class="gn-ticker">
+      <span class="gn-ticker-item">NODES: <span id="gnNodeCount">0</span>/10</span>
+      <span class="gn-ticker-item">BANDWIDTH: <span id="gnBandwidth">0.0</span> TB/s</span>
+      <span class="gn-ticker-item">LATENCY: <span id="gnLatency">--</span> ms</span>
+      <span class="gn-ticker-item">ENCRYPTION: AES-256</span>
+    </div>
+
+    <!-- Dashboard overlay (hidden until gn-dashboard action) -->
+    <div class="gn-dashboard hidden" id="gnDashboard"></div>
+  `;
+
+  els.stage.appendChild(container);
+
+  // Place city nodes on SVG & labels
+  const svgNodes = container.querySelector(".gn-nodes");
+  const labelsDiv = container.querySelector(".gn-labels");
+
+  GN_CITIES.forEach((city, i) => {
+    // SVG circle
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", city.x);
+    circle.setAttribute("cy", city.y);
+    circle.setAttribute("r", "0.8");
+    circle.setAttribute("class", "gn-node");
+    circle.setAttribute("data-idx", i);
+    circle.setAttribute("filter", "url(#gnGlow)");
+    svgNodes.appendChild(circle);
+
+    // Pulse ring
+    const pulse = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    pulse.setAttribute("cx", city.x);
+    pulse.setAttribute("cy", city.y);
+    pulse.setAttribute("r", "0");
+    pulse.setAttribute("class", "gn-pulse-ring");
+    pulse.setAttribute("data-idx", i);
+    svgNodes.appendChild(pulse);
+
+    // HTML label
+    const label = document.createElement("div");
+    label.className = "gn-label";
+    label.dataset.idx = i;
+    label.style.left = city.x + "%";
+    label.style.top = city.y + "%";
+    label.innerHTML = `<span class="gn-label-name">${city.name}</span>`;
+    labelsDiv.appendChild(label);
+  });
+  addGnGlitch();
+}
+
+function globalnetAction(phase) {
+  const container = document.querySelector(".gn-container");
+  if (!container) return;
+
+  if (phase.action === "gn-init") {
+    addToast("Initiating global network acquisition...", "warning");
+    // Start ambient data stream
+    gnStartDataStream(container);
+  }
+
+  if (phase.action === "gn-hack") {
+    const idx = phase.payload;
+    const city = GN_CITIES[idx];
+    if (!city) return;
+
+    // Update status panel
+    const statusTarget = container.querySelector(".gn-status-target");
+    statusTarget.textContent = `TARGET: ${city.name.toUpperCase()} [${city.ip}]`;
+    const fill = container.querySelector(".gn-status-fill");
+    fill.style.width = `${((idx + 1) / GN_CITIES.length) * 100}%`;
+
+    // Activate city node
+    const node = container.querySelector(`.gn-node[data-idx="${idx}"]`);
+    if (node) {
+      node.classList.add("hacked");
+      node.setAttribute("r", "1.2");
+    }
+
+    // Activate pulse
+    const pulse = container.querySelector(`.gn-pulse-ring[data-idx="${idx}"]`);
+    if (pulse) pulse.classList.add("active");
+
+    // Activate label
+    const label = container.querySelector(`.gn-label[data-idx="${idx}"]`);
+    if (label) label.classList.add("hacked");
+
+    // Draw connection line to previous city
+    if (idx > 0) {
+      const prev = GN_CITIES[idx - 1];
+      gnDrawLine(container, prev.x, prev.y, city.x, city.y);
+    }
+
+    // Add to data stream
+    gnAddLogEntry(container, city, idx);
+
+    // Update ticker
+    container.querySelector("#gnNodeCount").textContent = idx + 1;
+    container.querySelector("#gnBandwidth").textContent = ((idx + 1) * 4.2 + Math.random() * 8).toFixed(1);
+    container.querySelector("#gnLatency").textContent = Math.floor(Math.random() * 180 + 20);
+
+    addToast(`🎯 ${city.name} — ACCESS GRANTED`, "success");
+  }
+
+  if (phase.action === "gn-dashboard") {
+    gnShowDashboard(container);
+  }
+}
+
+function gnDrawLine(container, x1, y1, x2, y2) {
+  const svg = container.querySelector(".gn-lines");
+  const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  line.setAttribute("x1", x1);
+  line.setAttribute("y1", y1);
+  line.setAttribute("x2", x1);
+  line.setAttribute("y2", y1);
+  line.setAttribute("class", "gn-line");
+  svg.appendChild(line);
+
+  // Animate to target
+  requestAnimationFrame(() => {
+    line.setAttribute("x2", x2);
+    line.setAttribute("y2", y2);
+  });
+}
+
+function gnStartDataStream(container) {
+  const body = container.querySelector(".gn-stream-body");
+  if (!body) return;
+  const phrases = [
+    "SYN → ACK handshake",
+    "TLS 1.3 negotiation",
+    "Cert pinning bypassed",
+    "Port 443 open",
+    "SSH tunnel established",
+    "DNS rebind complete",
+    "Firewall rule injected",
+    "Proxy chain routing",
+    "SOCKS5 connected",
+    "VPN pivot active",
+  ];
+  let i = 0;
+  const push = () => {
+    if (!state.running) return;
+    const line = document.createElement("div");
+    line.className = "gn-stream-line";
+    const ts = new Date().toLocaleTimeString("en-GB", { hour12: false });
+    line.innerHTML = `<span class="gn-ts">${ts}</span> ${phrases[i % phrases.length]}`;
+    body.appendChild(line);
+    body.scrollTop = body.scrollHeight;
+    if (body.children.length > 30) body.firstChild.remove();
+    i++;
+    setTimeout(push, randomInt(600, 1400) / state.speed);
+  };
+  setTimeout(push, 800);
+}
+
+function gnAddLogEntry(container, city, idx) {
+  const body = container.querySelector(".gn-stream-body");
+  if (!body) return;
+
+  const keys = [
+    "xK9m2pQ4rT", "vB7nW3jL8s", "hR5yU1cF6e",
+    "mD4gZ0aX9w", "qP8kN2bJ7t", "sL6fH3dV5u",
+    "wC1iO9eA4r", "yT7oM0xG2p", "nF3lB8jK5q", "dE6hR1vS9m"
+  ];
+
+  const entries = [
+    `<span class="gn-log-ok">✓ ACCESS GRANTED</span> ${city.name} [${city.ip}]`,
+    `<span class="gn-log-dim">  Coord:</span> ${city.coord}`,
+    `<span class="gn-log-dim">  Key:</span> <span class="gn-log-key">${keys[idx]}</span>`,
+    `<span class="gn-log-dim">  Status:</span> COMPROMISED`,
+  ];
+
+  entries.forEach((html, j) => {
+    setTimeout(() => {
+      const line = document.createElement("div");
+      line.className = "gn-stream-line gn-stream-highlight";
+      line.innerHTML = html;
+      body.appendChild(line);
+      body.scrollTop = body.scrollHeight;
+    }, j * 200);
+  });
+}
+
+function gnShowDashboard(container) {
+  const dash = container.querySelector("#gnDashboard");
+  if (!dash) return;
+
+  const keys = [
+    "xK9m2pQ4rT", "vB7nW3jL8s", "hR5yU1cF6e",
+    "mD4gZ0aX9w", "qP8kN2bJ7t", "sL6fH3dV5u",
+    "wC1iO9eA4r", "yT7oM0xG2p", "nF3lB8jK5q", "dE6hR1vS9m"
+  ];
+
+  let rows = "";
+  GN_CITIES.forEach((c, i) => {
+    rows += `
+      <tr>
+        <td class="gn-dash-city">${c.name}</td>
+        <td class="gn-dash-mono">${c.ip}</td>
+        <td class="gn-dash-mono gn-dash-coord">${c.coord}</td>
+        <td class="gn-dash-key">${keys[i]}</td>
+        <td class="gn-dash-status">COMPROMISED</td>
+      </tr>`;
+  });
+
+  dash.innerHTML = `
+    <div class="gn-dash-card">
+      <div class="gn-dash-header">
+        <span class="gn-dash-badge">🔓 OPERATION COMPLETE</span>
+        <span class="gn-dash-ts">${new Date().toLocaleTimeString("en-GB", { hour12: false })}</span>
+      </div>
+      <div class="gn-dash-title">GLOBAL NETWORK CONTROL</div>
+      <div class="gn-dash-sub">10 / 10 nodes compromised — Full access achieved</div>
+      <div class="gn-dash-table-wrap">
+        <table class="gn-dash-table">
+          <thead><tr>
+            <th>CITY</th><th>IP ADDRESS</th><th>COORDINATES</th><th>ACCESS KEY</th><th>STATUS</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div class="gn-dash-footer">
+        <span>🎭 SIMULATION ONLY — No real systems accessed</span>
+      </div>
+    </div>
+  `;
+
+  dash.classList.remove("hidden");
+  addToast("🌐 All 10 nodes compromised — Dashboard unlocked", "success");
+}
+
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function addGnGlitch() {
+  const glitch = document.createElement("div");
+  glitch.className = "glitch-overlay";
+  glitch.style.cssText = `
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0;
+    background: rgba(255, 0, 0, 0.05);
+    mix-blend-mode: overlay;
+  `;
+  els.stage.appendChild(glitch);
+
+  // Simple glitch effect
+  const flicker = () => {
+    if (!state.running) return;
+    if (Math.random() > 0.97) {
+      glitch.style.opacity = Math.random() * 0.2;
+      glitch.style.transform = `translate(${Math.random() * 4 - 2}px, ${Math.random() * 4 - 2}px)`;
+      setTimeout(() => {
+        glitch.style.opacity = 0;
+        glitch.style.transform = "none";
+      }, 50);
+    }
+    requestAnimationFrame(flicker);
+  };
+  flicker();
+}
