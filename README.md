@@ -12,6 +12,22 @@ node server.js 3001
 
 Open `http://localhost:3001/`.
 
+On Windows you can also double-click `start-localhost.bat`.
+
+## Trace Video (Optional)
+
+This repo includes an optional, simulation-only "trace visualizer" video rendered with Remotion and shown during the corporate `TRACE` / `device-trace` steps.
+
+Render or re-render the asset:
+
+```powershell
+cd remotion
+npm install
+npm run render:trace
+```
+
+Output: `assets/videos/trace-sim.mp4`
+
 ## Donation
 
 Suggested donation: **$5 USD**.

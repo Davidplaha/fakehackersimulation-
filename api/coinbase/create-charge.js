@@ -23,7 +23,8 @@ async function readJson(req) {
 }
 
 function getBaseUrl(req) {
-  const proto = (req.headers["x-forwarded-proto"] || "https").split(",")[0].trim();
+  const inferred = req.socket && req.socket.encrypted ? "https" : "http";
+  const proto = (req.headers["x-forwarded-proto"] || inferred).split(",")[0].trim();
   const host = (req.headers["x-forwarded-host"] || req.headers.host || "").split(",")[0].trim();
   if (!host) return null;
   return `${proto}://${host}`;
@@ -105,4 +106,3 @@ module.exports = async (req, res) => {
     return sendJson(res, 500, { error: "Failed to create charge", message: String(err && err.message ? err.message : err) });
   }
 };
-

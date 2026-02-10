@@ -16,6 +16,10 @@ node_modules/
 # Local exports / backups
 backups/
 
+# Temp folders created by local tooling
+.tmp_*/
+.tmp_marketingskills_*/
+
 # Env files
 .env
 .env.*

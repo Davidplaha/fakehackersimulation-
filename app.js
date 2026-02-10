@@ -145,6 +145,7 @@ const state = {
   customTargetModel: 'DemoPhone X',
   customTargetCarrier: 'SecureNet Mobile',
   customTargetLocation: 'Unknown Location',
+  customTargetEmail: '',
 };
 
 let els = {};
@@ -409,7 +410,10 @@ function showPhoneScenarioOptions() {
 
 // Check if user has premium unlocked
 function isPremiumUnlocked() {
-  return localStorage.getItem(STORAGE_KEYS.premium) === 'unlocked';
+  const unlocked = localStorage.getItem(STORAGE_KEYS.premium) === 'unlocked';
+  const code = localStorage.getItem(STORAGE_KEYS.premiumChargeCode) || "";
+  // Require a verified charge code for premium. This prevents accidental "free" unlocks.
+  return unlocked && Boolean(code);
 }
 
 const DONATION_USD = 5;
@@ -515,10 +519,6 @@ async function handleDonationReturnFromCoinbase() {
 function unlockPremium(reason = "donation") {
   localStorage.setItem(STORAGE_KEYS.premium, 'unlocked');
   localStorage.setItem(STORAGE_KEYS.premiumUnlockedAt, String(Date.now()));
-  if (reason === "test") {
-    showToast("Test mode: Premium unlocked on this device.", "success");
-    return;
-  }
   showToast("Thanks for supporting SimDeck! Premium unlocked on this device.", "success");
 }
 
@@ -774,22 +774,6 @@ function showPaymentModal(opts = {}) {
         ${lastCode ? `Last charge code: <span style="font-family: var(--mono); color: var(--text);">${lastCode}</span>` : "No checkout started yet."}
       </div>
 
-      ${isLocal ? `
-        <button id="testDonation" class="btn ghost" style="
-          width: 100%;
-          padding: 12px;
-          margin-bottom: 10px;
-          border-color: rgba(255, 255, 255, 0.18);
-        ">Test Unlock (Localhost)</button>
-        <button id="resetPremium" class="btn ghost compact" style="
-          width: 100%;
-          padding: 10px;
-          margin-bottom: 10px;
-          border-color: rgba(255, 255, 255, 0.12);
-          color: var(--muted);
-        ">Reset Premium (Localhost)</button>
-      ` : ``}
-
       <p style="color: var(--muted); font-size: 11px; margin: 0;">
         Premium unlock happens only after Coinbase confirms the charge.
       </p>
@@ -852,21 +836,7 @@ function showPaymentModal(opts = {}) {
     }
   });
 
-  if (isLocal) {
-    document.getElementById("testDonation")?.addEventListener("click", () => {
-      unlockPremium("test");
-      modal.remove();
-      if (afterUnlock === "customize") showCustomizationForm();
-    });
-    document.getElementById("resetPremium")?.addEventListener("click", () => {
-      localStorage.removeItem(STORAGE_KEYS.premium);
-      localStorage.removeItem(STORAGE_KEYS.premiumUnlockedAt);
-      localStorage.removeItem(STORAGE_KEYS.lastChargeCode);
-      localStorage.removeItem(STORAGE_KEYS.premiumChargeCode);
-      showToast("Premium reset on this device.", "info");
-      modal.remove();
-    });
-  }
+  // Intentionally no "test unlock" in production. Premium requires Coinbase confirmation.
 
   modal.addEventListener("click", (e) => {
     if (e.target === modal) modal.remove();
@@ -875,6 +845,10 @@ function showPaymentModal(opts = {}) {
 
 // Customization Form (Premium Only)
 function showCustomizationForm() {
+  if (!isPremiumUnlocked()) {
+    showPaymentModal({ afterUnlock: "customize" });
+    return;
+  }
   els.scenarioGrid?.classList.add("hidden");
   els.stage.classList.add("active");
   els.stage.innerHTML = "";
@@ -923,6 +897,22 @@ function showCustomizationForm() {
           color: var(--text);
           font-family: var(--mono);
         ">
+      </div>
+    </div>
+
+    <div style="width: 100%; max-width: 500px;">
+      <label style="display: block; color: var(--text); margin-bottom: 5px; font-size: 14px;">Email (Optional)</label>
+      <input type="email" id="targetEmail" placeholder="john.smith@gmail.com" style="
+        width: 100%;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        font-family: var(--mono);
+      ">
+      <div style="color: var(--muted); font-size: 11px; margin-top: 6px;">
+        Used only inside the simulation UI.
       </div>
     </div>
 
@@ -995,6 +985,7 @@ function showCustomizationForm() {
   // Pre-fill with saved values
   document.getElementById('targetName').value = state.customTargetName || '';
   document.getElementById('targetPhoneNumber').value = state.customTargetNumber || '';
+  document.getElementById('targetEmail').value = state.customTargetEmail || '';
   document.getElementById('targetDeviceModel').value = state.customTargetModel || '';
   document.getElementById('targetCarrier').value = state.customTargetCarrier || '';
   document.getElementById('targetLocation').value = state.customTargetLocation || '';
@@ -1006,6 +997,7 @@ function showCustomizationForm() {
   document.getElementById('continueToScenarios').addEventListener('click', function () {
     state.customTargetName = document.getElementById('targetName').value || 'Target User';
     state.customTargetNumber = document.getElementById('targetPhoneNumber').value || '+1 (555) 123-4567';
+    state.customTargetEmail = document.getElementById('targetEmail').value || '';
     state.customTargetModel = document.getElementById('targetDeviceModel').value || 'iPhone 15 Pro';
     state.customTargetCarrier = document.getElementById('targetCarrier').value || 'Verizon';
     state.customTargetLocation = document.getElementById('targetLocation').value || 'New York, NY';
@@ -1020,6 +1012,7 @@ function showScenarioSelection() {
   // Ensure stage is visible
   els.scenarioGrid?.classList.add("hidden");
   els.stage.classList.add("active");
+  els.stage.classList.remove("stage-centered");
   els.stage.innerHTML = "";
   const optionsContainer = document.createElement("div");
   optionsContainer.className = "scenario-options";
@@ -1284,6 +1277,7 @@ function resetStage(keepWatermark = false) {
   // Hide stage and show scenario grid
   els.stage.innerHTML = "";
   els.stage.classList.remove("active");
+  els.stage.classList.remove("stage-centered");
   els.scenarioGrid?.classList.remove("hidden");
 
   if (state.motion) addGlitch();
@@ -1292,6 +1286,7 @@ function resetStage(keepWatermark = false) {
   // Restore nav panel on mobile
   document.querySelector('.nav-panel')?.classList.remove('mobile-hidden');
   document.querySelector('.category-sidebar')?.classList.remove('hidden');
+  document.body.classList.remove('sidebar-hidden');
 }
 
 function toggleWatermark(on) {
@@ -1436,6 +1431,7 @@ const scenarioRunners = {
 
 function runPhonePrankScenario() {
   clearStage();
+  els.stage.classList.add("stage-centered");
   const frame = buildPhonePrankFrame();
   els.stage.appendChild(frame);
   addGlitch();
@@ -1443,6 +1439,7 @@ function runPhonePrankScenario() {
 
 function runPhoneExfilScenario() {
   clearStage();
+  els.stage.classList.add("stage-centered");
   const frame = buildPhoneExfilFrame();
   els.stage.appendChild(frame);
   addGlitch();
@@ -1450,6 +1447,7 @@ function runPhoneExfilScenario() {
 
 function runPhoneScenario() {
   clearStage();
+  els.stage.classList.add("stage-centered");
   const frame = buildPhoneFrame();
   els.stage.appendChild(frame);
   addGlitch();
@@ -1457,6 +1455,7 @@ function runPhoneScenario() {
 
 function runPhoneMatrixScenario() {
   clearStage();
+  els.stage.classList.add("stage-centered");
   const frame = buildPhoneMatrixFrame();
   els.stage.appendChild(frame);
   addGlitch();
@@ -1464,13 +1463,16 @@ function runPhoneMatrixScenario() {
 
 function runPhoneCorporateScenario() {
   clearStage();
+  els.stage.classList.add("stage-centered");
   const frame = buildPhoneCorporateFrame();
   els.stage.appendChild(frame);
   addGlitch();
+  renderCustomizationPayNudge();
 }
 
 function runPhoneForensicScenario() {
   clearStage();
+  els.stage.classList.add("stage-centered");
   const frame = buildPhoneForensicFrame();
   els.stage.appendChild(frame);
   addGlitch();
@@ -1478,6 +1480,7 @@ function runPhoneForensicScenario() {
 
 function runPhoneTrackingScenario() {
   clearStage();
+  els.stage.classList.add("stage-centered");
   const frame = buildPhoneTrackingFrame();
   els.stage.appendChild(frame);
   addGlitch();
@@ -1486,10 +1489,70 @@ function runPhoneTrackingScenario() {
 
 function runPhoneTerminalScenario() {
   clearStage();
+  els.stage.classList.add("stage-centered");
   const frame = buildPhoneTerminalFrame();
   els.stage.appendChild(frame);
   addGlitch();
   startPhoneTerminalSimulation(frame);
+}
+
+function renderCustomizationPayNudge() {
+  if (!els.stage) return;
+
+  // Only show this upsell on Corporate SOC for now (user request).
+  if (state.scenario !== "phone_corporate") return;
+
+  // Customization is a paid feature of "Custom Target" mode.
+  // In Free Demo mode, don't show the customization UI at all.
+  if (!state.isPremiumMode) {
+    els.stage.querySelector(".pay-nudge")?.remove();
+    return;
+  }
+
+  els.stage.querySelector(".pay-nudge")?.remove();
+
+  const unlocked = isPremiumUnlocked();
+  // If previously unlocked without a charge code, treat as locked and clear the stale flag.
+  if (!unlocked && localStorage.getItem(STORAGE_KEYS.premium) === 'unlocked' && !(localStorage.getItem(STORAGE_KEYS.premiumChargeCode) || "")) {
+    localStorage.removeItem(STORAGE_KEYS.premium);
+    localStorage.removeItem(STORAGE_KEYS.premiumUnlockedAt);
+  }
+  const nudge = document.createElement("div");
+  nudge.className = "pay-nudge";
+  nudge.dataset.state = unlocked ? "unlocked" : "locked";
+
+  const price = Number.isFinite(DONATION_USD) ? DONATION_USD : 5;
+
+  nudge.innerHTML = `
+    <button class="pay-nudge-close" type="button" aria-label="Close">×</button>
+    <div class="pay-nudge-title">${unlocked ? "Customize Target" : `Unlock Custom Target ($${price})`}</div>
+    <div class="pay-nudge-sub">
+      ${unlocked
+        ? "Set friend name, phone, and email for this simulation."
+        : "Pay $5 to set friend name, phone, and email for this simulation."}
+    </div>
+    <div class="pay-nudge-actions">
+      <button class="btn ${unlocked ? "primary" : ""}" data-action="customize" type="button">
+        ${unlocked ? "Edit Details" : `Pay $${price} to Customize`}
+      </button>
+      <button class="btn ghost compact" data-action="learn" type="button">Why?</button>
+    </div>
+    <div class="pay-nudge-foot">Simulation only. No real hacking or tracking.</div>
+  `;
+
+  nudge.querySelector(".pay-nudge-close")?.addEventListener("click", () => nudge.remove());
+  nudge.querySelector('[data-action="customize"]')?.addEventListener("click", () => {
+    if (isPremiumUnlocked()) {
+      showCustomizationForm();
+    } else {
+      showPaymentModal({ afterUnlock: "customize" });
+    }
+  });
+  nudge.querySelector('[data-action="learn"]')?.addEventListener("click", () => {
+    showToast("Premium unlock lets you customize the simulation target on this device.", "info");
+  });
+
+  els.stage.appendChild(nudge);
 }
 
 // ---------- Email Hacking Scenario ----------
@@ -2862,35 +2925,89 @@ function phoneAction(phase) {
   const statusEl = frame.querySelector(".phone-status");
   const progress = frame.querySelector(".progress-fill");
   const stageTxt = frame.querySelector(".progress-stage");
+  const mfsStage = frame.querySelector("#mfsStage");
+  const mfsBar = frame.querySelector("#mfsBarFill");
+  const mfsPct = frame.querySelector("#mfsPct");
+  const mfsStatus = frame.querySelector("#mfsStatus");
+  const mfsTerm = frame.querySelector("#mfsTerminal");
+  const mfsAlert = frame.querySelector("#mfsAlert");
 
   switch (phase.action) {
     case "text":
-      // Re-use notification drop for status updates
-      const notif = frame.querySelector(".notification-drop");
-      if (notif) {
-        notif.querySelector(".notif-content div:last-child").textContent = phase.payload;
-        notif.classList.add("visible");
-        setTimeout(() => notif.classList.remove("visible"), 3000);
+      if (mfsAlert) {
+        mfsAlert.querySelector(".d").textContent = String(phase.payload || "");
+        mfsAlert.classList.add("visible");
+        setTimeout(() => mfsAlert.classList.remove("visible"), 2600);
+      } else {
+        // Re-use notification drop for status updates
+        const notif = frame.querySelector(".notification-drop");
+        if (notif) {
+          notif.querySelector(".notif-content div:last-child").textContent = phase.payload;
+          notif.classList.add("visible");
+          setTimeout(() => notif.classList.remove("visible"), 3000);
+        }
+      }
+
+      if (mfsTerm) {
+        const line = document.createElement("div");
+        line.className = "line";
+        line.innerHTML = `<span class="g">[info]</span> ${String(phase.payload || "")}`;
+        mfsTerm.appendChild(line);
+        mfsTerm.scrollTop = mfsTerm.scrollHeight;
       }
       break;
     case "stage":
-      // Show major stage in hack overlay if visible, or toast
-      const hackOverlay = frame.querySelector(".hack-overlay");
-      if (hackOverlay.classList.contains("visible")) {
-        hackOverlay.querySelector(".hack-title").textContent = phase.payload;
+      if (mfsStage) {
+        mfsStage.textContent = String(phase.payload || "");
+        if (mfsStatus) mfsStatus.textContent = "Running";
+
+        // Basic scan script ends at t=12s; use it as the meter baseline.
+        const pct = Math.max(0, Math.min(100, Math.round((Number(phase.t || 0) / 12) * 100)));
+        if (mfsPct) mfsPct.textContent = String(pct);
+        if (mfsBar) mfsBar.style.width = `${pct}%`;
+
+        if (mfsTerm) {
+          const line = document.createElement("div");
+          line.className = "line";
+          line.innerHTML = `<span class="y">[step]</span> ${String(phase.payload || "").toLowerCase()}…`;
+          mfsTerm.appendChild(line);
+          mfsTerm.scrollTop = mfsTerm.scrollHeight;
+        }
       } else {
-        addToastBanner(phase.payload, "info");
+        // Show major stage in hack overlay if visible, or toast
+        const hackOverlay = frame.querySelector(".hack-overlay");
+        if (hackOverlay.classList.contains("visible")) {
+          hackOverlay.querySelector(".hack-title").textContent = phase.payload;
+        } else {
+          addToastBanner(phase.payload, "info");
+        }
       }
       break;
     case "counts":
-      // Update file count in hack overlay
+      // Update file count in hack overlay (keep for backwards-compat).
+      const total = (phase.payload?.photos || 0) + (phase.payload?.messages || 0) + (phase.payload?.contacts || 0);
       const counter = frame.querySelector("#hackFileCount");
-      if (counter) counter.textContent = phase.payload.photos + phase.payload.messages;
+      if (counter) counter.textContent = String(total);
+
+      // Update Basic Scan counters if present.
+      frame.querySelector("#countPhotos")?.replaceChildren(document.createTextNode(String(phase.payload?.photos ?? 0)));
+      frame.querySelector("#countMessages")?.replaceChildren(document.createTextNode(String(phase.payload?.messages ?? 0)));
+      frame.querySelector("#countContacts")?.replaceChildren(document.createTextNode(String(phase.payload?.contacts ?? 0)));
       break;
     case "complete":
-      frame.querySelector(".hack-overlay").classList.add("visible");
-      frame.querySelector(".hack-title").textContent = "DEVICE HACKED";
-      showToast("Phone session complete (simulated).", "info");
+      frame.querySelector(".hack-overlay")?.classList.add("visible");
+      frame.querySelector(".hack-title").textContent = "SCAN COMPLETE";
+      if (mfsStatus) mfsStatus.textContent = "Complete";
+      if (mfsPct) mfsPct.textContent = "100";
+      if (mfsBar) mfsBar.style.width = "100%";
+      if (mfsTerm) {
+        const line = document.createElement("div");
+        line.className = "line";
+        line.innerHTML = `<span class="g">[done]</span> session complete (simulated)`;
+        mfsTerm.appendChild(line);
+        mfsTerm.scrollTop = mfsTerm.scrollHeight;
+      }
+      showToast("Basic scan complete (simulated).", "info");
       break;
     case "init-matrix":
       if (statusEl) statusEl.textContent = "MATRIX INIT...";
@@ -2925,6 +3042,8 @@ function phoneAction(phase) {
     case "device-trace":
       if (stageTxt) stageTxt.textContent = "TRACING TARGET DEVICE...";
       if (progress) animateProgress(progress, 45);
+      // Optional: show a cinematic trace visualization video (simulation-only asset).
+      openTraceVideoWindow();
       break;
     case "vulnerability-scan":
       if (stageTxt) stageTxt.textContent = "SCANNING FOR VULNERABILITIES...";
@@ -3001,6 +3120,49 @@ function phoneAction(phase) {
       break;
     default: break;
   }
+}
+
+const TRACE_VIDEO_SRC_MP4 = "assets/videos/trace-sim.mp4";
+
+function openTraceVideoWindow() {
+  if (!els.stage) return;
+  if (els.stage.querySelector(".trace-video-window")) return;
+
+  const win = createWindow("Trace Visualizer (Simulated)", { x: 180, y: 120, w: 560, h: 360 });
+  win.classList.add("trace-video-window");
+
+  const body = win.querySelector(".window-body");
+  body.style.padding = "0";
+  body.style.background = "#000";
+
+  const wrap = document.createElement("div");
+  wrap.className = "trace-video-wrap";
+  wrap.innerHTML = `
+    <video class="trace-video" muted playsinline autoplay loop preload="auto">
+      <source src="${TRACE_VIDEO_SRC_MP4}" type="video/mp4">
+    </video>
+    <div class="trace-video-overlay">
+      <div class="trace-video-pill">SIMULATION ONLY</div>
+      <div class="trace-video-sub">No real tracking. Visual demo asset.</div>
+    </div>
+    <div class="trace-video-missing">
+      <div class="trace-video-pill danger">VIDEO NOT FOUND</div>
+      <div class="trace-video-sub">Render it via: <span class="mono">cd remotion; npm i; npm run render:trace</span></div>
+    </div>
+  `;
+
+  body.appendChild(wrap);
+  els.stage.appendChild(win);
+
+  const vid = wrap.querySelector("video");
+  const markMissing = () => wrap.classList.add("missing");
+  const markOk = () => wrap.classList.remove("missing");
+
+  vid.addEventListener("error", markMissing);
+  vid.addEventListener("loadeddata", markOk);
+  // If autoplay is blocked for any reason, keep it muted and retry play.
+  const p = vid.play();
+  if (p && typeof p.catch === "function") p.catch(() => { /* ignore */ });
 }
 
 function emailAction(phase) {
@@ -3138,125 +3300,237 @@ function clearStage() {
   // Hide scenario grid and show stage
   els.scenarioGrid?.classList.add("hidden");
   els.stage.classList.add("active");
+  els.stage.classList.remove("stage-centered");
   els.stage.innerHTML = "";
   addGlitch();
 
   // Hide nav-panel on mobile during simulation
   document.querySelector('.nav-panel')?.classList.add('mobile-hidden');
   document.querySelector('.category-sidebar')?.classList.add('hidden');
+  // When the sidebar is hidden, ensure the stage uses the full grid width.
+  document.body.classList.add('sidebar-hidden');
 }
 
 function buildPhoneFrame() {
   const frame = document.createElement("div");
   frame.className = "mobile-frame";
 
-  const carrier = state.customTargetCarrier || 'Demo LTE';
+  const deviceLabel = state.customTargetModel || "DemoPhone X";
+  const carrier = state.customTargetCarrier || "Demo LTE";
+  const location = state.customTargetLocation || "Unknown";
 
   frame.innerHTML = `
     <div class="mobile-notch"></div>
-    <div class="mobile-screen">
-      <!-- Status Bar -->
-      <div class="status-bar">
-        <span>09:41</span>
-        <div style="display: flex; gap: 6px;">
-          <span>${carrier}</span>
-          <span>WiFi</span>
-          <span>100%</span>
+    <div class="mobile-screen mfs-screen">
+      <div class="mfs-topbar">
+        <div class="mfs-brand">
+          <div class="mfs-badge">SD</div>
+          <div>
+            <div class="mfs-title">Mobile Forensics Suite</div>
+            <div class="mfs-sub">SIMULATION ONLY</div>
+          </div>
+        </div>
+        <div class="mfs-meta">
+          <div class="mfs-pill">${carrier}</div>
+          <div class="mfs-pill">Secure Link</div>
         </div>
       </div>
 
-      <!-- App Grid -->
-      <div class="app-grid">
-        <div class="app-icon"><div class="app-shape app-photos">📷</div><span class="app-name">Photos</span></div>
-        <div class="app-icon"><div class="app-shape app-mail">✉️</div><span class="app-name">Mail</span></div>
-        <div class="app-icon"><div class="app-shape app-maps">📍</div><span class="app-name">Maps</span></div>
-        <div class="app-icon"><div class="app-shape app-bank">🏦</div><span class="app-name">Bank</span></div>
-        <div class="app-icon"><div class="app-shape app-camera">📸</div><span class="app-name">Camera</span></div>
-        <div class="app-icon"><div class="app-shape app-settings">⚙️</div><span class="app-name">Settings</span></div>
-      </div>
+      <div class="mfs-body">
+        <div class="mfs-card mfs-device">
+          <div class="mfs-card-head">
+            <div class="mfs-kicker">Target Device</div>
+            <div class="mfs-status"><span class="dot"></span><span id="mfsStatus">Ready</span></div>
+          </div>
+          <div class="mfs-device-grid">
+            <div class="mfs-field">
+              <div class="k">Model</div>
+              <div class="v">${deviceLabel}</div>
+            </div>
+            <div class="mfs-field">
+              <div class="k">Number</div>
+              <div class="v mono">${state.customTargetNumber || "+1 (555) 123-4567"}</div>
+            </div>
+            <div class="mfs-field">
+              <div class="k">Location</div>
+              <div class="v">${location}</div>
+            </div>
+            <div class="mfs-field">
+              <div class="k">Integrity</div>
+              <div class="v ok">SIMULATED</div>
+            </div>
+          </div>
+        </div>
 
-      <!-- Dock -->
-      <div class="mobile-dock">
-        <div class="app-icon"><div class="app-shape" style="background:#4cd964">📞</div></div>
-        <div class="app-icon"><div class="app-shape" style="background:#007aff">🌐</div></div>
-        <div class="app-icon"><div class="app-shape" style="background:#5ac8fa">💬</div></div>
-        <div class="app-icon"><div class="app-shape" style="background:#ff2d55">🎵</div></div>
-      </div>
+        <div class="mfs-card mfs-progress">
+          <div class="mfs-card-head">
+            <div class="mfs-kicker">Scan Pipeline</div>
+            <div class="mfs-percent"><span id="mfsPct">0</span>%</div>
+          </div>
+          <div class="mfs-bar">
+            <div class="mfs-bar-fill" id="mfsBarFill" style="width:0%"></div>
+          </div>
+          <div class="mfs-stage" id="mfsStage">Awaiting start…</div>
+          <div class="mfs-mini">
+            <div class="mfs-mini-item"><span class="k">Photos</span><span class="v" id="countPhotos">0</span></div>
+            <div class="mfs-mini-item"><span class="k">Messages</span><span class="v" id="countMessages">0</span></div>
+            <div class="mfs-mini-item"><span class="k">Contacts</span><span class="v" id="countContacts">0</span></div>
+          </div>
+        </div>
 
-      <!-- Overlays -->
-      <div class="notification-drop">
-        <div class="notif-icon">!</div>
-        <div class="notif-content">
-          <div>System Security</div>
-          <div>Unusual activity detected.</div>
+        <div class="mfs-card mfs-log">
+          <div class="mfs-card-head">
+            <div class="mfs-kicker">Telemetry Log</div>
+            <div class="mfs-hint">Visual demo only</div>
+          </div>
+          <div class="mfs-terminal" id="mfsTerminal">
+            <div class="line"><span class="g">[init]</span> loaded modules: ui, telemetry, sanitizer</div>
+            <div class="line"><span class="g">[note]</span> no real data is accessed</div>
+            <div class="line"><span class="g">[ready]</span> waiting for pipeline events…</div>
+          </div>
         </div>
       </div>
 
-      <div class="hack-overlay">
+      <div class="mfs-alert" id="mfsAlert" aria-live="polite" aria-atomic="true">
+        <div class="ico">!</div>
+        <div class="txt">
+          <div class="t">Simulation Notice</div>
+          <div class="d">All output is fictional and randomized.</div>
+        </div>
+      </div>
+
+      <div class="hack-overlay mfs-complete" id="mfsComplete">
         <div class="hack-spinner"></div>
-        <div class="hack-title">SYSTEM COMPROMISED</div>
-        <div style="font-family: monospace; color: white;">
-          <div>Root access: GRANTED</div>
-          <div>Files Exfiltrated: <span id="hackFileCount">0</span></div>
+        <div class="hack-title">SCAN COMPLETE</div>
+        <div class="mfs-complete-body">
+          <div class="row"><span class="k">Result</span><span class="v ok">No data collected</span></div>
+          <div class="row"><span class="k">Reason</span><span class="v">Simulation mode</span></div>
+          <div class="row"><span class="k">Total Items</span><span class="v mono"><span id="hackFileCount">0</span></span></div>
         </div>
       </div>
     </div>
   `;
-
-  // Make apps interactive (fake)
-  frame.querySelectorAll(".app-icon").forEach(icon => {
-    icon.addEventListener("click", () => {
-      addToastBanner("App locked by administrator (simulated).", "warning");
-    });
-  });
 
   return frame;
 }
 
 function buildPhoneMatrixFrame() {
   const frame = document.createElement("div");
-  frame.className = "mobile-frame";
+  frame.className = "mobile-frame mx-frame";
   frame.innerHTML = `
     <div class="mobile-top">
-      <span>MATRIX-HACK</span>
-      <span class="phone-status">TARGETING...</span>
+      <span class="mx-top-left">MATRIX // OPS</span>
+      <span class="phone-status mx-top-status">TARGETING...</span>
     </div>
     <div class="mobile-body">
-      <div class="terminal" style="height: 140px; margin-bottom: 10px;" id="matrix-terminal">
-        <div>> INITIATING SEQUENCE...</div>
-        <div>> TARGET: ${state.customTargetNumber || '[CUSTOM PHONE NUMBER]'}</div>
-        <div>> SCANNING NETWORK...</div>
+      <div class="mx-backdrop" aria-hidden="true"></div>
+
+      <div class="mx-hud">
+        <div class="mx-hud-left">
+          <div class="mx-chip">TARGET</div>
+          <div class="mx-target mono">${state.customTargetNumber || '[CUSTOM PHONE NUMBER]'}</div>
+          <div class="mx-sub mono">uplink: relay-04.sim | route: stable</div>
+        </div>
+        <div class="mx-hud-right">
+          <div class="mx-chip danger">SIMULATION</div>
+          <div class="mx-metrics mono">
+            <div><span class="k">SIG</span> <span class="v">-68dBm</span></div>
+            <div><span class="k">LAT</span> <span class="v">14ms</span></div>
+            <div><span class="k">JIT</span> <span class="v">2ms</span></div>
+          </div>
+        </div>
       </div>
-      <div class="progress" style="margin-bottom: 10px;">
+
+      <div class="mx-shell">
+        <div class="mx-terminal" id="matrix-terminal" role="log" aria-label="Simulation terminal">
+          <div class="line"><span class="g">[boot]</span> injecting demo kernel…</div>
+          <div class="line"><span class="g">[link]</span> target discovered: <span class="w mono">${state.customTargetNumber || 'UNKNOWN'}</span></div>
+          <div class="line"><span class="y">[scan]</span> enumerating surface…</div>
+          <div class="line"><span class="dim">press</span> <span class="key">DEEP SCAN</span> <span class="dim">to accelerate</span><span class="cursor" aria-hidden="true"></span></div>
+        </div>
+
+        <div class="mx-side">
+          <div class="mx-panel">
+            <div class="mx-panel-title mono">MODULES</div>
+            <div class="mx-list mono">
+              <div><span class="dot ok"></span> netmap</div>
+              <div><span class="dot ok"></span> handshake</div>
+              <div><span class="dot warn"></span> sandbox</div>
+              <div><span class="dot dim"></span> exfil</div>
+            </div>
+          </div>
+          <div class="mx-panel">
+            <div class="mx-panel-title mono">STATUS</div>
+            <div class="mx-big mono" id="mxBigStatus">LOCKED</div>
+            <div class="mx-tiny mono">policy: demo-safe | scope: visual</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress mx-progress" style="margin-top: 10px;">
         <div class="progress-bar"><div class="progress-fill"></div></div>
         <div class="progress-stage">Initializing...</div>
       </div>
-      <div class="status-grid" style="margin-top:10px;">
-        <div class="status-card"><div class="label">Signal</div><div class="value">TRACE-BYPASS</div></div>
-        <div class="status-card"><div class="label">OS</div><div class="value">LOCKED</div></div>
-        <div class="status-card"><div class="label">Security</div><div class="value">BYPASSED</div></div>
-        <div class="status-card"><div class="label">Access</div><div class="value">GRANTED</div></div>
+
+      <div class="mx-actions">
+        <button class="mobile-btn mx-btn" data-action="matrix-scan">DEEP SCAN</button>
+        <button class="mobile-btn mx-btn" data-action="matrix-access">GAIN ACCESS</button>
       </div>
-      <div class="small-label" style="margin-top:10px;">EXPLOITS DEPLOYED</div>
-      <div class="phone-counts">Data: Accessing... Files: Breaching...</div>
-      <button class="mobile-btn" data-action="matrix-scan">DEEP SCAN</button>
-      <button class="mobile-btn" data-action="matrix-access">GAIN ACCESS</button>
-      <div class="small-label" style="margin-top:8px;">SIMULATION ONLY. NO REAL DATA ACCESSED.</div>
+
+      <div class="mx-foot mono">NO REAL DATA. NO REAL ACCESS. CINEMATIC SIMULATION.</div>
     </div>
   `;
 
-  // Add matrix-style animation to the terminal
-  const terminal = frame.querySelector("#matrix-terminal");
-  let chars = "01";
-  let lines = [];
-  for (let i = 0; i < 5; i++) {
-    let line = "";
-    for (let j = 0; j < 40; j++) {
-      line += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    lines.push(`<div class="matrix-line">${line}</div>`);
+  // Add a cinematic matrix rain layer (lightweight, DOM-based).
+  // This is not security tooling; it's pure visual effect.
+  const rain = document.createElement("div");
+  rain.className = "mx-rain";
+  const cols = 18;
+  for (let i = 0; i < cols; i++) {
+    const col = document.createElement("div");
+    col.className = "mx-col";
+    col.style.setProperty("--mx-x", String(i));
+    col.style.setProperty("--mx-speed", String(6 + (i % 6)));
+    col.style.setProperty("--mx-delay", String((i % 9) * -0.6));
+    const stream = document.createElement("div");
+    stream.className = "mx-stream";
+    stream.textContent = "010101010101010101010101010101010101010101010101";
+    col.appendChild(stream);
+    rain.appendChild(col);
   }
-  terminal.innerHTML += lines.join("");
+  frame.querySelector(".mobile-body")?.appendChild(rain);
+
+  const terminal = frame.querySelector("#matrix-terminal");
+  const big = frame.querySelector("#mxBigStatus");
+  const pushLine = (tone, msg) => {
+    if (!terminal) return;
+    const line = document.createElement("div");
+    line.className = "line";
+    line.innerHTML = `<span class="${tone}">[${tone}]</span> ${msg}`;
+    terminal.appendChild(line);
+    terminal.scrollTop = terminal.scrollHeight;
+  };
+
+  // Tick the rain text occasionally so it doesn't look like a static wallpaper.
+  const glyphs = "01▮▯░▒▓/\\<>[]{}@#*+";
+  const tick = () => {
+    if (!state.running) return;
+    rain.querySelectorAll(".mx-stream").forEach((el, idx) => {
+      let s = "";
+      const len = 42;
+      for (let k = 0; k < len; k++) {
+        const ch = glyphs.charAt(Math.floor(Math.random() * glyphs.length));
+        s += ch;
+      }
+      el.textContent = s;
+      if (idx % 7 === 0 && terminal) {
+        // Tiny ambient log noise.
+        if (Math.random() < 0.16) pushLine("dim", `telemetry tick ${Math.floor(Math.random() * 9999)}`);
+      }
+    });
+    setTimeout(tick, 220);
+  };
+  setTimeout(tick, 220);
 
   frame.querySelector(".mobile-body").addEventListener("click", (e) => {
     if (!(e.target instanceof HTMLElement)) return;
@@ -3267,13 +3541,21 @@ function buildPhoneMatrixFrame() {
     if (action === "matrix-scan") {
       stageTxt.textContent = "DEEP SCANNING...";
       animateProgress(fill, 30);
+      pushLine("y", "deep scan engaged…");
       setTimeout(() => { stageTxt.textContent = "BYPASSING SECURITY..."; animateProgress(fill, 60); }, 1000 / state.speed);
       setTimeout(() => { stageTxt.textContent = "ACCESSING DATA..."; animateProgress(fill, 85); }, 2000 / state.speed);
-      setTimeout(() => { stageTxt.textContent = "COMPLETE - TARGET COMPROMISED"; animateProgress(fill, 100); }, 3000 / state.speed);
+      setTimeout(() => {
+        stageTxt.textContent = "COMPLETE - TARGET COMPROMISED";
+        animateProgress(fill, 100);
+        if (big) big.textContent = "BREACHED";
+        pushLine("g", "access window opened (simulated).");
+      }, 3000 / state.speed);
     }
 
     if (action === "matrix-access") {
       addToastBanner("ACCESS GRANTED TO TARGET DEVICE!", "success");
+      pushLine("g", "root privileges: granted (simulated).");
+      if (big) big.textContent = "GRANTED";
       // Add more matrix-style effects
       const matrixEffect = document.createElement("div");
       matrixEffect.className = "matrix-effect";
@@ -3350,7 +3632,8 @@ function buildPhoneCorporateFrame() {
       animateProgress(fill, 40);
       setTimeout(() => {
         stageTxt.textContent = "LOCATION PINPOINTED";
-        addToastBanner("Target located at: Fictional Address 123", "info");
+        openTraceVideoWindow();
+        addToastBanner("Trace visualizer opened (SIMULATED)", "info");
       }, 1500 / state.speed);
     }
 
@@ -4588,9 +4871,10 @@ function buildEmailHijackUI() {
     position: relative;
   `;
 
-  const targetEmail = state.customTargetName ?
-    `${state.customTargetName.toLowerCase().replace(/\s+/g, '.')}@gmail.com` :
-    "target.user@gmail.com";
+  const targetEmail = state.customTargetEmail ||
+    (state.customTargetName
+      ? `${state.customTargetName.toLowerCase().replace(/\s+/g, '.')}@gmail.com`
+      : "target.user@gmail.com");
 
   frame.innerHTML = `
     <!-- Browser Bar -->
@@ -4977,13 +5261,62 @@ function runPasswordDump(log, credLog) {
 
 function buildFBILock() {
   const wrap = document.createElement("div");
-  wrap.className = "overlay";
+  wrap.className = "overlay fbi-lock";
+
+  const target = state.customTargetName || "Device Owner";
+  const caseId = `FD-${Math.floor(Math.random() * 900000 + 100000)}`;
+  const ref = `${Math.floor(Math.random() * 9000 + 1000)}-${Math.floor(Math.random() * 9000 + 1000)}-${Math.floor(Math.random() * 9000 + 1000)}`;
   wrap.innerHTML = `
-    <div class="overlay-card">
-      <div class="title">SIMULATION -- DEVICE LOCK SCREEN (FAKE)</div>
-      <div class="countdown" id="fbiCountdown">01:30</div>
-      <button class="btn primary" id="unlockBtn">Unlock</button>
-      <button class="btn ghost" id="backHomeBtn">Back to Home</button>
+    <div class="fbi-card" role="dialog" aria-modal="true" aria-label="Lock screen simulation">
+      <div class="fbi-top">
+        <div class="fbi-seal" aria-hidden="true">
+          <div class="fbi-seal-inner">FBI</div>
+        </div>
+        <div class="fbi-top-text">
+          <div class="fbi-agency">Federal Bureau of Investigation</div>
+          <div class="fbi-division">Cyber Division, Digital Enforcement Unit</div>
+        </div>
+      </div>
+
+      <div class="fbi-banner">
+        <div class="fbi-banner-title">DEVICE ACCESS TEMPORARILY RESTRICTED</div>
+        <div class="fbi-banner-sub">SIMULATION ONLY. No real lock is occurring.</div>
+      </div>
+
+      <div class="fbi-grid">
+        <div class="fbi-panel">
+          <div class="fbi-label">Subject</div>
+          <div class="fbi-value">${target}</div>
+          <div class="fbi-label" style="margin-top: 10px;">Reference</div>
+          <div class="fbi-value mono">${ref}</div>
+          <div class="fbi-label" style="margin-top: 10px;">Case ID</div>
+          <div class="fbi-value mono">${caseId}</div>
+        </div>
+
+        <div class="fbi-panel">
+          <div class="fbi-label">Compliance Window</div>
+          <div class="fbi-timer" aria-label="Countdown timer">
+            <div class="fbi-timer-ring" aria-hidden="true"></div>
+            <div class="fbi-timer-text">
+              <div class="fbi-timer-k">Time Remaining</div>
+              <div class="fbi-countdown" id="fbiCountdown">01:30</div>
+            </div>
+          </div>
+          <div class="fbi-fine">
+            This is a visual demo screen. No real enforcement action. No data is accessed.
+          </div>
+        </div>
+      </div>
+
+      <div class="fbi-actions">
+        <button class="btn primary" id="unlockBtn">Acknowledge</button>
+        <button class="btn ghost" id="backHomeBtn">Exit Simulation</button>
+      </div>
+
+      <div class="fbi-footer">
+        <div class="mono">Simulation / Fake</div>
+        <div class="mono">Quick exit: ESC or Tap 5x</div>
+      </div>
     </div>
   `;
   wrap.querySelector("#unlockBtn").addEventListener("click", () => {
