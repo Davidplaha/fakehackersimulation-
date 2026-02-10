@@ -422,7 +422,13 @@ function selectScenario(id) {
     runEmailScenario();
   } else if (scenarioRunners[id]) {
     console.log("Running scenario:", id);
+    // Properly transition to stage view
+    els.scenarioGrid?.classList.add("hidden");
+    els.stage.classList.add("active");
+    state.running = true;
     scenarioRunners[id]();
+    // Fire the script timeline so animations play
+    if (state.auto && scripts[id]) runScript(scripts[id]);
   } else {
     console.log("No handler found for scenario:", id);
   }
@@ -3152,6 +3158,7 @@ function phoneAction(phase) {
 }
 
 const TRACE_VIDEO_SRC_MP4 = "assets/videos/trace-sim.mp4";
+const CRITICAL_VIDEO_SRC_MP4 = "assets/videos/critical-download.mp4";
 
 function openTraceVideoWindow() {
   if (!els.stage) return;
@@ -5654,53 +5661,39 @@ function runCriticalScenario() {
   clearStage();
 
   const container = document.createElement("div");
-  container.className = "sim-critical-data";
-  const segCount = 44;
+  container.className = "sim-critical-video";
   container.innerHTML = `
-    <div class="crit-map" aria-hidden="true">
-      <div class="crit-map-land"></div>
-      <div class="crit-map-grid"></div>
-      <div class="crit-map-noise"></div>
-    </div>
+    <div class="critical-video-wrap" role="status" aria-live="polite" aria-label="Critical data download simulation video (visual only)">
+      <video class="critical-video" muted playsinline autoplay loop preload="auto">
+        <source src="${CRITICAL_VIDEO_SRC_MP4}" type="video/mp4">
+      </video>
 
-    <div class="crit-box" role="status" aria-live="polite" aria-label="Critical data download simulation">
-      <div class="crit-output mono" aria-hidden="true"></div>
-
-      <div class="crit-title">Downloading...</div>
-      <div class="crit-sub">Critical Data</div>
-
-      <div class="crit-bar-wrap" aria-label="Transfer progress">
-        <div class="crit-bar-head mono" aria-hidden="true">
-          <span class="crit-bar-k">TRANSFER</span>
-          <span class="crit-bar-v" id="critPct">0%</span>
-        </div>
-        <div class="crit-bar" id="criticalProgressBar" role="progressbar" aria-label="Progress bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-          <!-- segments injected by JS -->
-        </div>
+      <div class="critical-video-overlay">
+        <div class="critical-video-pill">SIMULATION ONLY</div>
+        <div class="critical-video-sub">Visual demo. No real data transfer.</div>
       </div>
 
-      <div class="crit-stats mono" aria-hidden="true">
-        <div>PACKETS <span id="critPackets">0</span></div>
-        <div>RATE <span id="critRate">0.0</span> TB/s</div>
-        <div>NODE <span id="critNode">EU-WEST</span></div>
+      <div class="critical-video-missing">
+        <div class="critical-video-pill danger">VIDEO NOT FOUND</div>
+        <div class="critical-video-sub">Render it via: <span class="mono">cd remotion; npm i; npm run render:critical</span></div>
       </div>
     </div>
   `;
 
   els.stage.appendChild(container);
 
-  // Build segments
-  const bar = container.querySelector("#criticalProgressBar");
-  bar.dataset.pct = "0";
-  for (let i = 0; i < segCount; i++) {
-    const seg = document.createElement("div");
-    seg.className = "progress-segment";
-    bar.appendChild(seg);
-  }
+  const wrap = container.querySelector(".critical-video-wrap");
+  const vid = wrap.querySelector("video");
+  const markMissing = () => wrap.classList.add("missing");
+  const markOk = () => wrap.classList.remove("missing");
+  vid.addEventListener("error", markMissing);
+  vid.addEventListener("loadeddata", markOk);
+  const p = vid.play();
+  if (p && typeof p.catch === "function") p.catch(() => { /* ignore */ });
 }
 
 function criticalAction(phase) {
-  const container = document.querySelector(".sim-critical-data");
+  const container = document.querySelector(".sim-critical-data, .sim-critical-video");
   if (!container) return;
 
   if (phase.action === "critical-init") {
@@ -5709,6 +5702,7 @@ function criticalAction(phase) {
   } else if (phase.action === "critical-progress") {
     const pct = Number(phase.payload || 0);
     const bar = container.querySelector("#criticalProgressBar");
+    // Video-mode scenario doesn't need JS-driven segments.
     if (!bar) return;
 
     const fromPct = Number(bar.dataset.pct || "0");
@@ -5793,7 +5787,7 @@ const GN_CITIES = [
 ];
 
 function runGlobalNetScenario() {
-  clearStage();
+  els.stage.innerHTML = "";
 
   const container = document.createElement("div");
   container.className = "gn-container";

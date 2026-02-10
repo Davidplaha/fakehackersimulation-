@@ -5,6 +5,9 @@
   "description": "Remotion project for SimDeck trace (simulation-only) video assets.",
   "scripts": {
     "studio": "remotion studio",
+    "render:critical:mp4": "remotion render CriticalDownload ../assets/videos/critical-download.mp4 --codec h264 --overwrite",
+    "render:critical:webm": "remotion render CriticalDownload ../assets/videos/critical-download.webm --codec vp8 --overwrite",
+    "render:critical": "npm run render:critical:mp4",
     "render:trace:mp4": "remotion render TraceSim ../assets/videos/trace-sim.mp4 --codec h264 --overwrite",
     "render:trace:webm": "remotion render TraceSim ../assets/videos/trace-sim.webm --codec vp8 --overwrite",
     "render:trace": "npm run render:trace:mp4"
@@ -21,4 +24,3 @@
     "typescript": "^5.0.0"
   }
 }
-
