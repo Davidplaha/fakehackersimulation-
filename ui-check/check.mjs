@@ -119,6 +119,15 @@ const shots = async () => {
   await page.waitForTimeout(1400);
   await page.screenshot({path: path.join(outDir, '10-critical-data.png'), fullPage: true});
 
+  // Back to home and open Global Network.
+  await page.goto(baseURL, {waitUntil: 'networkidle'});
+  await page.waitForTimeout(350);
+  const globalnetCard = page.locator('[data-id="globalnet"]').first();
+  await globalnetCard.scrollIntoViewIfNeeded();
+  await globalnetCard.click({timeout: 10_000});
+  await page.waitForTimeout(1400);
+  await page.screenshot({path: path.join(outDir, '11-global-network.png'), fullPage: true});
+
   // Try to open trace visualizer (button inside the phone frame).
   const traceBtn = page.locator('.mobile-frame [data-action="trace"]').first();
   if (await traceBtn.count()) {

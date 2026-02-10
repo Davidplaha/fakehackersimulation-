@@ -3159,6 +3159,7 @@ function phoneAction(phase) {
 
 const TRACE_VIDEO_SRC_MP4 = "assets/videos/trace-sim.mp4";
 const CRITICAL_VIDEO_SRC_MP4 = "assets/videos/critical-download.mp4";
+const GLOBALNET_VIDEO_SRC_MP4 = "assets/videos/global-network.mp4";
 
 function openTraceVideoWindow() {
   if (!els.stage) return;
@@ -5787,91 +5788,38 @@ const GN_CITIES = [
 ];
 
 function runGlobalNetScenario() {
-  els.stage.innerHTML = "";
+  clearStage();
 
   const container = document.createElement("div");
-  container.className = "gn-container";
-
+  container.className = "sim-globalnet-video";
   container.innerHTML = `
-    <svg class="gn-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <defs>
-        <filter id="gnGlow">
-          <feGaussianBlur stdDeviation="0.4" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <radialGradient id="gnPulse" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="rgba(255,60,60,0.9)"/>
-          <stop offset="100%" stop-color="rgba(255,60,60,0)"/>
-        </radialGradient>
-      </defs>
-      <g class="gn-lines"></g>
-      <g class="gn-nodes"></g>
-    </svg>
+    <div class="globalnet-video-wrap" role="status" aria-live="polite" aria-label="Global network simulation video (visual only)">
+      <video class="globalnet-video" muted playsinline autoplay loop preload="auto">
+        <source src="${GLOBALNET_VIDEO_SRC_MP4}" type="video/mp4">
+      </video>
 
-    <!-- City labels layer (HTML for crisp text) -->
-    <div class="gn-labels"></div>
+      <div class="globalnet-video-overlay">
+        <div class="globalnet-video-pill">SIMULATION ONLY</div>
+        <div class="globalnet-video-sub">Visual demo. No real access.</div>
+      </div>
 
-    <!-- Top-left: status panel -->
-    <div class="gn-status-panel">
-      <div class="gn-status-title">ACQUIRING SYSTEM</div>
-      <div class="gn-status-target">Initializing...</div>
-      <div class="gn-status-bar"><div class="gn-status-fill"></div></div>
+      <div class="globalnet-video-missing">
+        <div class="globalnet-video-pill danger">VIDEO NOT FOUND</div>
+        <div class="globalnet-video-sub">Render it via: <span class="mono">cd remotion; npm i; npm run render:globalnet</span></div>
+      </div>
     </div>
-
-    <!-- Right: data stream -->
-    <div class="gn-data-stream">
-      <div class="gn-stream-header">ACCESS LOG</div>
-      <div class="gn-stream-body"></div>
-    </div>
-
-    <!-- Bottom: live stats ticker -->
-    <div class="gn-ticker">
-      <span class="gn-ticker-item">NODES: <span id="gnNodeCount">0</span>/10</span>
-      <span class="gn-ticker-item">BANDWIDTH: <span id="gnBandwidth">0.0</span> TB/s</span>
-      <span class="gn-ticker-item">LATENCY: <span id="gnLatency">--</span> ms</span>
-      <span class="gn-ticker-item">ENCRYPTION: AES-256</span>
-    </div>
-
-    <!-- Dashboard overlay (hidden until gn-dashboard action) -->
-    <div class="gn-dashboard hidden" id="gnDashboard"></div>
   `;
 
   els.stage.appendChild(container);
 
-  // Place city nodes on SVG & labels
-  const svgNodes = container.querySelector(".gn-nodes");
-  const labelsDiv = container.querySelector(".gn-labels");
-
-  GN_CITIES.forEach((city, i) => {
-    // SVG circle
-    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    circle.setAttribute("cx", city.x);
-    circle.setAttribute("cy", city.y);
-    circle.setAttribute("r", "0.8");
-    circle.setAttribute("class", "gn-node");
-    circle.setAttribute("data-idx", i);
-    circle.setAttribute("filter", "url(#gnGlow)");
-    svgNodes.appendChild(circle);
-
-    // Pulse ring
-    const pulse = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    pulse.setAttribute("cx", city.x);
-    pulse.setAttribute("cy", city.y);
-    pulse.setAttribute("r", "0");
-    pulse.setAttribute("class", "gn-pulse-ring");
-    pulse.setAttribute("data-idx", i);
-    svgNodes.appendChild(pulse);
-
-    // HTML label
-    const label = document.createElement("div");
-    label.className = "gn-label";
-    label.dataset.idx = i;
-    label.style.left = city.x + "%";
-    label.style.top = city.y + "%";
-    label.innerHTML = `<span class="gn-label-name">${city.name}</span>`;
-    labelsDiv.appendChild(label);
-  });
-  addGnGlitch();
+  const wrap = container.querySelector(".globalnet-video-wrap");
+  const vid = wrap.querySelector("video");
+  const markMissing = () => wrap.classList.add("missing");
+  const markOk = () => wrap.classList.remove("missing");
+  vid.addEventListener("error", markMissing);
+  vid.addEventListener("loadeddata", markOk);
+  const p = vid.play();
+  if (p && typeof p.catch === "function") p.catch(() => { /* ignore */ });
 }
 
 function globalnetAction(phase) {

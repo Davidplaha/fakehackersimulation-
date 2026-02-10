@@ -5,6 +5,9 @@
   "description": "Remotion project for SimDeck trace (simulation-only) video assets.",
   "scripts": {
     "studio": "remotion studio",
+    "render:globalnet:mp4": "remotion render GlobalNetwork ../assets/videos/global-network.mp4 --codec h264 --overwrite",
+    "render:globalnet:webm": "remotion render GlobalNetwork ../assets/videos/global-network.webm --codec vp8 --overwrite",
+    "render:globalnet": "npm run render:globalnet:mp4",
     "render:critical:mp4": "remotion render CriticalDownload ../assets/videos/critical-download.mp4 --codec h264 --overwrite",
     "render:critical:webm": "remotion render CriticalDownload ../assets/videos/critical-download.webm --codec vp8 --overwrite",
     "render:critical": "npm run render:critical:mp4",

@@ -278,6 +278,86 @@ body.sidebar-hidden .category-sidebar {
   display: none;
 }
 
+/* ---------------- Global Network video (Remotion render) ---------------- */
+.sim-globalnet-video {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.globalnet-video-wrap {
+  position: absolute;
+  inset: 0;
+  background: #000;
+}
+
+.globalnet-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(1.05) contrast(1.08);
+}
+
+.globalnet-video-overlay {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  display: grid;
+  gap: 6px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.globalnet-video-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.globalnet-video-pill.danger {
+  color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 60, 60, 0.35);
+  background: rgba(60, 0, 0, 0.55);
+}
+
+.globalnet-video-sub {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 520px;
+}
+
+.globalnet-video-missing {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-content: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 22px;
+}
+
+.globalnet-video-wrap.missing .globalnet-video-missing {
+  display: grid;
+}
+
+.globalnet-video-wrap.missing .globalnet-video {
+  display: none;
+}
+
 .trace-video-pill {
   display: inline-flex;
   align-items: center;

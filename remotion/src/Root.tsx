@@ -1,10 +1,22 @@
 import {Composition, Folder} from 'remotion';
 import {CriticalDownload, type CriticalDownloadProps} from './CriticalDownload';
+import {GlobalNetwork, type GlobalNetworkProps} from './GlobalNetwork';
 import {TraceSim, type TraceSimProps} from './TraceSim';
 
 export const RemotionRoot: React.FC = () => {
   return (
     <Folder name="SimDeck">
+      <Composition<GlobalNetworkProps>
+        id="GlobalNetwork"
+        component={GlobalNetwork}
+        durationInFrames={12 * 30}
+        fps={30}
+        width={1280}
+        height={720}
+        defaultProps={{
+          seed: 1337,
+        }}
+      />
       <Composition<CriticalDownloadProps>
         id="CriticalDownload"
         component={CriticalDownload}
