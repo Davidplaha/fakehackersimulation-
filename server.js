@@ -44,6 +44,9 @@ const server = http.createServer((req, res) => {
       if (route === '/api/coinbase/create-charge') {
         return require('./api/coinbase/create-charge.js')(req, res);
       }
+      if (route === '/api/coinbase/ping') {
+        return require('./api/coinbase/ping.js')(req, res);
+      }
       if (route === '/api/coinbase/status') {
         return require('./api/coinbase/status.js')(req, res);
       }

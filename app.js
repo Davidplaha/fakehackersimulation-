@@ -360,6 +360,7 @@ function injectDonateButton() {
   if (document.getElementById("donateBtn")) return;
 
   const btn = document.createElement("button");
+  btn.type = "button";
   btn.className = "btn compact ghost";
   btn.id = "donateBtn";
   btn.textContent = `Donate $${DONATION_USD}`;
@@ -483,6 +484,19 @@ async function createCoinbaseDonationCharge() {
   if (!data || !data.hosted_url || !data.code) throw new Error("Unexpected donation response.");
   localStorage.setItem(STORAGE_KEYS.lastChargeCode, data.code);
   return data;
+}
+
+async function probeCoinbaseBackend() {
+  try {
+    const resp = await fetch("/api/coinbase/ping", { method: "GET" });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) {
+      return { ok: false, reason: "bad_status", status: resp.status, data };
+    }
+    return { ok: true, configured: !!(data && data.configured) };
+  } catch (err) {
+    return { ok: false, reason: "network", error: String(err && err.message ? err.message : err) };
+  }
 }
 
 async function fetchCoinbaseDonationStatus(code) {
@@ -814,10 +828,42 @@ function showPaymentModal(opts = {}) {
   document.body.appendChild(modal);
 
   const statusEl = document.getElementById("donationStatus");
+  const openBtn = document.getElementById("openCoinbaseCheckout");
+  const verifyBtn = document.getElementById("verifyDonation");
+
+  // Diagnose whether /api exists and whether the server has the Coinbase key configured.
+  (async () => {
+    const probe = await probeCoinbaseBackend();
+    if (probe && probe.ok) {
+      if (!probe.configured) {
+        if (statusEl) {
+          statusEl.innerHTML =
+            `Coinbase backend detected, but missing <span class="mono" style="color: var(--text);">COINBASE_COMMERCE_API_KEY</span>.<br>` +
+            `Set it in your environment (or Vercel project settings) and restart the server.`;
+        }
+        if (openBtn) openBtn.disabled = true;
+      } else {
+        // Configured, ready.
+        if (statusEl && !lastCode) {
+          statusEl.textContent = "Ready. Click 'Donate with Coinbase' to generate a charge code.";
+        }
+      }
+      return;
+    }
+
+    // If ping fails, either we're on static hosting (no /api) or blocked network.
+    if (statusEl) {
+      statusEl.innerHTML =
+        `This host does not provide <span class="mono" style="color: var(--text);">/api/coinbase/*</span>.<br>` +
+        `Use <span class="mono" style="color: var(--text);">start-localhost.bat</span> or deploy with serverless functions (e.g. Vercel).`;
+    }
+    if (openBtn) openBtn.disabled = true;
+    if (verifyBtn) verifyBtn.disabled = true;
+  })();
 
   document.getElementById("closeDonationModal")?.addEventListener("click", () => modal.remove());
 
-  document.getElementById("openCoinbaseCheckout")?.addEventListener("click", async (e) => {
+  openBtn?.addEventListener("click", async (e) => {
     const btn = e.currentTarget;
     btn.disabled = true;
     const prev = btn.textContent;
@@ -831,13 +877,15 @@ function showPaymentModal(opts = {}) {
       window.location.href = charge.hosted_url;
     } catch (err) {
       console.warn(err);
-      showToast(`${err && err.message ? err.message : "Could not start checkout."} (Requires Vercel /api)`, "warning");
+      const msg = err && err.message ? err.message : "Could not start checkout.";
+      showToast(msg, "warning");
+      if (statusEl) statusEl.textContent = msg;
       btn.disabled = false;
       btn.textContent = prev;
     }
   });
 
-  document.getElementById("verifyDonation")?.addEventListener("click", async (e) => {
+  verifyBtn?.addEventListener("click", async (e) => {
     const btn = e.currentTarget;
     const code = localStorage.getItem(STORAGE_KEYS.lastChargeCode) || "";
     if (!code) {
