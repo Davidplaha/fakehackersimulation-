@@ -10,8 +10,8 @@ const themes = [
 ];
 
 const scenarios = [
-  { id: "phone", name: "Phone Hacking", desc: "Fake mobile scan with zero data.", icon: "📱", category: "phone", tags: ["Mobile", "Cinematic"], intensity: "Med" },
-  { id: "email", name: "Email Hack", desc: "Bypass animation & inbox access.", icon: "📧", category: "email", tags: ["Desktop"], intensity: "Med", isNew: true },
+  { id: "phone", name: "Phone Hacking", desc: "Fake mobile scan with zero data.", icon: "📱", image: "assets/phone-hacking-card-cyber-crop.png", category: "phone", tags: ["Mobile", "Cinematic"], intensity: "Med" },
+  { id: "email", name: "Email Hack", desc: "Bypass animation & inbox access.", icon: "📧", category: "email", tags: ["Mobile"], intensity: "Med", isNew: true },
   { id: "virus", name: "Virus Scanner", desc: "Fake security center with threats.", icon: "🛡️", category: "desktop", tags: ["Desktop", "Scare"], intensity: "High", isNew: true },
   { id: "ios", name: "iOS Update", desc: "Endless updater with panic mode.", icon: "🍎", category: "scare", tags: ["Mobile", "Loop"], intensity: "Low", isNew: true },
   { id: "android", name: "Android Sim", desc: "Optimizing/repairing loop.", icon: "🤖", category: "phone", tags: ["Mobile"], intensity: "Low" },
@@ -32,12 +32,17 @@ const miniPrograms = [
 
 const scripts = {
   phone_basic: [
-    { t: 0, action: "text", payload: "Device detected: DemoPhone X" },
-    { t: 1, action: "stage", payload: "Preparing" },
-    { t: 3, action: "stage", payload: "Analyzing" },
-    { t: 6, action: "stage", payload: "Indexing sample data" },
-    { t: 9, action: "counts", payload: { photos: 0, messages: 0, contacts: 0 } },
-    { t: 12, action: "complete", payload: "Session complete" },
+    { t: 0, action: "text", payload: "Device shadow detected" },
+    { t: 4, action: "stage", payload: "Relay handshake" },
+    { t: 10, action: "stage", payload: "Fingerprinting device shell" },
+    { t: 18, action: "stage", payload: "Extracting message stream" },
+    { t: 24, action: "counts", payload: { photos: 0, messages: 96, contacts: 0 } },
+    { t: 30, action: "stage", payload: "Extracting media vault" },
+    { t: 36, action: "counts", payload: { photos: 284, messages: 146, contacts: 0 } },
+    { t: 42, action: "stage", payload: "Cloning contact graph" },
+    { t: 48, action: "counts", payload: { photos: 328, messages: 214, contacts: 61 } },
+    { t: 52, action: "stage", payload: "Sealing trace mask" },
+    { t: 60, action: "complete", payload: "Session complete" },
   ],
   phone_matrix: [
     { t: 0, action: "init-matrix" },
@@ -297,8 +302,12 @@ function renderScenarios(filter = "all") {
     if (sc.isHot) tagsHtml += '<span class="tag hot">HOT</span>';
     sc.tags.forEach(t => tagsHtml += `<span class="tag">${t}</span>`);
 
+    const iconHtml = sc.image
+      ? `<div class="card-icon card-icon-image"><img src="${sc.image}" alt="" loading="lazy"></div>`
+      : `<div class="card-icon">${sc.icon || "🎯"}</div>`;
+
     card.innerHTML = `
-      <div class="card-icon">${sc.icon || "🎯"}</div>
+      ${iconHtml}
       <div class="card-title">${sc.name}</div>
       <div class="card-desc">${sc.desc}</div>
       <div class="card-tags">${tagsHtml}</div>
@@ -350,21 +359,21 @@ function bindNewDashboard() {
     });
   }
 
-  // Donation button (top bar)
-  injectDonateButton();
+  // Voluntary support button (top bar)
+  injectSupportButton();
 }
 
-function injectDonateButton() {
+function injectSupportButton() {
   const topRight = document.querySelector(".top-bar-right");
   if (!topRight) return;
-  if (document.getElementById("donateBtn")) return;
+  if (document.getElementById("supportBtn")) return;
 
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = "btn compact ghost";
-  btn.id = "donateBtn";
-  btn.textContent = `Donate $${DONATION_USD}`;
-  btn.addEventListener("click", () => showPaymentModal());
+  btn.id = "supportBtn";
+  btn.textContent = "Donate";
+  btn.addEventListener("click", () => showSupportModal());
 
   const settingsBtn = document.getElementById("settingsBtn");
   if (settingsBtn && settingsBtn.parentElement === topRight) {
@@ -377,13 +386,37 @@ function injectDonateButton() {
 
 function renderTray() {
   els.tray.innerHTML = "";
+  els.tray.classList.add("collapsed");
+
+  const toggle = document.createElement("button");
+  toggle.type = "button";
+  toggle.className = "tray-toggle";
+  toggle.setAttribute("aria-expanded", "false");
+  toggle.innerHTML = `<span class="tray-toggle-icon">▦</span><span>Tools</span><span class="tray-toggle-count">${miniPrograms.length}</span>`;
+  toggle.addEventListener("click", () => toggleTray());
+  els.tray.appendChild(toggle);
+
+  const panel = document.createElement("div");
+  panel.className = "tray-panel";
+
   miniPrograms.forEach((m) => {
     const btn = document.createElement("button");
     btn.className = "tray-button";
     btn.innerHTML = `<span class="label">${m.label}</span><span class="tiny">${m.note}</span>`;
     btn.addEventListener("click", () => openMiniProgram(m.id));
-    els.tray.appendChild(btn);
+    panel.appendChild(btn);
   });
+
+  els.tray.appendChild(panel);
+}
+
+function toggleTray(forceOpen) {
+  const tray = els.tray || document.getElementById("miniTray");
+  if (!tray) return;
+  const open = typeof forceOpen === "boolean" ? forceOpen : tray.classList.contains("collapsed");
+  tray.classList.toggle("collapsed", !open);
+  tray.classList.toggle("open", open);
+  tray.querySelector(".tray-toggle")?.setAttribute("aria-expanded", String(open));
 }
 
 function setTheme(id) {
@@ -437,15 +470,21 @@ function selectScenario(id) {
 
 function showPhoneScenarioOptions() {
   console.log("showPhoneScenarioOptions called");
-  showModeSelection();
+  const randomData = generateRandomTargetData();
+  state.customTargetName = randomData.name;
+  state.customTargetNumber = randomData.phone;
+  state.customTargetModel = randomData.device;
+  state.customTargetCarrier = randomData.carrier;
+  state.customTargetLocation = randomData.location;
+  state.customTargetBattery = randomData.battery;
+  state.customTargetNetwork = randomData.network;
+  state.isPremiumMode = false;
+  showScenarioSelection();
 }
 
-// Check if user has premium unlocked
+// The product is free to use. Support is voluntary and should not gate features.
 function isPremiumUnlocked() {
-  const unlocked = localStorage.getItem(STORAGE_KEYS.premium) === 'unlocked';
-  const code = localStorage.getItem(STORAGE_KEYS.premiumChargeCode) || "";
-  // Require a verified charge code for premium. This prevents accidental "free" unlocks.
-  return unlocked && Boolean(code);
+  return true;
 }
 
 const DONATION_USD = 5;
@@ -530,41 +569,19 @@ async function handleDonationReturnFromCoinbase() {
   }
 
   if (donation === "cancel") {
-    showToast("Donation canceled.", "info");
+    showToast("Support flow closed.", "info");
     return;
   }
 
   if (donation !== "success") return;
-
-  const code = localStorage.getItem(STORAGE_KEYS.lastChargeCode) || "";
-  if (!code) {
-    showToast("Return received. Click Donate and verify the charge.", "info");
-    showPaymentModal();
-    return;
-  }
-
-  showToast("Verifying donation...", "info");
-  try {
-    const st = await fetchCoinbaseDonationStatus(code);
-    if (st && st.paid) {
-      localStorage.setItem(STORAGE_KEYS.premiumChargeCode, String(st.code || code));
-      unlockPremium("donation");
-      return;
-    }
-    showToast(`Charge status: ${st.status || "UNKNOWN"}. You can verify again in a minute.`, "info");
-    showPaymentModal();
-  } catch (err) {
-    console.warn(err);
-    showToast("Could not verify donation yet. Open Donate and click Verify.", "warning");
-    showPaymentModal();
-  }
+  showSupportModal();
 }
 
 // Unlock premium (called after donation)
 function unlockPremium(reason = "donation") {
   localStorage.setItem(STORAGE_KEYS.premium, 'unlocked');
   localStorage.setItem(STORAGE_KEYS.premiumUnlockedAt, String(Date.now()));
-  showToast("Thanks for supporting SimDeck! Premium unlocked on this device.", "success");
+  showToast("Thanks for supporting SimDeck development.", "success");
 }
 
 // Generate random fake data for free mode
@@ -585,150 +602,10 @@ function generateRandomTargetData() {
   };
 }
 
-// Mode Selection Screen
-function showModeSelection() {
-  els.scenarioGrid?.classList.add("hidden");
-  els.stage.classList.add("active");
-  els.stage.innerHTML = "";
-
-  const isPremium = isPremiumUnlocked();
-
-  const container = document.createElement("div");
-  container.className = "mode-selection";
-  container.style.cssText = `
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    height: 100%;
-    gap: 30px;
-  `;
-
-  container.innerHTML = `
-    <div style="text-align: center;">
-      <h2 style="color: var(--text); margin: 0 0 10px 0; font-size: 28px;">📱 Phone Hacking Simulator</h2>
-      <p style="color: var(--muted); margin: 0;">Choose your experience mode</p>
-    </div>
-
-    <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; max-width: 700px;">
-      
-      <!-- Free Demo Mode -->
-      <div class="mode-card" id="freeModeCard" style="
-        background: linear-gradient(145deg, rgba(61, 246, 161, 0.1), rgba(61, 246, 161, 0.05));
-        border: 2px solid var(--accent);
-        border-radius: 20px;
-        padding: 30px;
-        width: 280px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-align: center;
-      ">
-        <div style="font-size: 48px; margin-bottom: 15px;">🆓</div>
-        <h3 style="color: var(--accent); margin: 0 0 10px 0; font-size: 22px;">Free Demo</h3>
-        <p style="color: var(--muted); font-size: 14px; margin-bottom: 20px;">
-          Experience the simulation with randomly generated fake data
-        </p>
-        <ul style="text-align: left; color: var(--text); font-size: 13px; list-style: none; padding: 0; margin: 0 0 20px 0;">
-          <li style="padding: 5px 0;">✅ All 8 phone scenarios</li>
-          <li style="padding: 5px 0;">✅ Realistic animations</li>
-          <li style="padding: 5px 0;">⚠️ Random target data only</li>
-          <li style="padding: 5px 0; color: var(--muted);">❌ No customization</li>
-        </ul>
-        <button class="btn primary" style="width: 100%; padding: 12px;">
-          Start Free Demo →
-        </button>
-      </div>
-
-      <!-- Premium Custom Mode -->
-      <div class="mode-card" id="customModeCard" style="
-        background: linear-gradient(145deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.08));
-        border: 2px solid ${isPremium ? '#4ade80' : '#ffd700'};
-        border-radius: 20px;
-        padding: 30px;
-        width: 280px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-align: center;
-        position: relative;
-      ">
-        ${isPremium ? `
-          <div style="position: absolute; top: -12px; right: -12px; background: #4ade80; color: #000; font-size: 11px; font-weight: bold; padding: 4px 10px; border-radius: 20px;">
-            ✓ UNLOCKED
-          </div>
-        ` : `
-          <div style="position: absolute; top: -12px; right: -12px; background: linear-gradient(90deg, #ffd700, #ff8c00); color: #000; font-size: 11px; font-weight: bold; padding: 4px 10px; border-radius: 20px;">
-            💎 PREMIUM
-          </div>
-        `}
-        <div style="font-size: 48px; margin-bottom: 15px;">🎯</div>
-        <h3 style="color: #ffd700; margin: 0 0 10px 0; font-size: 22px;">Custom Target</h3>
-        <p style="color: var(--muted); font-size: 14px; margin-bottom: 20px;">
-          ${isPremium ? 'Customize everything for your prank!' : 'Perfect for pranking friends!'}
-        </p>
-        <ul style="text-align: left; color: var(--text); font-size: 13px; list-style: none; padding: 0; margin: 0 0 20px 0;">
-          <li style="padding: 5px 0;">✅ Custom target name</li>
-          <li style="padding: 5px 0;">✅ Custom phone number</li>
-          <li style="padding: 5px 0;">✅ Custom battery & network</li>
-          <li style="padding: 5px 0;">✅ Custom location & carrier</li>
-        </ul>
-        <button class="btn" style="
-          width: 100%; 
-          padding: 12px; 
-          background: ${isPremium ? 'var(--accent)' : 'linear-gradient(90deg, #ffd700, #ff8c00)'};
-          color: ${isPremium ? 'var(--bg)' : '#000'};
-          font-weight: bold;
-        ">
-          ${isPremium ? 'Customize Target →' : `Donate $${DONATION_USD} (Crypto)`}
-        </button>
-      </div>
-    </div>
-
-    <button class="btn ghost" id="backToHome" style="margin-top: 20px;">
-      ← Back to Scenarios
-    </button>
-  `;
-
-  els.stage.appendChild(container);
-
-  // Event listeners
-  document.getElementById('freeModeCard').addEventListener('click', () => {
-    // Generate random data and go to scenario selection
-    const randomData = generateRandomTargetData();
-    state.customTargetName = randomData.name;
-    state.customTargetNumber = randomData.phone;
-    state.customTargetModel = randomData.device;
-    state.customTargetCarrier = randomData.carrier;
-    state.customTargetLocation = randomData.location;
-    state.customTargetBattery = randomData.battery;
-    state.customTargetNetwork = randomData.network;
-    state.isPremiumMode = false;
-    showToast("Demo mode: Using random target data", "info");
-    showScenarioSelection();
-  });
-
-  document.getElementById('customModeCard').addEventListener('click', () => {
-    if (isPremiumUnlocked()) {
-      showCustomizationForm();
-    } else {
-      showPaymentModal({ afterUnlock: "customize" });
-    }
-  });
-
-  document.getElementById('backToHome').addEventListener('click', () => {
-    resetStage();
-  });
-}
-
-// Donation Modal (Coinbase Commerce)
-function showPaymentModal(opts = {}) {
-  const afterUnlock = opts && opts.afterUnlock ? opts.afterUnlock : null;
-  const isLocal = ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
-
-  const lastCode = localStorage.getItem(STORAGE_KEYS.lastChargeCode) || "";
-
+// Voluntary support modal. This is not a paywall and does not unlock features.
+function showSupportModal() {
   const modal = document.createElement("div");
-  modal.className = "donation-modal";
+  modal.className = "support-modal";
   modal.style.cssText = `
     position: fixed;
     inset: 0;
@@ -742,16 +619,16 @@ function showPaymentModal(opts = {}) {
 
   modal.innerHTML = `
     <div style="
-      background: var(--panel-strong);
-      border: 2px solid #ffd700;
-      border-radius: 24px;
-      padding: 30px;
-      max-width: 450px;
+      background: rgba(13, 18, 31, 0.96);
+      border: 1px solid rgba(61, 246, 161, 0.28);
+      border-radius: 18px;
+      padding: 28px;
+      max-width: 460px;
       width: 100%;
-      text-align: center;
       position: relative;
+      box-shadow: 0 22px 90px rgba(0, 0, 0, 0.55);
     ">
-      <button id="closeDonationModal" style="
+      <button id="closeSupportModal" style="
         position: absolute;
         top: 15px;
         right: 15px;
@@ -762,172 +639,49 @@ function showPaymentModal(opts = {}) {
         cursor: pointer;
       ">×</button>
 
-      <div style="font-size: 48px; margin-bottom: 15px;">❤️</div>
-      <h2 style="color: #ffd700; margin: 0 0 10px 0;">Support SimDeck</h2>
-      <p style="color: var(--muted); margin: 0 0 18px 0; font-size: 14px;">
-        Donate via Coinbase Commerce to unlock Premium Mode on this device.
+      <div style="font-size: 38px; margin-bottom: 14px; text-align: center;">💚</div>
+      <h2 style="color: var(--text); margin: 0 0 10px 0; text-align: center;">Support SimDeck</h2>
+      <p style="color: var(--muted); margin: 0 0 18px 0; font-size: 14px; line-height: 1.55; text-align: center;">
+        SimDeck is free to use. If it helps your video, prank, demo, or content workflow, you can support future development.
       </p>
 
       <div style="
-        background: rgba(255, 215, 0, 0.1);
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        border-radius: 16px;
-        padding: 18px;
-        margin-bottom: 14px;
+        background: rgba(61, 246, 161, 0.08);
+        border: 1px solid rgba(61, 246, 161, 0.18);
+        border-radius: 14px;
+        padding: 16px;
+        color: var(--text);
+        font-size: 13px;
+        line-height: 1.55;
+        margin-bottom: 16px;
       ">
-        <div style="font-size: 34px; font-weight: bold; color: #ffd700;">$${DONATION_USD} USD</div>
-        <div style="color: var(--muted); font-size: 13px; margin-top: 6px;">Secure crypto checkout</div>
+        Contributions help cover hosting, new simulations, better visuals, mobile polish, and keeping the tool available without locking features behind a checkout.
       </div>
 
-      <div style="text-align:left; margin: 0 0 14px 0;">
-        <div style="color: var(--text); font-size: 13px; font-weight: bold; margin-bottom: 8px;">
-          Steps
-        </div>
-        <ol style="margin:0; padding-left: 18px; color: var(--muted); font-size: 12.5px; line-height: 1.5;">
-          <li>Open the Coinbase checkout</li>
-          <li>Send crypto payment</li>
-          <li>Return here and click Verify</li>
-        </ol>
-      </div>
+      <button id="supportComingSoon" class="btn primary" style="width: 100%; padding: 12px; margin-bottom: 10px;">
+        Donation details coming soon
+      </button>
 
-      <button id="openCoinbaseCheckout" class="btn primary" style="
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 10px;
-      ">Donate with Coinbase</button>
-
-      <button id="verifyDonation" class="btn" style="
-        width: 100%;
-        padding: 12px;
-        background: linear-gradient(90deg, #ffd700, #ff8c00);
-        color: #000;
-        font-weight: bold;
-        font-size: 15px;
-        margin-bottom: 10px;
-      ">Verify Donation</button>
-
-      <div id="donationStatus" style="
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 12px;
-        padding: 10px 12px;
-        text-align: left;
-        color: var(--muted);
-        font-size: 12px;
-        margin-bottom: 10px;
-      ">
-        ${lastCode ? `Last charge code: <span style="font-family: var(--mono); color: var(--text);">${lastCode}</span>` : "No checkout started yet."}
-      </div>
-
-      <p style="color: var(--muted); font-size: 11px; margin: 0;">
-        Premium unlock happens only after Coinbase confirms the charge.
+      <p style="color: var(--muted); font-size: 11px; margin: 0; text-align: center;">
+        No feature unlocks. No paywall. Just support if you want to help the project grow.
       </p>
     </div>
   `;
 
   document.body.appendChild(modal);
 
-  const statusEl = document.getElementById("donationStatus");
-  const openBtn = document.getElementById("openCoinbaseCheckout");
-  const verifyBtn = document.getElementById("verifyDonation");
-
-  // Diagnose whether /api exists and whether the server has the Coinbase key configured.
-  (async () => {
-    const probe = await probeCoinbaseBackend();
-    if (probe && probe.ok) {
-      if (!probe.configured) {
-        if (statusEl) {
-          statusEl.innerHTML =
-            `Coinbase backend detected, but missing <span class="mono" style="color: var(--text);">COINBASE_COMMERCE_API_KEY</span>.<br>` +
-            `Set it in your environment (or Vercel project settings) and restart the server.`;
-        }
-        if (openBtn) openBtn.disabled = true;
-      } else {
-        // Configured, ready.
-        if (statusEl && !lastCode) {
-          statusEl.textContent = "Ready. Click 'Donate with Coinbase' to generate a charge code.";
-        }
-      }
-      return;
-    }
-
-    // If ping fails, either we're on static hosting (no /api) or blocked network.
-    if (statusEl) {
-      statusEl.innerHTML =
-        `This host does not provide <span class="mono" style="color: var(--text);">/api/coinbase/*</span>.<br>` +
-        `Use <span class="mono" style="color: var(--text);">start-localhost.bat</span> or deploy with serverless functions (e.g. Vercel).`;
-    }
-    if (openBtn) openBtn.disabled = true;
-    if (verifyBtn) verifyBtn.disabled = true;
-  })();
-
-  document.getElementById("closeDonationModal")?.addEventListener("click", () => modal.remove());
-
-  openBtn?.addEventListener("click", async (e) => {
-    const btn = e.currentTarget;
-    btn.disabled = true;
-    const prev = btn.textContent;
-    btn.textContent = "Creating checkout...";
-    try {
-      const charge = await createCoinbaseDonationCharge();
-      if (statusEl) {
-        statusEl.innerHTML = `Last charge code: <span style="font-family: var(--mono); color: var(--text);">${charge.code}</span>`;
-      }
-      showToast("Redirecting to Coinbase checkout...", "info");
-      window.location.href = charge.hosted_url;
-    } catch (err) {
-      console.warn(err);
-      const msg = err && err.message ? err.message : "Could not start checkout.";
-      showToast(msg, "warning");
-      if (statusEl) statusEl.textContent = msg;
-      btn.disabled = false;
-      btn.textContent = prev;
-    }
+  document.getElementById("closeSupportModal")?.addEventListener("click", () => modal.remove());
+  document.getElementById("supportComingSoon")?.addEventListener("click", () => {
+    showToast("Support details will be added here soon. Thanks for wanting to help.", "success");
   });
-
-  verifyBtn?.addEventListener("click", async (e) => {
-    const btn = e.currentTarget;
-    const code = localStorage.getItem(STORAGE_KEYS.lastChargeCode) || "";
-    if (!code) {
-      showToast("No charge found. Click 'Donate with Coinbase' first.", "warning");
-      return;
-    }
-    btn.disabled = true;
-    const prev = btn.textContent;
-    btn.textContent = "Verifying...";
-    try {
-      const st = await fetchCoinbaseDonationStatus(code);
-      if (statusEl) statusEl.textContent = `Charge ${st.code || code}: ${st.status || "UNKNOWN"}`;
-      if (st && st.paid) {
-        localStorage.setItem(STORAGE_KEYS.premiumChargeCode, String(st.code || code));
-        unlockPremium("donation");
-        modal.remove();
-        if (afterUnlock === "customize") showCustomizationForm();
-      } else {
-        showToast(`Not confirmed yet (${st.status || "UNKNOWN"}). Try again shortly.`, "info");
-      }
-    } catch (err) {
-      console.warn(err);
-      showToast(err && err.message ? err.message : "Verify failed.", "warning");
-    } finally {
-      btn.disabled = false;
-      btn.textContent = prev;
-    }
-  });
-
-  // Intentionally no "test unlock" in production. Premium requires Coinbase confirmation.
 
   modal.addEventListener("click", (e) => {
     if (e.target === modal) modal.remove();
   });
 }
 
-// Customization Form (Premium Only)
+// Customization Form
 function showCustomizationForm() {
-  if (!isPremiumUnlocked()) {
-    showPaymentModal({ afterUnlock: "customize" });
-    return;
-  }
   els.scenarioGrid?.classList.add("hidden");
   els.stage.classList.add("active");
   els.stage.innerHTML = "";
@@ -945,8 +699,8 @@ function showCustomizationForm() {
 
   customizationContainer.innerHTML = `
     <div style="text-align: center; max-width: 500px;">
-      <div style="display: inline-block; background: linear-gradient(90deg, #ffd700, #ff8c00); color: #000; font-size: 11px; font-weight: bold; padding: 4px 12px; border-radius: 20px; margin-bottom: 10px;">
-        💎 PREMIUM MODE
+      <div style="display: inline-block; background: linear-gradient(90deg, #4a9fff, var(--accent)); color: #061019; font-size: 11px; font-weight: bold; padding: 4px 12px; border-radius: 20px; margin-bottom: 10px;">
+        CUSTOM MODE
       </div>
       <h2 style="color: var(--text); margin: 0 0 10px 0;">Customize Target Information</h2>
       <p style="color: var(--muted); margin: 0 0 20px 0;">Enter target details for the simulation (all data is fake)</p>
@@ -1071,7 +825,7 @@ function showCustomizationForm() {
   document.getElementById('targetBattery').value = state.customTargetBattery || '';
 
   // Event listeners
-  document.getElementById('backToModeSelect').addEventListener('click', showModeSelection);
+  document.getElementById('backToModeSelect').addEventListener('click', showScenarioSelection);
 
   document.getElementById('continueToScenarios').addEventListener('click', function () {
     state.customTargetName = document.getElementById('targetName').value || 'Target User';
@@ -1312,6 +1066,7 @@ function startScenario(force = false) {
   resetStage(true);
   // resetStage() intentionally stops any previous loop; re-enable for the next run.
   state.running = true;
+  document.body.classList.add('ui-running');
   // Ensure the current theme is applied
   if (state.theme) {
     setTheme(state.theme);
@@ -1351,6 +1106,7 @@ function updateCrumbs(showtime = false) {
 
 function resetStage(keepWatermark = false) {
   state.running = false;
+  document.body.classList.remove('ui-running');
   clearTimers();
 
   // Hide stage and show scenario grid
@@ -1581,61 +1337,7 @@ function runPhoneTerminalScenario() {
 
 function renderCustomizationPayNudge() {
   if (!els.stage) return;
-
-  // Only show this upsell on Corporate SOC for now (user request).
-  if (state.scenario !== "phone_corporate") return;
-
-  // Customization is a paid feature of "Custom Target" mode.
-  // In Free Demo mode, don't show the customization UI at all.
-  if (!state.isPremiumMode) {
-    els.stage.querySelector(".pay-nudge")?.remove();
-    return;
-  }
-
   els.stage.querySelector(".pay-nudge")?.remove();
-
-  const unlocked = isPremiumUnlocked();
-  // If previously unlocked without a charge code, treat as locked and clear the stale flag.
-  if (!unlocked && localStorage.getItem(STORAGE_KEYS.premium) === 'unlocked' && !(localStorage.getItem(STORAGE_KEYS.premiumChargeCode) || "")) {
-    localStorage.removeItem(STORAGE_KEYS.premium);
-    localStorage.removeItem(STORAGE_KEYS.premiumUnlockedAt);
-  }
-  const nudge = document.createElement("div");
-  nudge.className = "pay-nudge";
-  nudge.dataset.state = unlocked ? "unlocked" : "locked";
-
-  const price = Number.isFinite(DONATION_USD) ? DONATION_USD : 5;
-
-  nudge.innerHTML = `
-    <button class="pay-nudge-close" type="button" aria-label="Close">×</button>
-    <div class="pay-nudge-title">${unlocked ? "Customize Target" : `Unlock Custom Target ($${price})`}</div>
-    <div class="pay-nudge-sub">
-      ${unlocked
-      ? "Set friend name, phone, and email for this simulation."
-      : "Pay $5 to set friend name, phone, and email for this simulation."}
-    </div>
-    <div class="pay-nudge-actions">
-      <button class="btn ${unlocked ? "primary" : ""}" data-action="customize" type="button">
-        ${unlocked ? "Edit Details" : `Pay $${price} to Customize`}
-      </button>
-      <button class="btn ghost compact" data-action="learn" type="button">Why?</button>
-    </div>
-    <div class="pay-nudge-foot">Simulation only. No real hacking or tracking.</div>
-  `;
-
-  nudge.querySelector(".pay-nudge-close")?.addEventListener("click", () => nudge.remove());
-  nudge.querySelector('[data-action="customize"]')?.addEventListener("click", () => {
-    if (isPremiumUnlocked()) {
-      showCustomizationForm();
-    } else {
-      showPaymentModal({ afterUnlock: "customize" });
-    }
-  });
-  nudge.querySelector('[data-action="learn"]')?.addEventListener("click", () => {
-    showToast("Premium unlock lets you customize the simulation target on this device.", "info");
-  });
-
-  els.stage.appendChild(nudge);
 }
 
 // ---------- Email Hacking Scenario ----------
@@ -1689,51 +1391,69 @@ function runEmailScenario() {
   // Create full-screen email client container
   const container = document.createElement("div");
   container.className = "email-hacking-container";
-  container.style.cssText = `
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    background: #0a0c10;
-  `;
+  els.stage.appendChild(container);
+  addGlitch();
+  buildEmailLogin(container);
+}
 
-  // Start with bypass animation
+function buildEmailLogin(container) {
   container.innerHTML = `
-    <div class="email-bypass-overlay" style="
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.95);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      font-family: var(--mono);
-    ">
-      <div style="color: var(--accent); font-size: 14px; margin-bottom: 20px;">TARGET: victim@email.com</div>
-      <div class="bypass-terminal" style="
-        width: 90%;
-        max-width: 500px;
-        background: rgba(0,20,0,0.8);
-        border: 1px solid var(--accent);
-        border-radius: 8px;
-        padding: 15px;
-        font-size: 13px;
-        color: #0f0;
-        height: 200px;
-        overflow: hidden;
-      "></div>
-      <div style="margin-top: 20px; color: var(--muted);">
-        <span class="bypass-status">Initializing...</span>
-      </div>
-      <div class="progress" style="width: 90%; max-width: 500px; margin-top: 15px;">
-        <div class="progress-bar"><div class="progress-fill bypass-progress"></div></div>
+    <div class="email-login-screen">
+      <div class="email-login-card">
+        <div class="email-login-mark">MX</div>
+        <div class="email-login-kicker">Fictional Access Portal</div>
+        <h2>Signal Login</h2>
+        <p>Enter demo details to start the simulated inbox sequence.</p>
+        <form class="email-login-form" autocomplete="off">
+          <label>
+            <span>Alias</span>
+            <input type="text" id="emailLoginAlias" name="alias" placeholder="shadow.runner" autocomplete="off" required>
+          </label>
+          <label>
+            <span>Access Key</span>
+            <input type="password" id="emailLoginKey" name="accessKey" placeholder="demo key" autocomplete="off" required>
+          </label>
+          <button class="email-login-submit" type="submit">Enter Simulation</button>
+        </form>
+        <div class="email-login-note">Simulation only. Use demo details, not real passwords.</div>
       </div>
     </div>
   `;
 
-  els.stage.appendChild(container);
-  addGlitch();
+  container.querySelector(".email-login-form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const alias = container.querySelector("#emailLoginAlias")?.value?.trim();
+    state.emailLoginAlias = alias || "shadow.runner";
+    runEmailBypassIntro(container);
+  });
+}
+
+function runEmailBypassIntro(container) {
+
+  // Start with bypass animation
+  container.innerHTML = `
+    <div class="email-bypass-overlay">
+      <div class="email-hack-orb">MAIL</div>
+      <div class="email-hack-kicker">HACKING IN PROGRESS</div>
+      <div class="email-hack-title">Bypassing inbox security</div>
+      <div class="email-hack-sub">Session tunnel opening through encrypted mail nodes</div>
+
+      <div class="email-hack-panel">
+        <div class="email-hack-panel-top">
+          <span>LIVE TERMINAL</span>
+          <span class="email-hack-pulse">ACTIVE</span>
+        </div>
+        <div class="bypass-terminal"></div>
+      </div>
+
+      <div class="email-hack-status">
+        <span class="bypass-status">Initializing tunnel...</span>
+      </div>
+      <div class="progress email-hack-progress">
+        <div class="progress-bar"><div class="progress-fill bypass-progress"></div></div>
+      </div>
+    </div>
+  `;
 
   // Run bypass animation
   runEmailBypassAnimation(container);
@@ -1746,18 +1466,16 @@ function runEmailBypassAnimation(container) {
   const overlay = container.querySelector(".email-bypass-overlay");
 
   const bypassSteps = [
-    { text: "> Connecting to mail server...", delay: 800 },
-    { text: "> Server: mail.provider.com:993", delay: 600 },
-    { text: "> Initiating SSL handshake...", delay: 700 },
-    { text: "> Scanning for vulnerabilities...", delay: 1000 },
-    { text: "> CVE-2024-1234 detected!", delay: 800, color: "#ff0" },
-    { text: "> Exploiting authentication bypass...", delay: 1200 },
-    { text: "> Bypassing 2FA token...", delay: 1000 },
-    { text: "> Injecting session cookie...", delay: 900 },
-    { text: "> Decrypting stored credentials...", delay: 1100 },
-    { text: "> ██████████ PASSWORD FOUND ██████████", delay: 500, color: "#f00" },
-    { text: "> Authenticating as victim@email.com...", delay: 800 },
-    { text: "> ACCESS GRANTED", delay: 500, color: "#0f0" }
+    { text: "> Opening encrypted mail tunnel...", delay: 650 },
+    { text: "> Routing through ghost relay: mx-07", delay: 560 },
+    { text: "> Spoofing trusted inbox fingerprint...", delay: 720 },
+    { text: "> Mapping message index and folders...", delay: 780 },
+    { text: "> Security challenge detected", delay: 680, color: "#ffd166" },
+    { text: "> Injecting temporary session token...", delay: 880 },
+    { text: "> Masking device signature...", delay: 760 },
+    { text: "> Decrypting inbox cache...", delay: 820 },
+    { text: "> Building mailbox preview stream...", delay: 760 },
+    { text: "> ACCESS WINDOW STABILIZED", delay: 500, color: "#3df6a1" }
   ];
 
   let stepIndex = 0;
@@ -1801,61 +1519,29 @@ function runEmailBypassAnimation(container) {
 
 function buildEmailInbox(container) {
   container.innerHTML = `
-    <div class="email-client" style="
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    ">
-      <!-- Sidebar -->
-      <div class="email-sidebar" style="
-        width: 200px;
-        background: rgba(255,255,255,0.03);
-        border-right: 1px solid var(--border);
-        padding: 15px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      ">
-        <div style="color: var(--danger); font-size: 12px; margin-bottom: 10px;">⚠️ SESSION HIJACKED</div>
-        <div class="email-folder" style="padding: 8px 12px; background: var(--accent); color: #000; border-radius: 6px; font-weight: 600;">
-          📥 Inbox (${fakeEmails.length})
-        </div>
-        <div class="email-folder" style="padding: 8px 12px; color: var(--muted);">📤 Sent</div>
-        <div class="email-folder" style="padding: 8px 12px; color: var(--muted);">⭐ Starred</div>
-        <div class="email-folder" style="padding: 8px 12px; color: var(--muted);">🗑️ Trash</div>
-        <div style="margin-top: auto; font-size: 11px; color: var(--danger);">
-          🔴 Recording session...
-        </div>
+    <div class="email-client">
+      <div class="email-sidebar">
+        <div class="email-session">SESSION HIJACKED</div>
+        <div class="email-folder active">Inbox (${fakeEmails.length})</div>
+        <div class="email-folder">Sent</div>
+        <div class="email-folder">Starred</div>
+        <div class="email-folder">Trash</div>
+        <div class="email-recording">Recording session...</div>
       </div>
-      
-      <!-- Email List -->
-      <div class="email-list-container" style="
-        width: 300px;
-        border-right: 1px solid var(--border);
-        overflow-y: auto;
-        background: rgba(0,0,0,0.3);
-      ">
-        <div style="padding: 12px; border-bottom: 1px solid var(--border); font-weight: 600; color: var(--text);">
-          Inbox - victim@email.com
+
+      <div class="email-list-container">
+        <div class="email-mobile-header">
+          <div>
+        <div class="email-kicker">Hacking in progress</div>
+        <div class="email-account">Encrypted inbox stream</div>
+          </div>
+          <div class="email-count">${fakeEmails.length}</div>
         </div>
         <div class="email-list"></div>
       </div>
-      
-      <!-- Email Preview -->
-      <div class="email-preview" style="
-        flex: 1;
-        padding: 20px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-      ">
-        <div class="email-preview-placeholder" style="
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--muted);
-        ">
+
+      <div class="email-preview">
+        <div class="email-preview-placeholder">
           Select an email to read
         </div>
       </div>
@@ -1867,21 +1553,15 @@ function buildEmailInbox(container) {
   fakeEmails.forEach(email => {
     const item = document.createElement("div");
     item.className = "mail-item";
-    item.style.cssText = `
-      padding: 12px;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      transition: background 0.2s;
-    `;
     item.innerHTML = `
-      <div style="font-weight: 600; color: var(--text); margin-bottom: 4px;">${email.subject}</div>
-      <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">${email.from}</div>
-      <div style="font-size: 12px; color: var(--muted); opacity: 0.7;">${email.preview}</div>
-      <div style="font-size: 11px; color: var(--muted); margin-top: 6px;">${email.time}</div>
+      <div class="mail-item-top">
+        <div class="mail-subject">${email.subject}</div>
+        <div class="mail-time">${email.time}</div>
+      </div>
+      <div class="mail-from">${email.from}</div>
+      <div class="mail-preview-line">${email.preview}</div>
     `;
 
-    item.addEventListener("mouseenter", () => item.style.background = "rgba(255,255,255,0.05)");
-    item.addEventListener("mouseleave", () => item.style.background = "transparent");
     item.addEventListener("click", () => showEmailPreview(container, email));
 
     emailList.appendChild(item);
@@ -1892,32 +1572,32 @@ function buildEmailInbox(container) {
 
 function showEmailPreview(container, email) {
   const preview = container.querySelector(".email-preview");
+  preview.classList.add("active");
   preview.innerHTML = `
-    <div style="border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px;">
-      <div style="font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 10px;">${email.subject}</div>
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <div style="font-size: 14px; color: var(--text);">${email.from}</div>
-          <div style="font-size: 12px; color: var(--muted);">to: victim@email.com</div>
+    <button class="email-back" type="button">← Inbox</button>
+    <div class="email-preview-head">
+      <div class="email-preview-subject">${email.subject}</div>
+      <div class="email-preview-meta">
+        <div class="email-preview-from">
+          <div>${email.from}</div>
+          <span>to: encrypted inbox</span>
         </div>
-        <div style="font-size: 12px; color: var(--muted);">${email.time}</div>
+        <div>${email.time}</div>
       </div>
     </div>
-    <div style="
-      flex: 1;
-      color: var(--text);
-      line-height: 1.6;
-      white-space: pre-wrap;
-      font-size: 14px;
-    ">${email.body}</div>
-    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border);">
-      <button class="btn" style="margin-right: 8px;">📥 Export Email</button>
-      <button class="btn">📎 Download Attachments</button>
+    <div class="email-body">${email.body}</div>
+    <div class="email-actions">
+      <button class="btn">Export Email</button>
+      <button class="btn">Download Attachments</button>
     </div>
   `;
 
+  preview.querySelector(".email-back")?.addEventListener("click", () => {
+    preview.classList.remove("active");
+  });
+
   // Add click handlers for buttons
-  preview.querySelectorAll(".btn").forEach(btn => {
+  preview.querySelectorAll(".email-actions .btn").forEach(btn => {
     btn.addEventListener("click", () => {
       showToast("File saved to /exports (simulated)", "info");
     });
@@ -3011,9 +2691,25 @@ function phoneAction(phase) {
   const mfsStage = frame.querySelector("#mfsStage");
   const mfsBar = frame.querySelector("#mfsBarFill");
   const mfsPct = frame.querySelector("#mfsPct");
+  const mfsPctMirror = frame.querySelector("#mfsPctMirror");
+  const mfsRadar = frame.querySelector("#mfsRadar");
   const mfsStatus = frame.querySelector("#mfsStatus");
   const mfsTerm = frame.querySelector("#mfsTerminal");
   const mfsAlert = frame.querySelector("#mfsAlert");
+  const mfsCoreTitle = frame.querySelector("#mfsCoreTitle");
+  const mfsNotification = frame.querySelector("#mfsNotificationText");
+
+  const setMfsProgress = (pct) => {
+    const safePct = Math.max(0, Math.min(100, Math.round(Number(pct) || 0)));
+    if (mfsPct) mfsPct.textContent = String(safePct);
+    if (mfsPctMirror) mfsPctMirror.textContent = String(safePct);
+    if (mfsBar) mfsBar.style.width = `${safePct}%`;
+    if (mfsRadar) mfsRadar.style.setProperty("--angle", `${safePct * 3.6}deg`);
+    frame.querySelectorAll(".mfs-steps span").forEach((step) => {
+      const gate = Number(step.dataset.step || 0);
+      step.classList.toggle("active", safePct >= gate);
+    });
+  };
 
   switch (phase.action) {
     case "text":
@@ -3041,18 +2737,31 @@ function phoneAction(phase) {
       break;
     case "stage":
       if (mfsStage) {
-        mfsStage.textContent = String(phase.payload || "");
+        const stageStories = {
+          Preparing: "Spoofing relay handshake",
+          Analyzing: "Mapping lockscreen shadow",
+          "Indexing sample data": "Mirroring vault headers",
+          "Relay handshake": "Opening ghost relay",
+          "Fingerprinting device shell": "Fingerprinting device shell",
+          "Extracting message stream": "Extracting message stream",
+          "Extracting media vault": "Extracting media vault",
+          "Cloning contact graph": "Cloning contact graph",
+          "Sealing trace mask": "Sealing trace mask",
+        };
+        const stageCopy = stageStories[String(phase.payload || "")] || String(phase.payload || "");
+        mfsStage.textContent = stageCopy;
         if (mfsStatus) mfsStatus.textContent = "Running";
+        if (mfsCoreTitle) mfsCoreTitle.textContent = "Ghost Run";
+        frame.classList.remove("mfs-complete-state");
 
-        // Basic scan script ends at t=12s; use it as the meter baseline.
-        const pct = Math.max(0, Math.min(100, Math.round((Number(phase.t || 0) / 12) * 100)));
-        if (mfsPct) mfsPct.textContent = String(pct);
-        if (mfsBar) mfsBar.style.width = `${pct}%`;
+        const scriptTotal = (scripts[state.scenario] || []).reduce((max, item) => Math.max(max, Number(item.t || 0)), 12);
+        const pct = Math.max(0, Math.min(100, Math.round((Number(phase.t || 0) / scriptTotal) * 100)));
+        setMfsProgress(pct);
 
         if (mfsTerm) {
           const line = document.createElement("div");
           line.className = "line";
-          line.innerHTML = `<span class="y">[step]</span> ${String(phase.payload || "").toLowerCase()}…`;
+          line.innerHTML = `<span class="y">[step]</span> ${stageCopy.toLowerCase()}...`;
           mfsTerm.appendChild(line);
           mfsTerm.scrollTop = mfsTerm.scrollHeight;
         }
@@ -3076,17 +2785,21 @@ function phoneAction(phase) {
       frame.querySelector("#countPhotos")?.replaceChildren(document.createTextNode(String(phase.payload?.photos ?? 0)));
       frame.querySelector("#countMessages")?.replaceChildren(document.createTextNode(String(phase.payload?.messages ?? 0)));
       frame.querySelector("#countContacts")?.replaceChildren(document.createTextNode(String(phase.payload?.contacts ?? 0)));
+      frame.querySelector("#countItems")?.replaceChildren(document.createTextNode(String(total)));
       break;
     case "complete":
       frame.querySelector(".hack-overlay")?.classList.add("visible");
-      frame.querySelector(".hack-title").textContent = "SCAN COMPLETE";
+      if (frame.querySelector(".hack-title")) frame.querySelector(".hack-title").textContent = "SCAN COMPLETE";
+      frame.classList.add("mfs-complete-state");
       if (mfsStatus) mfsStatus.textContent = "Complete";
-      if (mfsPct) mfsPct.textContent = "100";
-      if (mfsBar) mfsBar.style.width = "100%";
+      if (mfsCoreTitle) mfsCoreTitle.textContent = "Access Staged";
+      if (mfsStage) mfsStage.textContent = "Ghost chain locked. Trace mask clean.";
+      if (mfsNotification) mfsNotification.textContent = `Ghost access staged on ${state.customTargetModel || "DemoPhone X"}`;
+      setMfsProgress(100);
       if (mfsTerm) {
         const line = document.createElement("div");
         line.className = "line";
-        line.innerHTML = `<span class="g">[done]</span> session complete (simulated)`;
+        line.innerHTML = `<span class="g">[done]</span> ghost chain locked. relay clean.`;
         mfsTerm.appendChild(line);
         mfsTerm.scrollTop = mfsTerm.scrollHeight;
       }
@@ -3398,30 +3111,64 @@ function clearStage() {
 
 function buildPhoneFrame() {
   const frame = document.createElement("div");
-  frame.className = "mobile-frame";
+  frame.className = "mobile-frame mfs-frame";
 
   const deviceLabel = state.customTargetModel || "DemoPhone X";
   const carrier = state.customTargetCarrier || "Demo LTE";
   const location = state.customTargetLocation || "Unknown";
 
   frame.innerHTML = `
-    <div class="mobile-notch"></div>
     <div class="mobile-screen mfs-screen">
-      <div class="mfs-topbar">
-        <div class="mfs-brand">
-          <div class="mfs-badge">SD</div>
-          <div>
-            <div class="mfs-title">Mobile Forensics Suite</div>
-            <div class="mfs-sub">SIMULATION ONLY</div>
-          </div>
-        </div>
-        <div class="mfs-meta">
-          <div class="mfs-pill">${carrier}</div>
-          <div class="mfs-pill">Secure Link</div>
-        </div>
+      <div class="mfs-phone-status" aria-hidden="true">
+        <span>10:24</span>
+        <span class="mfs-ios-right"><span class="mfs-cell-bars"></span><span>5G</span><span class="mfs-battery">89</span></span>
       </div>
 
-      <div class="mfs-body">
+      <section class="mfs-hero">
+        <div class="mfs-world-map" aria-hidden="true">
+          <span class="mfs-node n1"></span>
+          <span class="mfs-node n2"></span>
+          <span class="mfs-node n3"></span>
+          <span class="mfs-node n4"></span>
+        </div>
+
+        <div class="mfs-push">
+          <div class="mfs-badge">SD</div>
+          <div>
+            <div class="mfs-push-title">ShadowDeck</div>
+            <div class="mfs-push-main" id="mfsNotificationText">GhostLink primed for ${deviceLabel}</div>
+            <div class="mfs-push-sub">Tunnel armed. Trace mask online.</div>
+          </div>
+          <div class="mfs-push-time">now</div>
+        </div>
+
+        <div class="mfs-network-card">
+          <div class="mfs-kicker">Network Status</div>
+          <div class="mfs-secure">Secure</div>
+          <div class="mfs-network-grid">
+            <span>Connection</span><strong>Encrypted</strong>
+            <span>Latency</span><strong>23ms</strong>
+            <span>Location</span><strong>${location}</strong>
+            <span>IP Address</span><strong>142.250.72.206</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="mfs-panel">
+        <div class="mfs-topbar">
+          <div class="mfs-brand">
+            <div class="mfs-badge">SD</div>
+            <div>
+              <div class="mfs-title">ShadowDeck</div>
+              <div class="mfs-sub">GHOST LINK</div>
+            </div>
+          </div>
+          <div class="mfs-meta">
+            <div class="mfs-pill"><span class="mfs-signal"></span>${carrier}</div>
+            <div class="mfs-pill">Trace Mask</div>
+          </div>
+        </div>
+
         <div class="mfs-card mfs-device">
           <div class="mfs-card-head">
             <div class="mfs-kicker">Target Device</div>
@@ -3429,20 +3176,50 @@ function buildPhoneFrame() {
           </div>
           <div class="mfs-device-grid">
             <div class="mfs-field">
-              <div class="k">Model</div>
-              <div class="v">${deviceLabel}</div>
+              <div class="mfs-field-icon phone"></div>
+              <div>
+                <div class="k">Device</div>
+                <div class="v">${deviceLabel}</div>
+                <div class="s">Ghost profile</div>
+              </div>
             </div>
             <div class="mfs-field">
-              <div class="k">Number</div>
-              <div class="v mono">${state.customTargetNumber || "+1 (555) 123-4567"}</div>
+              <div class="mfs-field-icon phone"></div>
+              <div>
+                <div class="k">Number</div>
+                <div class="v mono">${state.customTargetNumber || "+1 (555) 123-4567"}</div>
+                <div class="s">${carrier}</div>
+              </div>
             </div>
             <div class="mfs-field">
-              <div class="k">Location</div>
-              <div class="v">${location}</div>
+              <div class="mfs-field-icon pin"></div>
+              <div>
+                <div class="k">Location</div>
+                <div class="v">${location}</div>
+                <div class="s">United States</div>
+              </div>
             </div>
             <div class="mfs-field">
-              <div class="k">Integrity</div>
-              <div class="v ok">SIMULATED</div>
+              <div class="mfs-field-icon shield"></div>
+              <div>
+                <div class="k">Access</div>
+                <div class="v ok">MASKED</div>
+                <div class="s">Clean route</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mfs-core mfs-complete-block" aria-label="Scan status">
+          <div class="mfs-radar" id="mfsRadar" style="--angle:0deg">
+            <div class="mfs-check-mark"></div>
+            <div class="mfs-radar-center"><span id="mfsPct">0</span><small>%</small></div>
+          </div>
+          <div class="mfs-core-copy">
+            <div class="mfs-core-title" id="mfsCoreTitle">Awaiting Start</div>
+            <div class="mfs-stage" id="mfsStage">Standing by for ghost handshake.</div>
+            <div class="mfs-steps" aria-hidden="true">
+              <span data-step="0" class="active">Prep</span><span data-step="25">Scan</span><span data-step="55">Index</span><span data-step="85">Verify</span>
             </div>
           </div>
         </div>
@@ -3450,31 +3227,30 @@ function buildPhoneFrame() {
         <div class="mfs-card mfs-progress">
           <div class="mfs-card-head">
             <div class="mfs-kicker">Scan Pipeline</div>
-            <div class="mfs-percent"><span id="mfsPct">0</span>%</div>
+            <div class="mfs-percent"><span id="mfsPctMirror">0</span>%</div>
           </div>
           <div class="mfs-bar">
             <div class="mfs-bar-fill" id="mfsBarFill" style="width:0%"></div>
           </div>
-          <div class="mfs-stage" id="mfsStage">Awaiting start…</div>
-          <div class="mfs-mini">
-            <div class="mfs-mini-item"><span class="k">Photos</span><span class="v" id="countPhotos">0</span></div>
-            <div class="mfs-mini-item"><span class="k">Messages</span><span class="v" id="countMessages">0</span></div>
-            <div class="mfs-mini-item"><span class="k">Contacts</span><span class="v" id="countContacts">0</span></div>
+          <div class="mfs-result-list">
+            <div><span>Result</span><strong>Ghost access staged</strong><i></i></div>
+            <div><span>Route</span><strong>Masked relay</strong><i></i></div>
+            <div><span>Total Items</span><strong id="countItems">0</strong><i></i></div>
           </div>
         </div>
 
         <div class="mfs-card mfs-log">
           <div class="mfs-card-head">
-            <div class="mfs-kicker">Telemetry Log</div>
-            <div class="mfs-hint">Visual demo only</div>
+            <div class="mfs-kicker">Ops Log</div>
+            <div class="mfs-hint">Live</div>
           </div>
           <div class="mfs-terminal" id="mfsTerminal">
-            <div class="line"><span class="g">[init]</span> loaded modules: ui, telemetry, sanitizer</div>
-            <div class="line"><span class="g">[note]</span> no real data is accessed</div>
-            <div class="line"><span class="g">[ready]</span> waiting for pipeline events…</div>
+            <div class="line"><span class="g">[10:24:31]</span> ghostlink_router <span class="ok">OK</span> <span>12ms</span></div>
+            <div class="line"><span class="g">[mask]</span> relay chain: brooklyn > oslo > seoul</div>
+            <div class="line"><span class="g">[ready]</span> waiting for handshake events...</div>
           </div>
         </div>
-      </div>
+      </section>
 
       <div class="mfs-alert" id="mfsAlert" aria-live="polite" aria-atomic="true">
         <div class="ico">!</div>
@@ -3484,15 +3260,14 @@ function buildPhoneFrame() {
         </div>
       </div>
 
-      <div class="hack-overlay mfs-complete" id="mfsComplete">
-        <div class="hack-spinner"></div>
-        <div class="hack-title">SCAN COMPLETE</div>
-        <div class="mfs-complete-body">
-          <div class="row"><span class="k">Result</span><span class="v ok">No data collected</span></div>
-          <div class="row"><span class="k">Reason</span><span class="v">Simulation mode</span></div>
-          <div class="row"><span class="k">Total Items</span><span class="v mono"><span id="hackFileCount">0</span></span></div>
-        </div>
+      <div class="mfs-tabbar" aria-hidden="true">
+        <div class="active">Dash</div>
+        <div>Mods</div>
+        <div>Activity</div>
+        <div>Reports</div>
+        <div>Prefs</div>
       </div>
+      <div class="mfs-home-indicator" aria-hidden="true"></div>
     </div>
   `;
 
@@ -5683,8 +5458,8 @@ function setupMobileTrayToggle() {
   const tray = document.getElementById('miniTray');
   if (toggleBtn && tray) {
     toggleBtn.addEventListener('click', () => {
-      tray.classList.toggle('mobile-visible');
-      toggleBtn.textContent = tray.classList.contains('mobile-visible') ? '✕ Close' : '⚙️ Tools';
+      toggleTray();
+      toggleBtn.textContent = tray.classList.contains('open') ? '✕ Close' : '⚙️ Tools';
     });
   }
 
@@ -5694,7 +5469,7 @@ function setupMobileTrayToggle() {
   if (exitPill && navPanel) {
     exitPill.addEventListener('click', () => {
       navPanel.classList.remove('mobile-hidden');
-      if (tray) tray.classList.remove('mobile-visible');
+      if (tray) toggleTray(false);
       if (toggleBtn) toggleBtn.textContent = '⚙️ Tools';
     });
   }
