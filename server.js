@@ -10,6 +10,111 @@ const HOST = process.env.HOST || process.argv[3] || '127.0.0.1';
 // If the user explicitly asked for a port, do not auto-bump; it causes confusion when the browser still points to the original port.
 const MAX_PORT_BUMP = USER_SPECIFIED_PORT ? 0 : 50; // Try up to DEFAULT_PORT + MAX_PORT_BUMP
 const PUBLIC_DIR = __dirname;
+const ROUTED_PAGES = new Set([
+  '/hacker-prank',
+  '/hacker-prank/',
+  '/fake-phone-hacking',
+  '/fake-phone-hacking/',
+  '/email-hack-simulator',
+  '/email-hack-simulator/',
+  '/fake-virus-scanner',
+  '/fake-virus-scanner/',
+  '/fake-windows-update',
+  '/fake-windows-update/',
+  '/cracked-screen-prank',
+  '/cracked-screen-prank/',
+  '/fake-fbi-lock-screen',
+  '/fake-fbi-lock-screen/',
+  '/ios-update-prank',
+  '/ios-update-prank/',
+  '/android-optimizing-prank',
+  '/android-optimizing-prank/',
+]);
+
+const ROUTE_META = {
+  '/': {
+    title: 'Hacker Prank Software | SimDeck Fake Hacking Simulation',
+    description: 'SimDeck is safe hacker prank software: a fake hacking simulation UI for demos, videos, and pranks. Works in your browser. No real hacking or data access.',
+    canonical: 'https://www.hackerprank.online/',
+  },
+  '/hacker-prank/': {
+    title: 'Hacker Prank | Fake Hacking Simulator',
+    description: 'Open safe hacker prank tools and fake hacking simulator screens for pranks, videos, demos, and harmless visual effects.',
+    canonical: 'https://www.hackerprank.online/hacker-prank/',
+  },
+  '/fake-phone-hacking/': {
+    title: 'Fake Phone Hacking Simulator | SimDeck',
+    description: 'Launch fake phone hacking prank screens including basic scan, phone tracking, terminal, matrix, and forensic-style simulations.',
+    canonical: 'https://www.hackerprank.online/fake-phone-hacking/',
+  },
+  '/email-hack-simulator/': {
+    title: 'Fake Email Hack Simulator | Email Prank Simulator',
+    description: 'Run safe email prank simulator screens with login, mailbox, recovery, and account-security theater.',
+    canonical: 'https://www.hackerprank.online/email-hack-simulator/',
+  },
+  '/fake-virus-scanner/': {
+    title: 'Fake Virus Scanner Prank | SimDeck',
+    description: 'Start a fake virus scanner prank with fictional threat alerts, progress bars, and cleanup screens.',
+    canonical: 'https://www.hackerprank.online/fake-virus-scanner/',
+  },
+  '/fake-windows-update/': {
+    title: 'Fake Windows Update Prank | SimDeck',
+    description: 'Open a Windows-style fake update and desktop prank simulator for harmless screen jokes and videos.',
+    canonical: 'https://www.hackerprank.online/fake-windows-update/',
+  },
+  '/cracked-screen-prank/': {
+    title: 'Cracked Screen Prank | Broken Screen Prank',
+    description: 'Launch a broken screen prank with fake glass cracks and screen damage effects.',
+    canonical: 'https://www.hackerprank.online/cracked-screen-prank/',
+  },
+  '/fake-fbi-lock-screen/': {
+    title: 'Fake FBI Lock Screen Prank | SimDeck',
+    description: 'Start a fictional FBI lock screen prank with countdown and warning-screen styling.',
+    canonical: 'https://www.hackerprank.online/fake-fbi-lock-screen/',
+  },
+  '/ios-update-prank/': {
+    title: 'Fake iOS Update Prank | SimDeck',
+    description: 'Run a fake iOS update prank that looks like an endless mobile update screen.',
+    canonical: 'https://www.hackerprank.online/ios-update-prank/',
+  },
+  '/android-optimizing-prank/': {
+    title: 'Android Optimizing Prank | SimDeck',
+    description: 'Open an Android optimizing prank with repair, cache, and system loop screens.',
+    canonical: 'https://www.hackerprank.online/android-optimizing-prank/',
+  },
+};
+
+function normalizeRoutePath(pathname) {
+  if (!pathname || pathname === '/') return '/';
+  return pathname.endsWith('/') ? pathname : `${pathname}/`;
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+  })[char]);
+}
+
+function applyRouteMeta(html, pathname) {
+  const meta = ROUTE_META[normalizeRoutePath(pathname)];
+  if (!meta) return html;
+  const title = escapeHtml(meta.title);
+  const description = escapeHtml(meta.description);
+  const canonical = escapeHtml(meta.canonical);
+
+  return html
+    .replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`)
+    .replace(/<meta name="description"[\s\S]*?>/i, `<meta name="description" content="${description}">`)
+    .replace(/<link rel="canonical"[\s\S]*?>/i, `<link rel="canonical" href="${canonical}">`)
+    .replace(/<meta property="og:title"[\s\S]*?>/i, `<meta property="og:title" content="${title}">`)
+    .replace(/<meta property="og:description"[\s\S]*?>/i, `<meta property="og:description" content="${description}">`)
+    .replace(/<meta name="twitter:title"[\s\S]*?>/i, `<meta name="twitter:title" content="${title}">`)
+    .replace(/<meta name="twitter:description"[\s\S]*?>/i, `<meta name="twitter:description" content="${description}">`);
+}
 
 const MIME_TYPES = {
   '.html': 'text/html',
@@ -63,7 +168,8 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  let filePath = req.url === '/' ? '/index.html' : req.url;
+  const requestPath = req.url ? req.url.split('?')[0] : '/';
+  let filePath = requestPath === '/' || ROUTED_PAGES.has(requestPath) ? '/index.html' : requestPath;
   filePath = path.join(PUBLIC_DIR, filePath);
 
   const extname = path.extname(filePath).toLowerCase();
@@ -124,6 +230,9 @@ const server = http.createServer((req, res) => {
         res.writeHead(500);
         res.end(`Server Error: ${err.code}`);
       } else {
+        if (extname === '.html') {
+          content = Buffer.from(applyRouteMeta(content.toString('utf-8'), requestPath), 'utf-8');
+        }
         console.log(`200: ${filePath}`);
         res.writeHead(200, { 'Content-Type': contentType });
         res.end(content, 'utf-8');

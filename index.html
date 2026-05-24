@@ -16,13 +16,13 @@
   <meta property="og:title" content="Hacker Prank Software | SimDeck Fake Hacking Simulation">
   <meta property="og:description"
     content="Safe hacker prank software: a fake hacking simulation UI for demos, videos, and pranks. No real hacking or data access.">
-  <meta property="og:image" content="https://www.hackerprank.online/assets/phone-cracked-screen.jfif">
+  <meta property="og:image" content="https://www.hackerprank.online/assets/crack-desktop.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Hacker Prank Software | SimDeck">
   <meta name="twitter:description"
     content="Safe hacker prank software and fake hacking simulation for demos, videos, and pranks. No real hacking.">
-  <meta name="twitter:image" content="https://www.hackerprank.online/assets/phone-cracked-screen.jfif">
+  <meta name="twitter:image" content="https://www.hackerprank.online/assets/crack-desktop.png">
 
   <script type="application/ld+json">
     {
@@ -49,10 +49,30 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 
 <body>
+  <section class="start-page" id="startPage" aria-label="SimDeck start screen">
+    <video class="start-page-video" id="startPageVideo" autoplay muted loop playsinline preload="auto"
+      aria-hidden="true">
+      <source
+        src="https://res.cloudinary.com/dy2kfjv5q/video/upload/v1779571828/hf_20260523_212240_6ca1e484-b894-4de8-80a4-df68012d7227_w18bip.mp4"
+        type="video/mp4">
+    </video>
+    <div class="start-video-folders" id="startVideoFolders">
+      <div class="start-folder-head">
+        <span>Name</span>
+        <span>Type</span>
+        <span>Size</span>
+      </div>
+      <div class="start-folder-list" id="startFolderList" aria-label="Prank folders"></div>
+    </div>
+    <button class="start-page-hit" id="enterSimDeckBtn" type="button" aria-label="Enter SimDeck">
+      <span>Start</span>
+    </button>
+  </section>
+
   <div class="app-shell">
     <!-- Top Navigation Bar -->
     <header class="top-bar">
@@ -234,7 +254,7 @@
   </template>
 
   <div class="toast-stack" id="toastStack"></div>
-  <script src="app.js"></script>
+  <script src="/app.js"></script>
 </body>
 
 </html>

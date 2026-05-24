@@ -10,7 +10,7 @@ const themes = [
 ];
 
 const scenarios = [
-  { id: "phone", name: "Phone Hacking", desc: "Fake mobile scan with zero data.", icon: "📱", image: "assets/phone-hacking-card-cyber-crop.png", category: "phone", tags: ["Mobile", "Cinematic"], intensity: "Med" },
+  { id: "phone", name: "Phone Hacking", desc: "Fake mobile scan with zero data.", icon: "📱", image: "/assets/phone-hacking-card-cyber-crop.png", category: "phone", tags: ["Mobile", "Cinematic"], intensity: "Med" },
   { id: "email", name: "Email Hack", desc: "Bypass animation & inbox access.", icon: "📧", category: "email", tags: ["Mobile"], intensity: "Med", isNew: true },
   { id: "virus", name: "Virus Scanner", desc: "Fake security center with threats.", icon: "🛡️", category: "desktop", tags: ["Desktop", "Scare"], intensity: "High", isNew: true },
   { id: "ios", name: "iOS Update", desc: "Endless updater with panic mode.", icon: "🍎", category: "scare", tags: ["Mobile", "Loop"], intensity: "Low", isNew: true },
@@ -22,6 +22,113 @@ const scenarios = [
   { id: "critical", name: "Critical Data", desc: "Global data heist simulation.", icon: "💾", category: "desktop", tags: ["New", "Cinematic"], intensity: "High", isNew: true },
   { id: "globalnet", name: "Global Network", desc: "Cinematic city-by-city takeover.", icon: "🌐", category: "desktop", tags: ["Cinematic", "New"], intensity: "High", isNew: true },
 ];
+
+const seoRoutes = {
+  "/hacker-prank/": {
+    label: "Hacker Prank",
+    title: "Hacker Prank - Fake Hacking Simulator",
+    metaTitle: "Hacker Prank | Fake Hacking Simulator",
+    description: "Open safe fake hacking simulator tools for pranks, videos, demos, and harmless screen effects.",
+    keywords: "hacker prank, fake hacking simulator",
+    folder: "Desktop",
+    scenarioIds: ["phone", "email", "virus", "win11", "tv", "fbi", "ios", "android", "critical", "globalnet"],
+  },
+  "/fake-phone-hacking/": {
+    label: "Fake Phone Hacking",
+    title: "Fake Phone Hacking Simulator",
+    metaTitle: "Fake Phone Hacking Simulator | SimDeck",
+    description: "Launch fake phone hacking prank screens including basic scan, phone tracking, terminal, matrix, and forensic-style simulations.",
+    keywords: "fake phone hacking simulator",
+    folder: "Phone",
+    scenarioIds: ["phone_basic", "phone_track", "phone_terminal", "phone_matrix", "phone_corporate", "phone_forensic", "phone_prank", "phone_exfil"],
+  },
+  "/email-hack-simulator/": {
+    label: "Email Hack Simulator",
+    title: "Fake Email Hack Simulator",
+    metaTitle: "Fake Email Hack Simulator | Email Prank Simulator",
+    description: "Run safe email prank simulator screens with login, mailbox, recovery, and account-security theater.",
+    keywords: "fake email hack simulator, email prank simulator",
+    folder: "Email",
+    scenarioIds: ["email", "emailHijack"],
+  },
+  "/fake-virus-scanner/": {
+    label: "Fake Virus Scanner",
+    title: "Fake Virus Scanner Prank",
+    metaTitle: "Fake Virus Scanner Prank | SimDeck",
+    description: "Start a fake virus scanner prank with fictional threat alerts, progress bars, and cleanup screens.",
+    keywords: "fake virus scanner prank",
+    folder: "Desktop",
+    scenarioIds: ["virus"],
+  },
+  "/fake-windows-update/": {
+    label: "Fake Windows Update",
+    title: "Fake Windows Update Prank",
+    metaTitle: "Fake Windows Update Prank | SimDeck",
+    description: "Open a Windows-style fake update and desktop prank simulator for harmless screen jokes and videos.",
+    keywords: "fake Windows update prank",
+    folder: "Desktop",
+    scenarioIds: ["win11"],
+  },
+  "/cracked-screen-prank/": {
+    label: "Cracked Screen Prank",
+    title: "Cracked Screen Prank",
+    metaTitle: "Cracked Screen Prank | Broken Screen Prank",
+    description: "Launch a broken screen prank with fake glass cracks and screen damage effects.",
+    keywords: "cracked screen prank, broken screen prank",
+    folder: "Pranks",
+    scenarioIds: ["tv"],
+  },
+  "/fake-fbi-lock-screen/": {
+    label: "Fake FBI Lock Screen",
+    title: "Fake FBI Lock Screen Prank",
+    metaTitle: "Fake FBI Lock Screen Prank | SimDeck",
+    description: "Start a fictional FBI lock screen prank with countdown and warning-screen styling.",
+    keywords: "fake FBI lock screen prank",
+    folder: "Scares",
+    scenarioIds: ["fbi"],
+  },
+  "/ios-update-prank/": {
+    label: "iOS Update Prank",
+    title: "Fake iOS Update Prank",
+    metaTitle: "Fake iOS Update Prank | SimDeck",
+    description: "Run a fake iOS update prank that looks like an endless mobile update screen.",
+    keywords: "fake iOS update prank",
+    folder: "Mobile",
+    scenarioIds: ["ios"],
+  },
+  "/android-optimizing-prank/": {
+    label: "Android Optimizing Prank",
+    title: "Android Optimizing Prank",
+    metaTitle: "Android Optimizing Prank | SimDeck",
+    description: "Open an Android optimizing prank with repair, cache, and system loop screens.",
+    keywords: "Android optimizing prank",
+    folder: "Mobile",
+    scenarioIds: ["android"],
+  },
+};
+
+const routeOrder = [
+  "/hacker-prank/",
+  "/fake-phone-hacking/",
+  "/email-hack-simulator/",
+  "/fake-virus-scanner/",
+  "/fake-windows-update/",
+  "/cracked-screen-prank/",
+  "/fake-fbi-lock-screen/",
+  "/ios-update-prank/",
+  "/android-optimizing-prank/",
+];
+
+const phoneScenarioMeta = {
+  phone_basic: { name: "Basic Scan", desc: "A one-minute fake phone scan with export progress.", icon: "SCAN" },
+  phone_track: { name: "Phone Tracking", desc: "Login first, then open a live tracking-style phone map.", icon: "GPS" },
+  phone_terminal: { name: "Phone Terminal", desc: "Termux-style command screen for cinematic pranks.", icon: "TERM" },
+  phone_matrix: { name: "Matrix Style", desc: "Green code cascade and phone access theater.", icon: "MX" },
+  phone_corporate: { name: "Corporate SOC", desc: "Security operations dashboard on a mobile device.", icon: "SOC" },
+  phone_forensic: { name: "Forensic Scan", desc: "Forensic-style device report and fake extraction flow.", icon: "LAB" },
+  phone_prank: { name: "Prank Mode", desc: "Fast funny fake leak screens for friends.", icon: "PRNK" },
+  phone_exfil: { name: "Data Exfiltration", desc: "Dramatic export-style phone data simulation.", icon: "EXF" },
+};
 
 const miniPrograms = [
   { id: "cam", label: "Camera Feed", note: "Simulated CCTV" },
@@ -108,7 +215,7 @@ const scripts = {
     { t: 12, action: "overlay", payload: "Access Granted" },
   ],
   tv: [
-    { t: 0, action: "crack", payload: "phone" },
+    { t: 0, action: "crack-picker" },
   ],
   emailHijack: [
     { t: 0, action: "step", payload: "Suspicious session detected (SIMULATED)" },
@@ -171,7 +278,8 @@ const state = {
   layout: "single",
   timers: [],
   recent: [],
-  customTargetNumber: '+1 (555) 123-4567',
+  simHistoryArmed: false,
+  customTargetNumber: '',
   customTargetModel: 'DemoPhone X',
   customTargetCarrier: 'SecureNet Mobile',
   customTargetLocation: 'Unknown Location',
@@ -229,6 +337,10 @@ function init() {
       resetStageBtn: document.querySelector("#resetStageBtn"),
       fullscreenBtn: document.querySelector("#fullscreenBtn"),
       toastStack: document.querySelector("#toastStack"),
+      startPage: document.querySelector("#startPage"),
+      startPageVideo: document.querySelector("#startPageVideo"),
+      enterSimDeckBtn: document.querySelector("#enterSimDeckBtn"),
+      startFolderList: document.querySelector("#startFolderList"),
     };
 
     console.log("Elements found:", {
@@ -245,25 +357,339 @@ function init() {
 
     console.log("Calling renderThemes...");
     renderThemes();
-    console.log("Calling renderScenarios...");
-    renderScenarios();
     console.log("Calling renderTray...");
     renderTray();
     console.log("Calling bindControls...");
     bindControls();
+    console.log("Calling bindStartPage...");
+    bindStartPage();
     console.log("Calling bindNewDashboard...");
     bindNewDashboard();
     console.log("Calling setTheme...");
     setTheme("hollywood");
-    console.log("Calling updateCrumbs...");
-    updateCrumbs();
+    console.log("Calling route renderer...");
+    renderCurrentRoute();
     console.log("=== SimDeck Init Complete ===");
-    showToast("Welcome to SimDeck! Pick a scenario to start.", "info");
     handleDonationReturnFromCoinbase();
   } catch (error) {
     console.error("=== SimDeck Init ERROR ===", error);
     alert("SimDeck Init Error: " + error.message);
   }
+}
+
+function bindStartPage() {
+  if (!els.startPage) return;
+
+  const closeStartPage = () => {
+    els.startPage.classList.add("hidden");
+    els.startPage.setAttribute("aria-hidden", "true");
+    try {
+      els.startPageVideo?.pause();
+    } catch {
+      // Autoplay/video controls can fail silently on some browsers.
+    }
+    setTimeout(() => {
+      els.startPage?.remove();
+    }, 460);
+  };
+
+  if (getCurrentPath() !== "/") {
+    closeStartPage();
+    return;
+  }
+
+  renderStartVideoFolders();
+
+  els.enterSimDeckBtn?.addEventListener("click", () => {
+    if (window.matchMedia("(max-width: 900px)").matches) {
+      closeStartPage();
+      return;
+    }
+    els.startPage.classList.add("folders-open");
+    els.enterSimDeckBtn?.setAttribute("aria-expanded", "true");
+    els.startFolderList?.querySelector(".start-folder-row")?.focus();
+  });
+
+  els.startFolderList?.addEventListener("click", (event) => {
+    const row = event.target instanceof HTMLElement ? event.target.closest(".start-folder-row") : null;
+    if (!row) return;
+    closeStartPage();
+    navigateToRoute(row.dataset.route || "/");
+  });
+
+  els.startPageVideo?.play?.().catch(() => {});
+}
+
+function renderStartVideoFolders() {
+  if (!els.startFolderList) return;
+  els.startFolderList.innerHTML = "";
+  routeOrder.forEach((path) => {
+    const route = seoRoutes[path];
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "start-folder-row";
+    row.dataset.route = path;
+    row.innerHTML = `
+      <span><i aria-hidden="true"></i>${escapeMarkup(route.label)}</span>
+      <span>folder</span>
+      <span>--</span>
+    `;
+    els.startFolderList.appendChild(row);
+  });
+}
+
+function getCurrentPath() {
+  const path = window.location.pathname || "/";
+  if (path === "/") return "/";
+  return path.endsWith("/") ? path : `${path}/`;
+}
+
+function setCanonical(path) {
+  const href = `https://www.hackerprank.online${path === "/" ? "/" : path}`;
+  let link = document.querySelector('link[rel="canonical"]');
+  if (!link) {
+    link = document.createElement("link");
+    link.rel = "canonical";
+    document.head.appendChild(link);
+  }
+  link.href = href;
+}
+
+function setMeta(name, content) {
+  let tag = document.querySelector(`meta[name="${name}"]`);
+  if (!tag) {
+    tag = document.createElement("meta");
+    tag.setAttribute("name", name);
+    document.head.appendChild(tag);
+  }
+  tag.setAttribute("content", content);
+}
+
+function setOg(property, content) {
+  const selector = `meta[property="${property}"]`;
+  let tag = document.querySelector(selector);
+  if (!tag) {
+    tag = document.createElement("meta");
+    tag.setAttribute("property", property);
+    document.head.appendChild(tag);
+  }
+  tag.setAttribute("content", content);
+}
+
+function updateRouteSeo(route) {
+  const path = getCurrentPath();
+  const title = route?.metaTitle || "Hacker Prank Software | SimDeck Fake Hacking Simulation";
+  const description = route?.description || "SimDeck is safe hacker prank software: a fake hacking simulation UI for demos, videos, and pranks. Works in your browser. No real hacking or data access.";
+  document.title = title;
+  setMeta("description", description);
+  setOg("og:title", title);
+  setOg("og:description", description);
+  setMeta("twitter:title", title);
+  setMeta("twitter:description", description);
+  setCanonical(path);
+}
+
+function navigateToRoute(path) {
+  const normalized = path.endsWith("/") ? path : `${path}/`;
+  history.pushState({ simdeckRoute: normalized }, "", normalized);
+  renderCurrentRoute();
+}
+
+function renderCurrentRoute() {
+  if (!els.scenarioGrid || !els.stage) return;
+
+  resetRouteStage();
+  const path = getCurrentPath();
+  const route = seoRoutes[path];
+  updateRouteSeo(route);
+
+  if (path === "/hacker-prank/") {
+    renderHackerPrankScenarioGrid();
+  } else if (route) {
+    renderSeoFolderPage(route, path);
+  } else {
+    renderHomeDirectory();
+  }
+}
+
+function resetRouteStage() {
+  clearTimers();
+  state.running = false;
+  state.scenario = null;
+  state.simHistoryArmed = false;
+  clearCrackPrankState();
+  document.body.classList.remove("ui-running", "sidebar-hidden");
+  document.querySelector(".nav-panel")?.classList.remove("mobile-hidden");
+  document.querySelector(".category-sidebar")?.classList.remove("hidden");
+  els.stage.innerHTML = "";
+  els.stage.classList.remove("active", "stage-centered");
+  els.scenarioGrid.classList.remove("hidden");
+  els.scenarioGrid.innerHTML = "";
+  toggleWatermark(state.watermarkOn);
+  updateCrumbs();
+}
+
+function clearCrackPrankState() {
+  document.body.classList.remove(
+    "crack-prank-active",
+    "crack-prank-live",
+    "crack-prank-mobile",
+    "crack-prank-desktop"
+  );
+}
+
+function getScenarioMeta(id) {
+  if (phoneScenarioMeta[id]) return { id, ...phoneScenarioMeta[id], tags: ["Phone", "Simulation"], intensity: "Med" };
+  const sc = scenarios.find((item) => item.id === id);
+  if (sc) return sc;
+  return { id, name: id, desc: "Simulation", icon: "SIM", tags: ["Simulation"], intensity: "Med" };
+}
+
+function renderHackerPrankScenarioGrid() {
+  currentCategory = "all";
+  renderScenarios("all");
+  els.categoryList?.querySelectorAll(".category-item").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.category === "all");
+  });
+  if (els.crumbs) els.crumbs.textContent = "Home > Hacker Prank > All Scenarios";
+}
+
+function renderHomeDirectory() {
+  if (!els.scenarioGrid) return;
+  els.scenarioGrid.className = "scenario-grid directory-grid";
+  els.scenarioGrid.innerHTML = `
+    <section class="directory-hero">
+      <div class="directory-kicker">SimDeck Launcher</div>
+      <h2>Choose a prank folder</h2>
+      <p>Open safe fake hacking simulator folders with shareable URLs for search, videos, and mobile pranks.</p>
+    </section>
+  `;
+
+  routeOrder.forEach((path) => {
+    const route = seoRoutes[path];
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "directory-folder";
+    card.innerHTML = `
+      <span class="folder-icon" aria-hidden="true"></span>
+      <span class="folder-main">
+        <strong>${escapeMarkup(route.label)}</strong>
+        <small>${escapeMarkup(route.keywords)}</small>
+      </span>
+      <span class="folder-path">${escapeMarkup(path)}</span>
+    `;
+    card.addEventListener("click", () => navigateToRoute(path));
+    els.scenarioGrid.appendChild(card);
+  });
+
+  if (els.crumbs) els.crumbs.textContent = "Home > Folders";
+}
+
+function renderSeoFolderPage(route, path) {
+  els.scenarioGrid.className = "scenario-grid seo-folder-grid";
+  els.scenarioGrid.innerHTML = `
+    <section class="seo-folder-hero">
+      <button class="folder-back" type="button" data-route="/">Back</button>
+      <div class="directory-kicker">${escapeMarkup(route.folder)} Folder</div>
+      <h2>${escapeMarkup(route.title)}</h2>
+      <p>${escapeMarkup(route.description)}</p>
+      <div class="seo-keywords">${escapeMarkup(route.keywords)}</div>
+    </section>
+  `;
+
+  els.scenarioGrid.querySelector(".folder-back")?.addEventListener("click", () => navigateToRoute("/"));
+
+  let phoneTargetPanel = null;
+  if (path === "/fake-phone-hacking/") {
+    ensurePhoneTargetDefaults();
+    phoneTargetPanel = buildPhoneTargetPanel();
+    phoneTargetPanel.addEventListener("input", () => savePhoneTargetFromForm(phoneTargetPanel));
+    els.scenarioGrid.appendChild(phoneTargetPanel);
+  }
+
+  route.scenarioIds.forEach((id) => {
+    const meta = getScenarioMeta(id);
+    const card = document.createElement("article");
+    card.className = "seo-sim-card";
+    card.innerHTML = `
+      <div class="seo-sim-icon">${meta.image ? `<img src="${escapeMarkup(meta.image)}" alt="">` : `<span>${escapeMarkup(meta.icon || "SIM")}</span>`}</div>
+      <div class="seo-sim-copy">
+        <h3>${escapeMarkup(meta.name)}</h3>
+        <p>${escapeMarkup(meta.desc || "Open this safe visual prank simulation.")}</p>
+        <div class="seo-sim-tags">${(meta.tags || []).map((tag) => `<span>${escapeMarkup(tag)}</span>`).join("")}</div>
+      </div>
+      <button class="seo-start-btn" type="button">Start Simulation</button>
+    `;
+    card.querySelector(".seo-start-btn")?.addEventListener("click", () => {
+      if (phoneTargetPanel) {
+        if (!phoneTargetPanel.reportValidity()) return;
+        savePhoneTargetFromForm(phoneTargetPanel);
+      }
+      launchScenarioFromFolder(id);
+    });
+    card.addEventListener("dblclick", () => {
+      if (phoneTargetPanel) {
+        if (!phoneTargetPanel.reportValidity()) return;
+        savePhoneTargetFromForm(phoneTargetPanel);
+      }
+      launchScenarioFromFolder(id);
+    });
+    els.scenarioGrid.appendChild(card);
+  });
+
+  if (els.crumbs) els.crumbs.textContent = `Home > ${route.label}`;
+}
+
+function buildPhoneTargetPanel() {
+  const panel = document.createElement("form");
+  panel.className = "phone-target-panel";
+  panel.innerHTML = `
+    <div class="phone-target-head">
+      <div>
+        <div class="phone-target-kicker">Target Profile</div>
+        <h2>Set the number first</h2>
+      </div>
+      <span>Simulation only</span>
+    </div>
+    <div class="phone-target-grid">
+      <label>
+        <span>Name</span>
+        <input name="targetName" type="text" autocomplete="off" placeholder="Friend name" value="${escapeMarkup(state.customTargetName || "")}">
+      </label>
+      <label>
+        <span>Phone number</span>
+        <input name="targetPhone" type="tel" inputmode="tel" autocomplete="off" placeholder="+1 (246) 168-2663" value="${escapeMarkup(state.customTargetNumber || "")}" required>
+      </label>
+      <label>
+        <span>Device</span>
+        <input name="targetDevice" type="text" autocomplete="off" placeholder="iPhone 15 Pro" value="${escapeMarkup(state.customTargetModel || "")}">
+      </label>
+      <label>
+        <span>Carrier</span>
+        <input name="targetCarrier" type="text" autocomplete="off" placeholder="5G Mobile" value="${escapeMarkup(state.customTargetCarrier || "")}">
+      </label>
+      <label>
+        <span>Location</span>
+        <input name="targetLocation" type="text" autocomplete="off" placeholder="Nearby" value="${escapeMarkup(state.customTargetLocation || "")}">
+      </label>
+      <label>
+        <span>Battery</span>
+        <input name="targetBattery" type="number" min="1" max="100" inputmode="numeric" placeholder="85" value="${escapeMarkup(state.customTargetBattery || 85)}">
+      </label>
+    </div>
+    <p>These details stay in this browser and only appear inside the fake phone screens.</p>
+  `;
+  panel.addEventListener("submit", (event) => event.preventDefault());
+  return panel;
+}
+
+function launchScenarioFromFolder(id) {
+  if (id === "phone") {
+    navigateToRoute("/fake-phone-hacking/");
+    return;
+  }
+  state.scenario = id;
+  startScenario(true);
 }
 
 function renderThemes() {
@@ -284,6 +710,7 @@ function renderThemes() {
 
 function renderScenarios(filter = "all") {
   if (!els.scenarioGrid) return;
+  els.scenarioGrid.className = "scenario-grid";
   els.scenarioGrid.innerHTML = "";
 
   const filtered = filter === "all"
@@ -470,14 +897,7 @@ function selectScenario(id) {
 
 function showPhoneScenarioOptions() {
   console.log("showPhoneScenarioOptions called");
-  const randomData = generateRandomTargetData();
-  state.customTargetName = randomData.name;
-  state.customTargetNumber = randomData.phone;
-  state.customTargetModel = randomData.device;
-  state.customTargetCarrier = randomData.carrier;
-  state.customTargetLocation = randomData.location;
-  state.customTargetBattery = randomData.battery;
-  state.customTargetNetwork = randomData.network;
+  ensurePhoneTargetDefaults();
   state.isPremiumMode = false;
   showScenarioSelection();
 }
@@ -600,6 +1020,29 @@ function generateRandomTargetData() {
     battery: Math.floor(Math.random() * 70) + 15,
     network: ["4G LTE", "5G", "5G+"][Math.floor(Math.random() * 3)]
   };
+}
+
+function ensurePhoneTargetDefaults() {
+  state.customTargetName = state.customTargetName || "Friend";
+  state.customTargetNumber = state.customTargetNumber || "";
+  state.customTargetEmail = state.customTargetEmail || "";
+  state.customTargetModel = state.customTargetModel || "iPhone 15 Pro";
+  state.customTargetCarrier = state.customTargetCarrier || "5G Mobile";
+  state.customTargetLocation = state.customTargetLocation || "Nearby";
+  state.customTargetBattery = state.customTargetBattery || 85;
+  state.customTargetNetwork = state.customTargetNetwork || "5G";
+}
+
+function savePhoneTargetFromForm(form) {
+  if (!(form instanceof HTMLFormElement)) return;
+  const data = new FormData(form);
+  state.customTargetName = String(data.get("targetName") || "").trim() || "Friend";
+  state.customTargetNumber = String(data.get("targetPhone") || "").trim();
+  state.customTargetModel = String(data.get("targetDevice") || "").trim() || "iPhone 15 Pro";
+  state.customTargetCarrier = String(data.get("targetCarrier") || "").trim() || "5G Mobile";
+  state.customTargetLocation = String(data.get("targetLocation") || "").trim() || "Nearby";
+  state.customTargetBattery = Number(data.get("targetBattery")) || 85;
+  state.customTargetNetwork = "5G";
 }
 
 // Voluntary support modal. This is not a paywall and does not unlock features.
@@ -877,6 +1320,12 @@ function showScenarioSelection() {
 
   els.stage.appendChild(backButton);
 
+  ensurePhoneTargetDefaults();
+
+  const targetPanel = buildPhoneTargetPanel();
+  targetPanel.addEventListener("input", () => savePhoneTargetFromForm(targetPanel));
+  optionsContainer.appendChild(targetPanel);
+
   const phoneScenarios = [
     {
       id: "phone_basic",
@@ -957,6 +1406,13 @@ function showScenarioSelection() {
       highlightActive(els.scenarioList, "phone");
       // Add to recent
       addRecent("phone");
+      if (scenario.id === "phone_basic") {
+        savePhoneTargetFromForm(targetPanel);
+        showBasicScanSetup();
+        return;
+      }
+      if (!targetPanel.reportValidity()) return;
+      savePhoneTargetFromForm(targetPanel);
       // Close the scenario selection and start the simulation after a short delay
       setTimeout(() => {
         startScenario();
@@ -969,6 +1425,80 @@ function showScenarioSelection() {
   els.stage.appendChild(optionsContainer);
 
 
+}
+
+function showBasicScanSetup() {
+  els.scenarioGrid?.classList.add("hidden");
+  els.stage.classList.add("active");
+  els.stage.classList.add("stage-centered");
+  els.stage.innerHTML = "";
+
+  const setup = document.createElement("div");
+  setup.className = "basic-scan-setup";
+  setup.innerHTML = `
+    <button class="basic-scan-back" type="button">← Back to Basic Scan</button>
+    <form class="basic-scan-form" autocomplete="off">
+      <div class="basic-scan-icon">⌕</div>
+      <div>
+        <h2>Target Setup</h2>
+        <p>Enter the details that should appear inside the simulation.</p>
+      </div>
+
+      <label>
+        <span>Phone number</span>
+        <input id="basicScanPhone" name="phone" type="tel" inputmode="tel" placeholder="+1 (555) 123-4567" value="${escapeMarkup(state.customTargetNumber || "")}" required>
+      </label>
+
+      <label>
+        <span>iPhone type</span>
+        <select id="basicScanModel" name="model">
+          ${["iPhone 16 Pro Max", "iPhone 16 Pro", "iPhone 15 Pro Max", "iPhone 15 Pro", "iPhone 14 Pro", "iPhone 13"].map((model) => `
+            <option value="${escapeMarkup(model)}" ${model === state.customTargetModel ? "selected" : ""}>${escapeMarkup(model)}</option>
+          `).join("")}
+        </select>
+      </label>
+
+      <label>
+        <span>Carrier label</span>
+        <input id="basicScanCarrier" name="carrier" type="text" maxlength="28" placeholder="SecureNet Mobile" value="${escapeMarkup(state.customTargetCarrier || "")}">
+      </label>
+
+      <div class="basic-scan-preview">
+        <span>Simulation target</span>
+        <strong id="basicScanPreview">${escapeMarkup(state.customTargetModel || "DemoPhone X")} · ${escapeMarkup(state.customTargetNumber || "+1 (555) 123-4567")}</strong>
+      </div>
+
+      <button class="btn primary" type="submit">Start Basic Scan</button>
+      <small>This is visual only. No real device is accessed.</small>
+    </form>
+  `;
+
+  els.stage.appendChild(setup);
+
+  const phoneInput = setup.querySelector("#basicScanPhone");
+  const modelInput = setup.querySelector("#basicScanModel");
+  const carrierInput = setup.querySelector("#basicScanCarrier");
+  const preview = setup.querySelector("#basicScanPreview");
+  const syncPreview = () => {
+    const phone = phoneInput.value.trim() || "+1 (555) 123-4567";
+    const model = modelInput.value || "DemoPhone X";
+    preview.textContent = `${model} · ${phone}`;
+  };
+
+  phoneInput.addEventListener("input", syncPreview);
+  modelInput.addEventListener("change", syncPreview);
+  setup.querySelector(".basic-scan-back")?.addEventListener("click", showScenarioSelection);
+  setup.querySelector(".basic-scan-form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    state.customTargetNumber = phoneInput.value.trim() || "+1 (555) 123-4567";
+    state.customTargetModel = modelInput.value || "iPhone 15 Pro";
+    state.customTargetCarrier = carrierInput.value.trim() || "SecureNet Mobile";
+    state.customTargetNetwork = "5G";
+    showToast("Basic Scan target loaded", "success");
+    startScenario();
+  });
+
+  phoneInput.focus();
 }
 
 function addRecent(id) {
@@ -1001,8 +1531,7 @@ function bindControls() {
 
   // Reset button
   els.resetStageBtn?.addEventListener("click", () => {
-    resetStage();
-    renderScenarios(currentCategory);
+    renderCurrentRoute();
     showToast("Stage reset! Pick a scenario.", "info");
   });
 
@@ -1048,6 +1577,7 @@ function bindControls() {
   els.stage?.addEventListener("click", handleTapExit);
   els.stage?.addEventListener("touchstart", handleTouchExit);
   els.stage?.addEventListener("touchend", cancelTouchHold);
+  window.addEventListener("popstate", handleBrowserBack);
 
   enableWatermarkDrag();
 
@@ -1064,6 +1594,7 @@ function closeDisclaimer() { els.disclaimerModal.classList.remove("show"); }
 function startScenario(force = false) {
   if (!force && !state.scenario) { showToast("Choose a scenario.", "warning"); return; }
   resetStage(true);
+  armSimulationHistory();
   // resetStage() intentionally stops any previous loop; re-enable for the next run.
   state.running = true;
   document.body.classList.add('ui-running');
@@ -1082,6 +1613,25 @@ function startScenario(force = false) {
   } else {
     showToast("Scenario not implemented yet.", "warning");
   }
+}
+
+function armSimulationHistory() {
+  if (state.simHistoryArmed) return;
+  try {
+    history.pushState({ simdeckRunning: true }, "", window.location.href);
+    state.simHistoryArmed = true;
+  } catch (err) {
+    state.simHistoryArmed = false;
+  }
+}
+
+function handleBrowserBack() {
+  if (state.running || els.stage?.classList.contains("active")) {
+    state.simHistoryArmed = false;
+    exitToHome();
+    return;
+  }
+  renderCurrentRoute();
 }
 
 function updateCrumbs(showtime = false) {
@@ -1106,6 +1656,8 @@ function updateCrumbs(showtime = false) {
 
 function resetStage(keepWatermark = false) {
   state.running = false;
+  state.simHistoryArmed = false;
+  clearCrackPrankState();
   document.body.classList.remove('ui-running');
   clearTimers();
 
@@ -1171,6 +1723,7 @@ function cancelTouchHold() {
 
 function exitToHome() {
   state.running = false;
+  state.simHistoryArmed = false;
   clearTimers();
   showToast("Exited to home.", "info");
   resetStage();
@@ -1320,10 +1873,9 @@ function runPhoneForensicScenario() {
 function runPhoneTrackingScenario() {
   clearStage();
   els.stage.classList.add("stage-centered");
-  const frame = buildPhoneTrackingFrame();
+  const frame = buildPhoneTrackingLoginFrame();
   els.stage.appendChild(frame);
   addGlitch();
-  startPhoneTrackingSimulation(frame);
 }
 
 function runPhoneTerminalScenario() {
@@ -2654,9 +3206,9 @@ function showWindows11BSOD(container) {
 
 function runTVScenario() {
   clearStage();
-  const overlay = buildCrackOverlay("phone");
-  els.stage.appendChild(overlay);
-  overlay.addEventListener("click", cycleCrackPattern);
+  document.body.classList.add("crack-prank-active");
+  const picker = buildCrackPicker();
+  els.stage.appendChild(picker);
   addGlitch();
 }
 
@@ -2792,17 +3344,22 @@ function phoneAction(phase) {
       if (frame.querySelector(".hack-title")) frame.querySelector(".hack-title").textContent = "SCAN COMPLETE";
       frame.classList.add("mfs-complete-state");
       if (mfsStatus) mfsStatus.textContent = "Complete";
-      if (mfsCoreTitle) mfsCoreTitle.textContent = "Access Staged";
-      if (mfsStage) mfsStage.textContent = "Ghost chain locked. Trace mask clean.";
-      if (mfsNotification) mfsNotification.textContent = `Ghost access staged on ${state.customTargetModel || "DemoPhone X"}`;
+      if (mfsCoreTitle) mfsCoreTitle.textContent = "Exporting Phone Data";
+      if (mfsStage) mfsStage.textContent = "Messages, media, contacts queued to vault.";
+      if (mfsNotification) mfsNotification.textContent = `Exporting phone data from ${state.customTargetModel || "DemoPhone X"}`;
+      const resultValue = frame.querySelector(".mfs-result-list div:first-child strong");
+      const routeValue = frame.querySelector(".mfs-result-list div:nth-child(2) strong");
+      if (resultValue) resultValue.textContent = "Exporting phone data";
+      if (routeValue) routeValue.textContent = "Vault relay active";
       setMfsProgress(100);
       if (mfsTerm) {
         const line = document.createElement("div");
         line.className = "line";
-        line.innerHTML = `<span class="g">[done]</span> ghost chain locked. relay clean.`;
+        line.innerHTML = `<span class="g">[export]</span> messages, media, contacts queued to vault.`;
         mfsTerm.appendChild(line);
         mfsTerm.scrollTop = mfsTerm.scrollHeight;
       }
+      startPhoneExportProgress(frame);
       showToast("Basic scan complete (simulated).", "info");
       break;
     case "init-matrix":
@@ -3061,7 +3618,7 @@ function winAction(phase) {
 }
 
 function tvAction(phase) {
-  if (phase.action === "crack") {
+  if (phase.action === "crack" || phase.action === "crack-picker") {
     const overlay = els.stage.querySelector(".crack-overlay");
     if (overlay) setCrackPattern(overlay, phase.payload);
   }
@@ -3090,6 +3647,45 @@ function showtimeAction(phase) {
       break;
     default: break;
   }
+}
+
+function startPhoneExportProgress(frame) {
+  const panel = frame.querySelector("#mfsExportPanel");
+  const pctEl = frame.querySelector("#mfsExportPct");
+  const fill = frame.querySelector("#mfsExportFill");
+  const copy = frame.querySelector("#mfsExportCopy");
+  const term = frame.querySelector("#mfsTerminal");
+  if (!panel || panel.dataset.running === "true") return;
+
+  panel.dataset.running = "true";
+  frame.classList.add("mfs-export-active");
+
+  const steps = [
+    { t: 0, pct: 8, copy: "Opening vault relay..." },
+    { t: 2500, pct: 22, copy: "Exporting messages.db" },
+    { t: 5200, pct: 38, copy: "Packing media thumbnails" },
+    { t: 8200, pct: 57, copy: "Exporting contact graph" },
+    { t: 11200, pct: 74, copy: "Compressing chat attachments" },
+    { t: 14200, pct: 91, copy: "Sealing encrypted bundle" },
+    { t: 16500, pct: 100, copy: "Export package ready" },
+  ];
+
+  steps.forEach((step) => {
+    const timer = setTimeout(() => {
+      if (!state.running) return;
+      if (pctEl) pctEl.textContent = String(step.pct);
+      if (fill) fill.style.width = `${step.pct}%`;
+      if (copy) copy.textContent = step.copy;
+      if (term) {
+        const line = document.createElement("div");
+        line.className = "line";
+        line.innerHTML = `<span class="g">[export]</span> ${step.copy.toLowerCase()}`;
+        term.appendChild(line);
+        term.scrollTop = term.scrollHeight;
+      }
+    }, step.t / state.speed);
+    state.timers.push(timer);
+  });
 }
 
 // ---------- Builders ----------
@@ -3123,6 +3719,7 @@ function buildPhoneFrame() {
         <span>10:24</span>
         <span class="mfs-ios-right"><span class="mfs-cell-bars"></span><span>5G</span><span class="mfs-battery">89</span></span>
       </div>
+      <button class="mfs-back-btn" type="button" aria-label="Back to scenarios">Back</button>
 
       <section class="mfs-hero">
         <div class="mfs-world-map" aria-hidden="true">
@@ -3155,18 +3752,10 @@ function buildPhoneFrame() {
       </section>
 
       <section class="mfs-panel">
-        <div class="mfs-topbar">
-          <div class="mfs-brand">
-            <div class="mfs-badge">SD</div>
-            <div>
-              <div class="mfs-title">ShadowDeck</div>
-              <div class="mfs-sub">GHOST LINK</div>
-            </div>
-          </div>
-          <div class="mfs-meta">
-            <div class="mfs-pill"><span class="mfs-signal"></span>${carrier}</div>
-            <div class="mfs-pill">Trace Mask</div>
-          </div>
+        <div class="mfs-link-strip">
+          <span><span class="mfs-signal"></span>${carrier}</span>
+          <span>Trace Mask</span>
+          <span>Ghost Link</span>
         </div>
 
         <div class="mfs-card mfs-device">
@@ -3233,9 +3822,18 @@ function buildPhoneFrame() {
             <div class="mfs-bar-fill" id="mfsBarFill" style="width:0%"></div>
           </div>
           <div class="mfs-result-list">
-            <div><span>Result</span><strong>Ghost access staged</strong><i></i></div>
+            <div><span>Result</span><strong>Pending export</strong><i></i></div>
             <div><span>Route</span><strong>Masked relay</strong><i></i></div>
             <div><span>Total Items</span><strong id="countItems">0</strong><i></i></div>
+          </div>
+          <div class="mfs-export-panel" id="mfsExportPanel">
+            <div class="mfs-export-head">
+              <span>Export Progress</span>
+              <strong><span id="mfsExportPct">0</span>%</strong>
+            </div>
+            <div class="mfs-export-bar"><div id="mfsExportFill"></div></div>
+            <div class="mfs-export-copy" id="mfsExportCopy">Waiting for vault relay...</div>
+            <button class="mfs-export-back" type="button">Back to scenarios</button>
           </div>
         </div>
 
@@ -3270,6 +3868,15 @@ function buildPhoneFrame() {
       <div class="mfs-home-indicator" aria-hidden="true"></div>
     </div>
   `;
+
+  frame.querySelector(".mfs-back-btn")?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    exitToHome();
+  });
+  frame.querySelector(".mfs-export-back")?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    exitToHome();
+  });
 
   return frame;
 }
@@ -3625,23 +4232,101 @@ function getSimTrackingBaseLocation(locationText) {
   return raw ? { ...fallback, label: raw } : fallback;
 }
 
+function escapeMarkup(value = "") {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  })[char]);
+}
+
+function buildPhoneTrackingLoginFrame() {
+  const frame = document.createElement("div");
+  frame.className = "mobile-frame trk-frame trk-login-frame";
+
+  frame.innerHTML = `
+    <div class="mobile-notch"></div>
+    <div class="mobile-screen trk-screen trk-login-screen">
+      <div class="status-bar trk-status-bar">
+        <span>09:43</span>
+        <div class="trk-status-right">
+          <span>${escapeMarkup(state.customTargetNetwork || "5G")}</span>
+          <span>${escapeMarkup(state.customTargetBattery || 85)}%</span>
+        </div>
+      </div>
+
+      <div class="trk-login-shell">
+        <div class="trk-login-mark">TRACE</div>
+        <div class="trk-login-title">PHONE TRACKING</div>
+        <div class="trk-login-sub">Load target profile before opening the live trace console.</div>
+
+        <form class="trk-login-form" id="trkLoginForm">
+          <label>
+            <span>Name</span>
+            <input name="targetName" type="text" autocomplete="name" placeholder="Friend name" value="${escapeMarkup(state.customTargetName || "")}" required>
+          </label>
+          <label>
+            <span>Phone Number</span>
+            <input name="targetPhone" type="tel" autocomplete="tel" placeholder="+1 (746) 844-5451" value="${escapeMarkup(state.customTargetNumber || "")}" required>
+          </label>
+          <label>
+            <span>Email</span>
+            <input name="targetEmail" type="email" autocomplete="email" placeholder="name@example.com" value="${escapeMarkup(state.customTargetEmail || "")}" required>
+          </label>
+          <button class="trk-login-btn" type="submit">Start Tracking</button>
+        </form>
+
+        <div class="trk-login-foot">
+          <span>LIVE</span>
+          <span>SIM</span>
+          <span>TRACE MASK READY</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  frame.querySelector("#trkLoginForm")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!(form instanceof HTMLFormElement) || !form.reportValidity()) return;
+
+    const data = new FormData(form);
+    state.customTargetName = String(data.get("targetName") || "").trim();
+    state.customTargetNumber = String(data.get("targetPhone") || "").trim();
+    state.customTargetEmail = String(data.get("targetEmail") || "").trim();
+    state.customTargetCarrier = state.customTargetCarrier || "Ghost LTE";
+    state.customTargetNetwork = state.customTargetNetwork || "5G";
+
+    const trackingFrame = buildPhoneTrackingFrame();
+    frame.replaceWith(trackingFrame);
+    startPhoneTrackingSimulation(trackingFrame);
+  });
+
+  return frame;
+}
+
 function buildPhoneTrackingFrame() {
   const frame = document.createElement("div");
   frame.className = "mobile-frame trk-frame";
 
-  const carrier = state.customTargetCarrier || "Demo LTE";
-  const target = state.customTargetNumber || "+1 (555) 123-4567";
+  const carrier = escapeMarkup(state.customTargetCarrier || "Ghost LTE");
+  const target = escapeMarkup(state.customTargetNumber || "+1 (555) 123-4567");
+  const targetName = escapeMarkup(state.customTargetName || "Target User");
+  const targetEmail = escapeMarkup(state.customTargetEmail || "unknown@mail.local");
   const base = getSimTrackingBaseLocation(state.customTargetLocation);
+  const baseLabel = escapeMarkup(base.label);
 
   frame.innerHTML = `
     <div class="mobile-notch"></div>
     <div class="mobile-screen trk-screen">
-      <div class="status-bar">
+      <div class="status-bar trk-status-bar">
         <span>09:43</span>
-        <div style="display: flex; gap: 6px;">
+        <div class="trk-status-right">
           <span>${carrier}</span>
-          <span>${state.customTargetNetwork || "5G"}</span>
-          <span>${state.customTargetBattery || 85}%</span>
+          <span>${escapeMarkup(state.customTargetNetwork || "5G")}</span>
+          <span>${escapeMarkup(state.customTargetBattery || 85)}%</span>
         </div>
       </div>
 
@@ -3649,6 +4334,7 @@ function buildPhoneTrackingFrame() {
         <div>
           <div class="trk-title">PHONE TRACKING</div>
           <div class="trk-sub">Target: <span class="trk-target">${target}</span></div>
+          <div class="trk-id-line">${targetName} / ${targetEmail}</div>
         </div>
         <div class="trk-badges">
           <span class="trk-badge live">LIVE</span>
@@ -3673,7 +4359,7 @@ function buildPhoneTrackingFrame() {
       <div class="trk-metrics">
         <div class="trk-metric">
           <div class="k">Area</div>
-          <div class="v" id="trkArea">${base.label}</div>
+          <div class="v" id="trkArea">${baseLabel}</div>
         </div>
         <div class="trk-metric">
           <div class="k">Accuracy</div>
@@ -3933,13 +4619,13 @@ function buildPhoneTerminalFrame() {
         </div>
 
         <div class="trm-menu">
-          <div><span class="n">[01]</span> Profile Scan  <span class="d">: fake device metadata</span></div>
-          <div><span class="n">[02]</span> Signal Probe  <span class="d">: animated pings</span></div>
-          <div><span class="n">[03]</span> App Audit     <span class="d">: mock app list</span></div>
-          <div><span class="n">[04]</span> Message Tease <span class="d">: prank preview</span></div>
-          <div><span class="n">[05]</span> Camera Feed   <span class="d">: simulated CCTV</span></div>
-          <div><span class="n">[06]</span> Data Export   <span class="d">: fake transfer bar</span></div>
-          <div style="margin-top: 10px;"><span class="n">[99]</span> Exit System  <span class="d">: return to home</span></div>
+          <div><span class="n">01</span><span class="m"><b>Profile Scan</b><small>fake metadata</small></span></div>
+          <div><span class="n">02</span><span class="m"><b>Signal Probe</b><small>animated pings</small></span></div>
+          <div><span class="n">03</span><span class="m"><b>App Audit</b><small>mock app list</small></span></div>
+          <div><span class="n">04</span><span class="m"><b>Message Tease</b><small>prank preview</small></span></div>
+          <div><span class="n">05</span><span class="m"><b>Camera Feed</b><small>simulated CCTV</small></span></div>
+          <div><span class="n">06</span><span class="m"><b>Data Export</b><small>fake transfer</small></span></div>
+          <div><span class="n">99</span><span class="m"><b>Exit System</b><small>return home</small></span></div>
         </div>
 
         <div class="trm-log" id="trmLog" aria-live="polite"></div>
@@ -4680,6 +5366,50 @@ function runAndroidRepair(log, progressBar, progressText, statusText) {
   }, 700);
 }
 
+function buildCrackPicker() {
+  const wrap = document.createElement("div");
+  wrap.className = "crack-picker";
+  wrap.innerHTML = `
+    <div class="crack-picker-head">
+      <div>
+        <div class="directory-kicker">Hollywood Hacker</div>
+        <h2>Choose Cracked Screen</h2>
+        <p>Select a mobile or desktop cracked display prank. The effect is visual only.</p>
+      </div>
+    </div>
+    <div class="crack-choice-grid">
+      <button class="crack-choice mobile" type="button" data-crack-style="mobile">
+        <span class="crack-thumb"><img src="/assets/crack-mobile.png" alt=""></span>
+        <strong>Mobile Crack</strong>
+        <small>Portrait phone damage with dense spider cracks.</small>
+      </button>
+      <button class="crack-choice desktop" type="button" data-crack-style="desktop">
+        <span class="crack-thumb"><img src="/assets/crack-desktop.png" alt=""></span>
+        <strong>Desktop Crack</strong>
+        <small>Wide monitor damage with broken panel lines.</small>
+      </button>
+    </div>
+  `;
+
+  wrap.addEventListener("click", (event) => {
+    const choice = event.target instanceof HTMLElement ? event.target.closest(".crack-choice") : null;
+    if (!choice) return;
+    launchCrackOverlay(choice.dataset.crackStyle || "desktop");
+  });
+
+  return wrap;
+}
+
+function launchCrackOverlay(style) {
+  els.stage.innerHTML = "";
+  const overlay = buildCrackOverlay(style);
+  const mode = overlay.dataset.pattern || "desktop";
+  document.body.classList.add("crack-prank-active", "crack-prank-live");
+  document.body.classList.toggle("crack-prank-mobile", mode === "mobile");
+  document.body.classList.toggle("crack-prank-desktop", mode === "desktop");
+  els.stage.appendChild(overlay);
+}
+
 function buildCrackOverlay(style) {
   const overlay = document.createElement("div");
   overlay.className = "crack-overlay";
@@ -4688,31 +5418,21 @@ function buildCrackOverlay(style) {
   hint.className = "overlay";
   hint.style.background = "transparent";
   hint.style.pointerEvents = "none";
-  hint.innerHTML = `<div class="overlay-card"><div class="title">Tap to switch crack pattern</div><div class="subtitle">Simulated screen damage. Quick exit always available.</div></div>`;
+  hint.innerHTML = `<div class="overlay-card"><div class="title">Cracked Screen</div><div class="subtitle">Visual prank only. Quick exit always available.</div></div>`;
   overlay.appendChild(hint);
   return overlay;
 }
 
 function setCrackPattern(el, style) {
   const patterns = {
-    phone: "url('/assets/phone-cracked-screen.jfif')",
-    corner: "radial-gradient(circle at 0% 0%, rgba(255,255,255,0.4), transparent 35%), radial-gradient(circle at 20% 20%, rgba(255,255,255,0.15), transparent 25%)",
-    spider: "radial-gradient(circle at 50% 40%, rgba(255,255,255,0.35), transparent 38%), radial-gradient(circle at 55% 45%, rgba(255,255,255,0.25), transparent 32%)",
-    center: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4), transparent 40%), radial-gradient(circle at 48% 52%, rgba(255,255,255,0.2), transparent 28%)",
+    mobile: "url('/assets/crack-mobile.png')",
+    desktop: "url('/assets/crack-desktop.png')",
   };
-  const key = patterns[style] ? style : "phone";
+  const key = patterns[style] ? style : "desktop";
   el.dataset.pattern = key;
-  el.style.backgroundImage = patterns[key] || patterns.phone;
-}
-
-function cycleCrackPattern() {
-  const overlay = els.stage.querySelector(".crack-overlay");
-  if (!overlay) return;
-  const seq = ["phone", "corner", "spider", "center"];
-  const current = overlay.dataset.pattern || "phone";
-  const currentIdx = seq.indexOf(current);
-  const next = seq[(currentIdx + 1) % seq.length];
-  setCrackPattern(overlay, next);
+  el.classList.toggle("crack-mobile-mode", key === "mobile");
+  el.classList.toggle("crack-desktop-mode", key === "desktop");
+  el.style.backgroundImage = patterns[key] || patterns.desktop;
 }
 
 function buildEmailHijackUI() {

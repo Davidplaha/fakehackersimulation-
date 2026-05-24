@@ -1,0 +1,76 @@
+{
+  "rewrites": [
+    {
+      "source": "/hacker-prank",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/hacker-prank/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/fake-phone-hacking",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/fake-phone-hacking/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/email-hack-simulator",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/email-hack-simulator/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/fake-virus-scanner",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/fake-virus-scanner/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/fake-windows-update",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/fake-windows-update/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/cracked-screen-prank",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/cracked-screen-prank/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/fake-fbi-lock-screen",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/fake-fbi-lock-screen/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/ios-update-prank",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/ios-update-prank/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/android-optimizing-prank",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/android-optimizing-prank/",
+      "destination": "/index.html"
+    }
+  ]
+}
