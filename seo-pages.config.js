@@ -18,7 +18,7 @@ module.exports = {
       h1: "Hacker Prank Simulation",
       intro: "SimDeck is a safe hacker prank simulation built for videos, demos, streams, and harmless jokes. It creates realistic fake hacking screens without touching real devices, accounts, networks, files, or messages.",
       sections: [
-        ["A fake hacking simulator people can actually use", "Search Console data from the previous Cyberlords prank page showed strong demand around hacker prank, fake hacking, hacking prank, fake hacker prank, and fake hacking website prank. This page is built around that intent: people want a convincing screen they can open quickly, make fullscreen, and use as a visual prank without downloads or real hacking."],
+        ["A fake hacking simulator people can actually use", "People search for hacker prank, fake hacking, hacking prank, fake hacker prank, and fake hacking website prank because they want a convincing screen they can open quickly, make fullscreen, and use as a visual prank - without downloads or real hacking. This page is built around exactly that intent."],
         ["What you can launch", "Choose fake phone hacking screens, fake virus scans, email hack theater, Windows update pranks, cracked screen effects, FBI-style lock screens, iOS update loops, Android optimizing screens, and a Windows OS simulator. Each mode is visual only. The buttons, logs, folders, alerts, and progress bars are designed to look alive while staying completely fictional."],
         ["How to use it safely", "Pick a prank folder, customize harmless labels where available, then start the simulation. For best effect, use fullscreen and keep the built-in simulation watermark available when filming or demonstrating. SimDeck is entertainment software, not spyware, malware, phishing, account recovery, or a security bypass tool."],
       ],
@@ -35,7 +35,7 @@ module.exports = {
       description: "Open a safe hacker prank online with fake hacking screens, cinematic dashboards, phone scans, virus alerts, and harmless prank modes.",
       keywords: ["hacker prank", "hacking prank", "fake hacker prank", "prank hacker", "fake hacking prank"],
       h1: "Hacker Prank",
-      intro: "This hacker prank page is the main launcher for SimDeck. It targets the exact searches that already produced impressions and clicks for the old Cyberlords data: hacker prank, hacking prank, prank hacker, fake hacker prank, and fake hacking prank.",
+      intro: "This hacker prank page is the main launcher for SimDeck. It targets the searches people actually use - hacker prank, hacking prank, prank hacker, fake hacker prank, and fake hacking prank - and puts a working, safe prank screen one click away.",
       sections: [
         ["Built for the search intent", "People searching hacker prank usually want an instant screen they can show to a friend, record for a short video, or use as a fictional computer scene. SimDeck keeps the simulation first, then supports it with clear explanations, safety notes, and links to every prank mode so Google can crawl the full tool set."],
         ["Prank modes included", "The launcher includes fake hacking dashboards, phone scan simulations, fake email access screens, password theater, fake virus scanning, cracked screen visuals, Windows pranks, iOS and Android update loops, and cinematic global network screens. Every mode is a browser animation and does not connect to real systems."],

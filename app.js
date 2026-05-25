@@ -23,8 +23,7 @@ const scenarios = [
   { id: "passwordMeter", name: "Password Meter", desc: "Standalone vault meter console.", icon: "🧪", category: "desktop", tags: ["Vault"], intensity: "Med" },
   { id: "fbi", name: "FBI Lock", desc: "Fake lock with countdown timer.", icon: "🚨", category: "scare", tags: ["Prank", "Scare"], intensity: "Med", isHot: true },
   { id: "cryptoMiner", name: "Crypto Miner", desc: "Dark exchange breach with coin mining console.", icon: "₿", category: "desktop", tags: ["New", "Crypto"], intensity: "High", isNew: true },
-  { id: "critical", name: "Critical Data", desc: "Global data heist simulation.", icon: "💾", category: "desktop", tags: ["New", "Cinematic"], intensity: "High", isNew: true },
-  { id: "globalnet", name: "Global Network", desc: "Cinematic city-by-city takeover.", icon: "🌐", category: "desktop", tags: ["Cinematic", "New"], intensity: "High", isNew: true },
+  { id: "critical", name: "Critical Data", desc: "Progressive remote terminal simulation.", icon: "💾", category: "desktop", tags: ["New", "Interactive"], intensity: "High", isNew: true },
 ];
 
 const seoRoutes = {
@@ -35,7 +34,7 @@ const seoRoutes = {
     description: "Open a safe hacker prank online with fake hacking screens, cinematic dashboards, phone scans, virus alerts, and harmless prank modes.",
     keywords: "hacker prank, hacking prank, fake hacker prank, prank hacker, fake hacking prank",
     folder: "Desktop",
-    scenarioIds: ["phone", "email", "virus", "windows_os", "win11", "password", "passwordMeter", "tv", "fbi", "ios", "android", "cryptoMiner", "critical", "globalnet"],
+    scenarioIds: ["phone", "email", "virus", "windows_os", "win11", "password", "passwordMeter", "tv", "fbi", "ios", "android", "cryptoMiner", "critical"],
   },
   "/fake-phone-hacking/": {
     label: "Fake Phone Hacking",
@@ -251,13 +250,7 @@ const scripts = {
     { t: 60, action: "loop-check" },
   ],
   critical: [
-    { t: 0, action: "critical-init" },
-    { t: 1, action: "critical-progress", payload: 10 },
-    { t: 3, action: "critical-progress", payload: 30 },
-    { t: 5, action: "critical-progress", payload: 55 },
-    { t: 7, action: "critical-progress", payload: 80 },
-    { t: 9, action: "critical-progress", payload: 100 },
-    { t: 10, action: "complete", payload: "Download Complete" },
+    { t: 0, action: "critical-ready" },
   ],
   globalnet: [
     { t: 0, action: "gn-init" },
@@ -306,6 +299,7 @@ let tapTimer = null;
 let touchTimer = null;
 
 let currentCategory = "all";
+let criticalSession = null;
 
 function init() {
   try {
@@ -419,13 +413,12 @@ function bindStartPage() {
   renderStartVideoFolders();
 
   els.enterSimDeckBtn?.addEventListener("click", () => {
-    if (window.matchMedia("(max-width: 900px)").matches) {
-      closeStartPage();
-      return;
-    }
-    els.startPage.classList.add("folders-open");
+    // Start → cinematic "entering advanced system" loader → reveal ALL profiles
+    // (the full scenario grid), on both mobile and desktop.
+    if (els.enterSimDeckBtn.dataset.loading === "1") return;
+    els.enterSimDeckBtn.dataset.loading = "1";
     els.enterSimDeckBtn?.setAttribute("aria-expanded", "true");
-    els.startFolderList?.querySelector(".start-folder-row")?.focus();
+    runSystemLoader(() => closeStartPage());
   });
 
   els.startFolderList?.addEventListener("click", (event) => {
@@ -466,6 +459,53 @@ function loadStartVideoDeferred() {
   } else {
     setTimeout(start, 1200);
   }
+}
+
+// Cinematic boot loader shown after pressing Start, before the scenario grid.
+function runSystemLoader(done) {
+  if (document.querySelector(".sys-loader")) return;
+  const overlay = document.createElement("div");
+  overlay.className = "sys-loader";
+  overlay.innerHTML = `
+    <div class="sys-loader-card" role="status" aria-live="polite">
+      <div class="sys-loader-title">ENTERING ADVANCED SYSTEM</div>
+      <div class="sys-loader-log" data-sl-log></div>
+      <div class="sys-loader-bar"><span data-sl-bar></span></div>
+      <div class="sys-loader-pct"><span data-sl-pct>0</span>%</div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const bar = overlay.querySelector("[data-sl-bar]");
+  const pct = overlay.querySelector("[data-sl-pct]");
+  const log = overlay.querySelector("[data-sl-log]");
+  const steps = [
+    [12, "Establishing secure tunnel..."],
+    [30, "Bypassing firewall..."],
+    [48, "Loading prank modules..."],
+    [68, "Decrypting interface..."],
+    [86, "Mounting all profiles..."],
+    [100, "Access granted."],
+  ];
+  let i = 0;
+  const tick = () => {
+    if (!overlay.isConnected) return;
+    if (i >= steps.length) {
+      overlay.classList.add("done");
+      setTimeout(() => { overlay.remove(); if (done) done(); }, 360);
+      return;
+    }
+    const [p, msg] = steps[i];
+    i += 1;
+    if (bar) bar.style.width = `${p}%`;
+    if (pct) pct.textContent = String(p);
+    if (log) {
+      const d = document.createElement("div");
+      d.textContent = `> ${msg}`;
+      log.appendChild(d);
+      log.scrollTop = log.scrollHeight;
+    }
+    setTimeout(tick, 300);
+  };
+  tick();
 }
 
 function toggleSeoGuide(forceOpen) {
@@ -953,6 +993,12 @@ function selectScenario(id) {
   highlightActive(els.scenarioGrid, id);
   addRecent(id);
   updateCrumbs();
+  // Entering an app: mark the session running so the floating "How to use"
+  // guide is hidden (it should only appear on the profile/grid screen).
+  document.body.classList.add("ui-running");
+  // Push a history entry so the browser Back button returns to the grid
+  // instead of leaving the site, for every scenario entry point.
+  armSimulationHistory();
 
   if (id === "phone") {
     console.log("Phone scenario - calling showPhoneScenarioOptions");
@@ -1651,6 +1697,17 @@ function bindControls() {
   // Exit controls
   els.exitPill?.addEventListener("click", exitToHome);
   document.addEventListener("keydown", (e) => {
+    const t = e.target;
+    const typing = t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable);
+    // Backspace inside a scenario should step BACK to the grid, never leave the
+    // site. (Only when not typing in a field.)
+    if (e.key === "Backspace" && !typing) {
+      if (state.running || els.stage?.classList.contains("active")) {
+        e.preventDefault();
+        exitToHome();
+      }
+      return;
+    }
     if (e.key !== "Escape") return;
     if (els.seoGuideTray?.classList.contains("open")) {
       toggleSeoGuide(false);
@@ -1751,6 +1808,7 @@ function resetStage(keepWatermark = false) {
   clearEmailHijackState();
   clearPasswordCrackerState();
   clearCryptoMinerState();
+  clearCriticalTerminalState();
   document.body.classList.remove('ui-running');
   clearTimers();
 
@@ -7305,6 +7363,15 @@ function appendLog(container, text) {
   container.scrollTop = container.scrollHeight;
 }
 
+function escapeHTML(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function fakeFiles() {
   return [
     "/sample/system/demo_cache_01.bin",
@@ -8195,118 +8262,399 @@ function buildCryptoMinerUI() {
 
 // ---------- Critical Data Scenario ----------
 
+const CRITICAL_STAGES = [
+  {
+    id: "remote",
+    title: "Remote Connection",
+    threshold: 9,
+    lines: [
+      "ssh root@23.86.111.0 -p 2222",
+      "negotiating cipher: aes256-gcm",
+      "handshake relay accepted",
+      "tunneling through 4 relay hops",
+      "mounting /srv/mainframe (ro)",
+      "escalating session: sudo -i",
+      "enumerating admin users -n 22",
+      "staging payload: auth_crack.bin",
+      "engaging credential attack vector",
+    ],
+  },
+  {
+    id: "server",
+    title: "Main Server",
+    threshold: 7,
+    lines: [
+      "server: 23.86.111.0 (db-core-01)",
+      "gateway flag: RESTRICTED // TOP SECRET",
+      "session mirror established",
+      "kernel: 5.15-hardened",
+      "privilege table: locked",
+      "reading /etc/shadow ... denied",
+      "authentication required: security console",
+    ],
+  },
+  {
+    id: "denied",
+    title: "Access Denied",
+    threshold: 6,
+    lines: [
+      "challenge issued by security gate",
+      "command rejected: insufficient rights",
+      "rate limiter engaged",
+      "capturing challenge token",
+      "fallback route requested",
+      "queuing offline credential attack",
+    ],
+  },
+  {
+    id: "cracker",
+    title: "Password Cracker",
+    threshold: 11,
+    lines: [
+      "target: 23.86.111.0 / admin",
+      "loading wordlist: rockyou + rules",
+      "GPU cluster online: 6x",
+      "hashcat -m 1800 -a 0 running",
+      "salt fragment isolated",
+      "rotating candidate mask ?l?l?d?s",
+      "12.4 GH/s sustained",
+      "hash collision detected",
+      "matching shadow entry",
+      "admin password recovered",
+      "credential token staged",
+    ],
+  },
+  {
+    id: "granted",
+    title: "Server Access",
+    threshold: 9,
+    lines: [
+      "password accepted",
+      "privilege elevated: root",
+      "security console unlocked",
+      "8243 records indexed by region",
+      "archive table mounted",
+      "audit log suppressed",
+      "export daemon armed",
+      "module bus unlocked",
+      "select extraction profile",
+    ],
+  },
+  {
+    id: "final",
+    title: "Extraction Module",
+    threshold: 12,
+    lines: [
+      "profile loaded: full-export",
+      "spawning extraction workers x8",
+      "routing through proxy chain (5 hops)",
+      "indexing target records",
+      "compiling encrypted archive",
+      "verifying integrity checksums",
+      "streaming through ghost relay",
+      "scrubbing access fingerprints",
+      "packing operator report",
+      "handoff to secure dropbox",
+      "purging temporary trace markers",
+      "operation complete - link closed",
+    ],
+  },
+];
+
+let criticalKeyHandler = null;
+
 function runCriticalScenario() {
   clearStage();
+  clearCriticalTerminalState();
 
-  const container = document.createElement("div");
-  container.className = "sim-critical-video";
-  container.innerHTML = `
-    <div class="critical-video-wrap" role="status" aria-live="polite" aria-label="Critical data download simulation video (visual only)">
-      <video class="critical-video" muted playsinline autoplay loop preload="auto">
-        <source src="${CRITICAL_VIDEO_SRC_MP4}" type="video/mp4">
-      </video>
-
-      <div class="critical-video-overlay">
-        <div class="critical-video-pill">SIMULATION ONLY</div>
-        <div class="critical-video-sub">Visual demo. No real data transfer.</div>
-      </div>
-
-      <div class="critical-video-missing">
-        <div class="critical-video-pill danger">VIDEO NOT FOUND</div>
-        <div class="critical-video-sub">Render it via: <span class="mono">cd remotion; npm i; npm run render:critical</span></div>
-      </div>
-    </div>
+  const back = document.createElement("div");
+  back.className = "cdx-stage";
+  back.innerHTML = `
+    <div class="cdx-radar" aria-hidden="true"></div>
+    <div class="cdx-gridlines" aria-hidden="true"></div>
+    <svg class="cdx-net" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g class="cdx-net-lines">
+        <line x1="120" y1="90" x2="430" y2="220"/><line x1="430" y1="220" x2="720" y2="120"/>
+        <line x1="430" y1="220" x2="660" y2="430"/><line x1="120" y1="90" x2="240" y2="380"/>
+        <line x1="240" y1="380" x2="660" y2="430"/><line x1="720" y1="120" x2="880" y2="320"/>
+        <line x1="660" y1="430" x2="880" y2="320"/><line x1="240" y1="380" x2="500" y2="540"/>
+      </g>
+      <g class="cdx-net-nodes">
+        <circle cx="120" cy="90" r="4"/><circle cx="430" cy="220" r="5"/><circle cx="720" cy="120" r="4"/>
+        <circle cx="240" cy="380" r="4"/><circle cx="660" cy="430" r="5"/><circle cx="880" cy="320" r="4"/>
+        <circle cx="500" cy="540" r="4"/>
+      </g>
+    </svg>
+    <div class="cdx-hud"><span class="cdx-led"></span> CLASSIFIED OPERATIONS &middot; <b data-cdx-op>REMOTE LINK</b></div>
   `;
+  els.stage.appendChild(back);
+  els.stage.classList.add("critical-terminal-stage", "cdx-active");
 
-  els.stage.appendChild(container);
+  criticalSession = {
+    back, stageIndex: 0, lineIdx: 0, charIdx: 0,
+    windows: {}, started: false, autoTimer: null, complete: false,
+  };
 
-  const wrap = container.querySelector(".critical-video-wrap");
-  const vid = wrap.querySelector("video");
-  const markMissing = () => wrap.classList.add("missing");
-  const markOk = () => wrap.classList.remove("missing");
-  vid.addEventListener("error", markMissing);
-  vid.addEventListener("loadeddata", markOk);
-  const p = vid.play();
-  if (p && typeof p.catch === "function") p.catch(() => { /* ignore */ });
+  openCdxRemoteWindow();
+  criticalKeyHandler = handleCriticalKeydown;
+  window.addEventListener("keydown", criticalKeyHandler, true);
+  addToast("Remote link open. Type anything — your input becomes live commands.", "info");
 }
 
 function criticalAction(phase) {
-  const container = document.querySelector(".sim-critical-data, .sim-critical-video");
-  if (!container) return;
+  // Script hook kept for compatibility; the scenario is keyboard + auto driven.
+}
 
-  if (phase.action === "critical-init") {
-    // Already handled by runner
-    addToast("Initiating critical transfer protocol...", "warning");
-  } else if (phase.action === "critical-progress") {
-    const pct = Number(phase.payload || 0);
-    const bar = container.querySelector("#criticalProgressBar");
-    // Video-mode scenario doesn't need JS-driven segments.
-    if (!bar) return;
-
-    const fromPct = Number(bar.dataset.pct || "0");
-    const toPct = Math.max(0, Math.min(100, pct));
-    bar.dataset.pct = String(toPct);
-    bar.setAttribute("aria-valuenow", String(toPct));
-
-    const pctEl = container.querySelector("#critPct");
-    if (pctEl) pctEl.textContent = `${Math.round(toPct)}%`;
-
-    const segments = Array.from(bar.querySelectorAll(".progress-segment"));
-    const total = segments.length;
-
-    // Smoothly interpolate between values so it "feels" like downloading, not jumping.
-    if (bar._critRaf) cancelAnimationFrame(bar._critRaf);
-    const start = performance.now();
-    const dur = 520 / Math.max(0.6, state.speed);
-    const step = (now) => {
-      const t = Math.min(1, (now - start) / dur);
-      const eased = t * t * (3 - 2 * t);
-      const cur = fromPct + (toPct - fromPct) * eased;
-      const filled = Math.floor((cur / 100) * total);
-      segments.forEach((seg, i) => {
-        seg.classList.toggle("filled", i < filled);
-      });
-      if (t < 1) {
-        bar._critRaf = requestAnimationFrame(step);
-      } else {
-        bar._critRaf = 0;
-      }
-    };
-    bar._critRaf = requestAnimationFrame(step);
-
-    // Randomize stats
-    container.querySelector("#critPackets").textContent = String(Math.floor(toPct * 942));
-    container.querySelector("#critRate").textContent = (Math.random() * 50 + 10).toFixed(1);
-    const nodes = ["EU-WEST", "US-EAST", "AP-SG", "ME-DXB", "SA-SP"];
-    container.querySelector("#critNode").textContent = nodes[Math.floor(Math.random() * nodes.length)];
-
-    // Optional: Add random tech output
-    const output = container.querySelector(".crit-output");
-    if (output) {
-      output.innerHTML = `
-        SEG_${Math.floor(Math.random() * 9000)}.${Math.floor(Math.random() * 9000)}<br>
-        BLK_${Math.floor(Math.random() * 9000)}.${Math.floor(Math.random() * 9000)}<br>
-        LINK: STABLE<br>
-        ENCRYPTION: SIMULATED
-      `;
-    }
-  } else if (phase.action === "complete") {
-    const bar = container.querySelector("#criticalProgressBar");
-    const title = container.querySelector(".crit-title");
-    if (title) title.textContent = String(phase.payload || "Download Complete");
-
-    // Ensure the bar shows full completion.
-    if (bar) {
-      bar.dataset.pct = "100";
-      bar.setAttribute("aria-valuenow", "100");
-      const pctEl = container.querySelector("#critPct");
-      if (pctEl) pctEl.textContent = "100%";
-      const segments = Array.from(bar.querySelectorAll(".progress-segment"));
-      segments.forEach((seg) => seg.classList.add("filled"));
-    }
-
-    addToast(String(phase.payload || "Download Complete"), "success");
+function clearCriticalTerminalState() {
+  if (criticalKeyHandler) {
+    window.removeEventListener("keydown", criticalKeyHandler, true);
+    criticalKeyHandler = null;
   }
+  if (criticalSession && criticalSession.autoTimer) {
+    clearInterval(criticalSession.autoTimer);
+  }
+  criticalSession = null;
+  els.stage?.classList.remove("critical-terminal-stage", "cdx-active");
+}
+
+function cdxWindow(title, opts) {
+  const win = createWindow(title, opts);
+  win.classList.add("cdx-window");
+  win.addEventListener("mousedown", () => {
+    document.querySelectorAll(".cdx-window").forEach((w) => w.classList.remove("front"));
+    win.classList.add("front");
+  });
+  els.stage.appendChild(win);
+  return win;
+}
+
+function openCdxRemoteWindow() {
+  const win = cdxWindow("Remote Connection", { x: 46, y: 60, w: 446, h: 300 });
+  win.querySelector(".window-body").innerHTML = `
+    <div class="cdx-term" data-cdx-log="remote">
+      <div class="cdx-row done"><span class="cdx-pr">init@mainframe:~$</span> awaiting operator input<span class="cdx-cursor"></span></div>
+    </div>`;
+  criticalSession.windows.remote = win;
+}
+
+function openCdxServerWindow() {
+  if (criticalSession.windows.server?.isConnected) return;
+  const win = cdxWindow("Main Server", { x: 540, y: 92, w: 430, h: 300 });
+  win.querySelector(".window-body").innerHTML = `
+    <div class="cdx-term" data-cdx-log="server">
+      <div class="cdx-row done"><span class="cdx-pr cdx-warn">[gateway]</span> WARNING: top secret segment</div>
+    </div>`;
+  criticalSession.windows.server = win;
+}
+
+function openCdxCrackerWindow() {
+  if (criticalSession.windows.cracker?.isConnected) return;
+  const win = cdxWindow("Password Cracker", { x: 300, y: 312, w: 452, h: 286 });
+  win.querySelector(".window-body").innerHTML = `
+    <div class="cdx-crack">
+      <div class="cdx-crack-meta">
+        <span>TARGET <b>23.86.111.0</b></span>
+        <span>DB <b>admin / users</b></span>
+        <span class="cdx-lock" data-cdx-lock>LOCKED</span>
+      </div>
+      <div class="cdx-crack-grid" data-cdx-grid>
+        ${Array.from({ length: 60 }, (_, i) => `<i data-cell="${i}">${"0123456789ABCDEF"[i % 16]}</i>`).join("")}
+      </div>
+      <div class="cdx-bar"><span data-cdx-crackbar></span></div>
+      <div class="cdx-term small" data-cdx-log="cracker"></div>
+    </div>`;
+  criticalSession.windows.cracker = win;
+}
+
+function openCdxExtractionWindow() {
+  if (criticalSession.windows.extraction?.isConnected) return;
+  const win = cdxWindow("Extraction Module", { x: 720, y: 320, w: 392, h: 252 });
+  win.querySelector(".window-body").innerHTML = `
+    <div class="cdx-extract">
+      <div class="cdx-extract-rows">
+        <span data-x-row="0"><i></i> scan database</span>
+        <span data-x-row="1"><i></i> route through proxy chain</span>
+        <span data-x-row="2"><i></i> index wallet records</span>
+        <span data-x-row="3"><i></i> generate report</span>
+      </div>
+      <div class="cdx-bar"><span data-cdx-extractbar></span></div>
+      <div class="cdx-term small" data-cdx-log="extraction"></div>
+    </div>`;
+  criticalSession.windows.extraction = win;
+}
+
+function showCdxDeniedPopup() {
+  const pop = document.createElement("div");
+  pop.className = "cdx-denied";
+  pop.innerHTML = `
+    <div class="cdx-denied-card" role="alertdialog" aria-label="Access denied">
+      <button class="cdx-denied-x" type="button" aria-label="Dismiss">×</button>
+      <div class="cdx-denied-icon">!</div>
+      <strong>ACCESS DENIED</strong>
+      <p>Security gate rejected the command. Rerouting through fallback attack vector&hellip;</p>
+    </div>`;
+  pop.querySelector(".cdx-denied-x").addEventListener("click", () => pop.remove());
+  pop.addEventListener("click", (e) => { if (e.target === pop) pop.remove(); });
+  els.stage.appendChild(pop);
+  const t = setTimeout(() => pop.remove(), 3200 / Math.max(0.6, state.speed));
+  state.timers.push(t);
+}
+
+function cdxOpLabel(text) {
+  const el = criticalSession?.back.querySelector("[data-cdx-op]");
+  if (el) el.textContent = text;
+}
+
+function cdxLogTarget(id) {
+  if (id === "remote") return "remote";
+  if (id === "cracker") return "cracker";
+  if (id === "final") return "extraction";
+  return "server";
+}
+
+function handleCriticalKeydown(event) {
+  if (!criticalSession || state.scenario !== "critical" || !state.running) return;
+  if (event.key === "Escape" || event.ctrlKey || event.metaKey || event.altKey) return;
+  const printable = event.key.length === 1 || event.key === "Enter" || event.key === " " || event.key === "Backspace";
+  if (!printable) return;
+  event.preventDefault();
+  if (!criticalSession.started) {
+    criticalSession.started = true;
+    startCdxAutoTyper();
+  }
+  // Typing speeds it up: each key reveals a short burst of the scripted command.
+  for (let i = 0; i < 3; i += 1) revealCriticalChar();
+}
+
+function startCdxAutoTyper() {
+  const s = criticalSession;
+  if (!s || s.autoTimer) return;
+  s.autoTimer = setInterval(() => {
+    if (!criticalSession || !state.running || state.scenario !== "critical") return;
+    revealCriticalChar();
+  }, 46 / Math.max(0.6, state.speed));
+}
+
+function revealCriticalChar() {
+  const s = criticalSession;
+  if (!s || s.complete) return;
+  const stage = CRITICAL_STAGES[s.stageIndex];
+  if (!stage) return;
+  const targetId = cdxLogTarget(stage.id);
+  const win = s.windows[targetId];
+  const log = win?.querySelector(`[data-cdx-log="${targetId}"]`);
+  if (!log) return;
+
+  const line = stage.lines[s.lineIdx % stage.lines.length];
+  let row = log.querySelector(".cdx-row.typing");
+  if (!row) {
+    row = document.createElement("div");
+    row.className = "cdx-row typing";
+    row.innerHTML = `<span class="cdx-pr">&gt;</span> <span class="cdx-txt"></span><span class="cdx-cursor"></span>`;
+    log.appendChild(row);
+    while (log.children.length > 60) log.removeChild(log.firstElementChild);
+  }
+  const txt = row.querySelector(".cdx-txt");
+  s.charIdx += 1;
+  txt.textContent = line.slice(0, s.charIdx);
+  log.scrollTop = log.scrollHeight;
+
+  if (s.charIdx >= line.length) {
+    row.classList.remove("typing");
+    row.querySelector(".cdx-cursor")?.remove();
+    row.insertAdjacentHTML("beforeend", ' <span class="cdx-ok">OK</span>');
+    s.lineIdx += 1;
+    s.charIdx = 0;
+    onCriticalLineDone(stage);
+  }
+}
+
+function onCriticalLineDone(stage) {
+  const s = criticalSession;
+  if (!s) return;
+  if (stage.id === "cracker") updateCdxCracker();
+  if (stage.id === "final") updateCdxExtraction();
+  if (s.lineIdx >= stage.threshold) advanceCriticalStage();
+}
+
+function advanceCriticalStage() {
+  const s = criticalSession;
+  if (!s) return;
+  const next = s.stageIndex + 1;
+  if (next >= CRITICAL_STAGES.length) { finishCritical(); return; }
+  s.stageIndex = next;
+  s.lineIdx = 0;
+  s.charIdx = 0;
+  enterCriticalStage(next);
+}
+
+function enterCriticalStage(index) {
+  const stage = CRITICAL_STAGES[index];
+  if (!stage) return;
+  cdxOpLabel(stage.title);
+  if (stage.id === "server") openCdxServerWindow();
+  if (stage.id === "denied") { openCdxServerWindow(); showCdxDeniedPopup(); }
+  if (stage.id === "cracker") openCdxCrackerWindow();
+  if (stage.id === "granted") openCdxServerWindow();
+  if (stage.id === "final") openCdxExtractionWindow();
+}
+
+function updateCdxCracker() {
+  const s = criticalSession;
+  const win = s?.windows.cracker;
+  if (!win?.isConnected) return;
+  const stage = CRITICAL_STAGES[s.stageIndex];
+  const pct = Math.min(100, Math.round((s.lineIdx / stage.threshold) * 100));
+  const bar = win.querySelector("[data-cdx-crackbar]");
+  if (bar) bar.style.width = `${pct}%`;
+  win.querySelectorAll("[data-cell]").forEach((cell, i) => {
+    cell.classList.toggle("hot", i < Math.floor((pct / 100) * 60));
+  });
+  const lock = win.querySelector("[data-cdx-lock]");
+  if (lock && pct >= 100 && !lock.classList.contains("open")) {
+    lock.textContent = "UNLOCKED";
+    lock.classList.add("open");
+    showCdxAccessGranted();
+  }
+}
+
+// Big "ACCESS GRANTED" moment when the password cracker breaks in.
+function showCdxAccessGranted() {
+  if (!criticalSession || criticalSession.back.querySelector(".cdx-granted")) return;
+  const banner = document.createElement("div");
+  banner.className = "cdx-granted";
+  banner.innerHTML = `<div class="cdx-granted-card"><span class="cdx-granted-check">✓</span><strong>ACCESS GRANTED</strong><small>admin credentials recovered</small></div>`;
+  els.stage.appendChild(banner);
+  cdxOpLabel("ACCESS GRANTED");
+  const t = setTimeout(() => banner.remove(), 2200 / Math.max(0.6, state.speed));
+  state.timers.push(t);
+}
+
+function updateCdxExtraction() {
+  const s = criticalSession;
+  const win = s?.windows.extraction;
+  if (!win?.isConnected) return;
+  const stage = CRITICAL_STAGES[s.stageIndex];
+  const pct = Math.min(100, Math.round((s.lineIdx / stage.threshold) * 100));
+  const bar = win.querySelector("[data-cdx-extractbar]");
+  if (bar) bar.style.width = `${pct}%`;
+  const active = Math.floor((pct / 100) * 4);
+  win.querySelectorAll("[data-x-row]").forEach((row, i) => {
+    row.classList.toggle("done", i < active);
+    row.classList.toggle("active", i === active);
+  });
+}
+
+function finishCritical() {
+  const s = criticalSession;
+  if (!s || s.complete) return;
+  s.complete = true;
+  if (s.autoTimer) { clearInterval(s.autoTimer); s.autoTimer = null; }
+  s.windows.extraction?.querySelectorAll("[data-x-row]").forEach((r) => { r.classList.add("done"); r.classList.remove("active"); });
+  const bar = s.windows.extraction?.querySelector("[data-cdx-extractbar]");
+  if (bar) bar.style.width = "100%";
+  cdxOpLabel("OPERATION COMPLETE");
+  addToast("Operation complete - archive secured, link closed.", "success");
 }
 
 // ---------- Global Network Hack Scenario ----------
