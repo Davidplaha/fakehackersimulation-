@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Windows XP Simulator Online | Fake XP Desktop Prank</title>
+  <meta name="description" content="Open a free Windows XP simulator in your browser. Boot a fake XP desktop, explore the start menu, and use it as a nostalgic prank or screen effect. No download.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://www.hackerprank.online/xp-simulator/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Windows XP Simulator Online | Fake XP Desktop Prank">
+  <meta property="og:description" content="Free Windows XP simulator in your browser. Boot a fake XP desktop and use it as a nostalgic prank or retro screen effect.">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="bootScreen" class="boot-screen">
+    <div class="boot-card">
+      <div class="boot-logo"><span></span><span></span><span></span><span></span></div>
+      <div>
+        <strong>Microsoft Windows XP</strong>
+        <small>Simulator loading...</small>
+      </div>
+      <div class="boot-bar"><i></i></div>
+    </div>
+  </div>
+
+  <main id="desktop" class="desktop" aria-label="Windows XP simulator desktop">
+    <section id="osChooser" class="os-chooser" aria-label="Choose Windows version">
+      <div class="os-card">
+        <div class="os-card-head">
+          <span class="os-win-logo"></span>
+          <div>
+            <strong>Choose Windows</strong>
+            <small>Select the desktop style to launch.</small>
+          </div>
+        </div>
+        <div class="os-options">
+          <button class="os-option active" data-os="xp">
+            <span class="os-preview xp-preview"></span>
+            <strong>Windows XP</strong>
+            <small>Classic Luna desktop</small>
+          </button>
+          <button class="os-option" data-os="win11">
+            <span class="os-preview win11-preview"></span>
+            <strong>Windows 11</strong>
+            <small>Modern centered taskbar</small>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="desktopIcons" class="desktop-icons" aria-label="Desktop icons"></section>
+    <section id="windowLayer" class="window-layer" aria-label="Open windows"></section>
+
+    <div id="contextMenu" class="context-menu" hidden></div>
+
+    <nav id="startMenu" class="start-menu" aria-label="Start menu" hidden>
+      <div class="start-head">
+        <div class="user-tile">XP</div>
+        <div>
+          <strong>Sim User</strong>
+          <small>Computer administrator</small>
+        </div>
+      </div>
+      <div class="start-body">
+        <div class="start-left">
+          <button data-app="ie"><span class="app-ico ie"></span>Internet Explorer</button>
+          <button data-app="notepad"><span class="app-ico notepad"></span>Notepad</button>
+          <button data-app="paint"><span class="app-ico paint"></span>Paint</button>
+          <button data-app="calculator"><span class="app-ico calc"></span>Calculator</button>
+          <button data-app="cmd"><span class="app-ico cmd"></span>Command Prompt</button>
+          <div class="start-sep"></div>
+          <button id="allProgramsBtn"><span class="app-ico folder"></span>All Programs <b>▶</b></button>
+          <div id="programsFlyout" class="programs-flyout" hidden>
+            <button data-app="minesweeper">Games / Minesweeper</button>
+            <button data-app="media">Entertainment / Media Player</button>
+            <button data-app="explorer">Accessories / Windows Explorer</button>
+            <button data-app="control">Control Panel</button>
+          </div>
+        </div>
+        <div class="start-right">
+          <button data-app="documents">My Documents</button>
+          <button data-app="pictures">My Pictures</button>
+          <button data-app="music">My Music</button>
+          <button data-app="computer">My Computer</button>
+          <button data-app="control">Control Panel</button>
+          <button data-app="search">Search</button>
+          <button data-app="run">Run...</button>
+        </div>
+      </div>
+      <div class="start-foot">
+        <button id="logOffBtn">Log Off</button>
+        <button id="turnOffBtn">Turn Off Computer</button>
+      </div>
+    </nav>
+
+    <aside id="notification" class="notification" hidden>
+      <button id="closeNotification" aria-label="Close notification">×</button>
+      <strong>Start the Prank</strong>
+      <span>Go full screen (F11) and explore the desktop.</span>
+    </aside>
+
+    <footer class="taskbar" aria-label="Taskbar">
+      <button id="startButton" class="start-button" aria-expanded="false"><span></span>start</button>
+      <div class="quick-launch">
+        <button data-app="ie" title="Internet Explorer" class="quick ie"></button>
+        <button data-action="show-desktop" title="Show Desktop" class="quick desktop-q"></button>
+        <button data-app="cmd" title="Command Prompt" class="quick cmd-q"></button>
+      </div>
+      <div id="taskButtons" class="task-buttons" aria-label="Open windows"></div>
+      <div class="tray">
+        <button id="osSwitchBtn" title="Switch Windows">OS</button>
+        <button id="soundBtn" title="Volume">🔊</button>
+        <button id="networkBtn" title="Network">📶</button>
+        <time id="clock">12:00 PM</time>
+      </div>
+    </footer>
+  </main>
+
+  <style>
+    .xp-seo{background:#0a0d17;color:#c7d2ea;padding:48px 20px;font-family:system-ui,-apple-system,sans-serif}
+    .xp-seo-inner{max-width:820px;margin:0 auto}
+    .xp-seo h1{color:#fff;font-size:clamp(24px,4vw,34px);margin:0 0 14px}
+    .xp-seo h2{color:#fff;font-size:clamp(17px,2.4vw,22px);margin:26px 0 6px}
+    .xp-seo h3{color:#dbe4f7;font-size:16px;margin:16px 0 4px}
+    .xp-seo p{line-height:1.7;color:#aab6d4;margin:0 0 8px}
+    .xp-seo a{color:#bcd0ff}
+  </style>
+  <section class="xp-seo" aria-label="About this Windows XP simulator">
+    <div class="xp-seo-inner">
+      <h1>Windows XP Simulator</h1>
+      <p>This Windows XP simulator boots a nostalgic fake XP desktop right in your browser. It is a visual prank and retro toy &mdash; there is no real operating system, nothing is downloaded, and nothing is installed on your device.</p>
+      <h2>What you can do</h2>
+      <p>Watch the classic XP boot screen, explore the Luna desktop and start menu, and use the retro interface as a screen effect for videos, streams, screenshots, or harmless jokes. Everything you see is a browser animation.</p>
+      <h2>Why people use an XP simulator</h2>
+      <p>The Windows XP look is a popular nostalgia and prank aesthetic. This page lets anyone open that classic desktop instantly &mdash; no old hardware, no virtual machines, and no risky downloads.</p>
+      <h2>Safe and fictional</h2>
+      <p>The simulator is entertainment only. It does not run real programs, read files, or connect to your system. It is part of the <a href="/">SimDeck hacker prank toolkit</a> &mdash; see also the <a href="/cracked-screen-prank/">cracked screen prank</a> and <a href="/fake-virus-scanner/">fake virus scanner</a>.</p>
+      <h2>Frequently asked questions</h2>
+      <h3>Is this a real Windows XP?</h3>
+      <p>No. It is a browser-based visual recreation for fun. Nothing is installed and no real OS runs.</p>
+      <h3>Does it work on phones?</h3>
+      <p>Yes, it runs in modern mobile browsers, though the desktop experience is best on a larger screen.</p>
+      <h3>Is it free?</h3>
+      <p>Yes. The Windows XP simulator is free to use in your browser with no download.</p>
+    </div>
+  </section>
+
+  <script src="./app.js"></script>
+</body>
+</html>

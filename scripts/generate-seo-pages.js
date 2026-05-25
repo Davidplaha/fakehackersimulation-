@@ -1,4 +1,9 @@
-<!DOCTYPE html>
+const fs = require("fs");
+const path = require("path");
+const { routes, siteUrl, ogImage, trustLinks } = require("../seo-pages.config");
+
+const root = path.resolve(__dirname, "..");
+const baseHtml = `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -25,7 +30,7 @@
   <meta name="twitter:description" content="Run a safe hacker prank simulation in your browser. Try fake hacking screens, phone scans, virus alerts, Windows pranks, and cinematic hacker dashboards.">
   <meta name="twitter:image" content="https://www.hackerprank.online/assets/crack-desktop.png">
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://www.hackerprank.online/#website","url":"https://www.hackerprank.online/","name":"SimDeck","description":"Safe hacker prank simulation and fake hacking simulator tools for demos, videos, and harmless pranks.","inLanguage":"en"},{"@type":"WebApplication","@id":"https://www.hackerprank.online/#app","name":"Hacker Prank Simulation","url":"https://www.hackerprank.online/","applicationCategory":"EntertainmentApplication","operatingSystem":"Web","description":"Run a safe hacker prank simulation in your browser. Try fake hacking screens, phone scans, virus alerts, Windows pranks, and cinematic hacker dashboards.","isAccessibleForFree":true},{"@type":"BreadcrumbList","@id":"https://www.hackerprank.online/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.hackerprank.online/"},{"@type":"ListItem","position":2,"name":"Hacker Prank Simulation","item":"https://www.hackerprank.online/"}]},{"@type":"FAQPage","@id":"https://www.hackerprank.online/#faq","mainEntity":[{"@type":"Question","name":"Is this a real hacking tool?","acceptedAnswer":{"@type":"Answer","text":"No. SimDeck is a fake hacking simulator for harmless visual pranks and content creation. It does not access real accounts, devices, messages, cameras, networks, or files."}},{"@type":"Question","name":"Can I use it for a video or livestream?","acceptedAnswer":{"@type":"Answer","text":"Yes. The simulator is designed for demos, videos, streams, and fictional scenes where you need a convincing hacker prank screen."}},{"@type":"Question","name":"Does it work on mobile?","acceptedAnswer":{"@type":"Answer","text":"Yes. Several prank modes are optimized for phones, and the fake phone hacking page includes customizable phone labels."}}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org"}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -34,9 +39,8 @@
 
 <body>
   <section class="start-page" id="startPage" aria-label="SimDeck start screen">
-    <video class="start-page-video" id="startPageVideo" muted loop playsinline preload="none" fetchpriority="low" aria-hidden="true"
-      poster="https://res.cloudinary.com/dy2kfjv5q/video/upload/so_0,f_auto,q_auto,w_1280/v1779571828/hf_20260523_212240_6ca1e484-b894-4de8-80a4-df68012d7227_w18bip.jpg">
-      <source data-src="https://res.cloudinary.com/dy2kfjv5q/video/upload/f_auto,q_auto:eco,vc_auto,w_1280/v1779571828/hf_20260523_212240_6ca1e484-b894-4de8-80a4-df68012d7227_w18bip.mp4" type="video/mp4">
+    <video class="start-page-video" id="startPageVideo" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+      <source src="https://res.cloudinary.com/dy2kfjv5q/video/upload/v1779571828/hf_20260523_212240_6ca1e484-b894-4de8-80a4-df68012d7227_w18bip.mp4" type="video/mp4">
       <track kind="captions" srclang="en" label="Decorative background video" src="/captions/start-page.vtt" default>
     </video>
     <div class="start-video-folders" id="startVideoFolders">
@@ -92,74 +96,6 @@
         <button class="mobile-tray-toggle" id="mobileToggleTray">Tools</button>
         <div class="watermark" id="watermark">SIMULATION / FAKE</div>
       </main>
-
-  <section class="static-seo-content seo-collapsed" id="seo-content" aria-label="Hacker Prank Simulation guide">
-    <button class="static-seo-toggle" type="button" aria-expanded="false" aria-controls="staticSeoInner">
-      <span>Hacker Prank Simulation guide</span>
-      <strong>Expand</strong>
-    </button>
-    <div class="static-seo-inner" id="staticSeoInner">
-      <p class="static-seo-kicker">Safe browser simulation</p>
-      <h1>Hacker Prank Simulation</h1>
-      <p class="static-seo-intro">SimDeck is a safe hacker prank simulation built for videos, demos, streams, and harmless jokes. It creates realistic fake hacking screens without touching real devices, accounts, networks, files, or messages.</p>
-      <div class="static-seo-grid">
-        
-        <section>
-          <h3>A fake hacking simulator people can actually use</h3>
-          <p>Search Console data from the previous Cyberlords prank page showed strong demand around hacker prank, fake hacking, hacking prank, fake hacker prank, and fake hacking website prank. This page is built around that intent: people want a convincing screen they can open quickly, make fullscreen, and use as a visual prank without downloads or real hacking.</p>
-        </section>
-        <section>
-          <h3>What you can launch</h3>
-          <p>Choose fake phone hacking screens, fake virus scans, email hack theater, Windows update pranks, cracked screen effects, FBI-style lock screens, iOS update loops, Android optimizing screens, and a Windows OS simulator. Each mode is visual only. The buttons, logs, folders, alerts, and progress bars are designed to look alive while staying completely fictional.</p>
-        </section>
-        <section>
-          <h3>How to use it safely</h3>
-          <p>Pick a prank folder, customize harmless labels where available, then start the simulation. For best effect, use fullscreen and keep the built-in simulation watermark available when filming or demonstrating. SimDeck is entertainment software, not spyware, malware, phishing, account recovery, or a security bypass tool.</p>
-        </section>
-      </div>
-      <section class="static-seo-faq" aria-label="Frequently asked questions">
-        <h3>Frequently Asked Questions</h3>
-        
-        <details>
-          <summary>Is this a real hacking tool?</summary>
-          <p>No. SimDeck is a fake hacking simulator for harmless visual pranks and content creation. It does not access real accounts, devices, messages, cameras, networks, or files.</p>
-        </details>
-        <details>
-          <summary>Can I use it for a video or livestream?</summary>
-          <p>Yes. The simulator is designed for demos, videos, streams, and fictional scenes where you need a convincing hacker prank screen.</p>
-        </details>
-        <details>
-          <summary>Does it work on mobile?</summary>
-          <p>Yes. Several prank modes are optimized for phones, and the fake phone hacking page includes customizable phone labels.</p>
-        </details>
-      </section>
-      <nav class="static-seo-links" aria-label="Related prank simulators">
-        <strong>Related SimDeck tools</strong>
-        <div>
-          <a href="/hacker-prank/">Hacker Prank</a>
-          <a href="/fake-phone-hacking/">Fake Phone Hacking</a>
-          <a href="/email-hack-simulator/">Email Hack Simulator</a>
-          <a href="/fake-virus-scanner/">Fake Virus Scanner</a>
-          <a href="/fake-windows-update/">Fake Windows Update</a>
-          <a href="/windows-os-simulator/">Windows OS Simulator</a>
-          <a href="/cracked-screen-prank/">Cracked Screen Prank</a>
-          <a href="/fake-fbi-lock-screen/">Fake FBI Lock Screen</a>
-          <a href="/ios-update-prank/">iOS Update Prank</a>
-          <a href="/android-optimizing-prank/">Android Optimizing Prank</a>
-        </div>
-      </nav>
-      <nav class="static-seo-links static-trust-links" aria-label="Trust and safety pages">
-        <strong>Trust and safety</strong>
-        <div>
-          <a href="/about/">About SimDeck</a>
-          <a href="/contact/">Contact</a>
-          <a href="/privacy/">Privacy Policy</a>
-          <a href="/terms/">Terms</a>
-          <a href="/safety/">Safety Disclaimer</a>
-        </div>
-      </nav>
-    </div>
-  </section>
     </div>
 
     <footer class="bottom-bar">
@@ -235,9 +171,193 @@
       });
     })();
   </script>
-
-
-<!-- route-seo:start --><section class="route-seo" aria-label="About this prank simulator"><div class="route-seo-inner"><p class="route-intro">SimDeck is a safe hacker prank simulation built for videos, demos, streams, and harmless jokes. It creates realistic fake hacking screens without touching real devices, accounts, networks, files, or messages.</p><section class="route-sec"><h2>A fake hacking simulator people can actually use</h2><p>Search Console data from the previous Cyberlords prank page showed strong demand around hacker prank, fake hacking, hacking prank, fake hacker prank, and fake hacking website prank. This page is built around that intent: people want a convincing screen they can open quickly, make fullscreen, and use as a visual prank without downloads or real hacking.</p></section><section class="route-sec"><h2>What you can launch</h2><p>Choose fake phone hacking screens, fake virus scans, email hack theater, Windows update pranks, cracked screen effects, FBI-style lock screens, iOS update loops, Android optimizing screens, and a Windows OS simulator. Each mode is visual only. The buttons, logs, folders, alerts, and progress bars are designed to look alive while staying completely fictional.</p></section><section class="route-sec"><h2>How to use it safely</h2><p>Pick a prank folder, customize harmless labels where available, then start the simulation. For best effect, use fullscreen and keep the built-in simulation watermark available when filming or demonstrating. SimDeck is entertainment software, not spyware, malware, phishing, account recovery, or a security bypass tool.</p></section><section class="route-faqs"><h2>Frequently asked questions</h2><div class="route-faq"><h3>Is this a real hacking tool?</h3><p>No. SimDeck is a fake hacking simulator for harmless visual pranks and content creation. It does not access real accounts, devices, messages, cameras, networks, or files.</p></div><div class="route-faq"><h3>Can I use it for a video or livestream?</h3><p>Yes. The simulator is designed for demos, videos, streams, and fictional scenes where you need a convincing hacker prank screen.</p></div><div class="route-faq"><h3>Does it work on mobile?</h3><p>Yes. Several prank modes are optimized for phones, and the fake phone hacking page includes customizable phone labels.</p></div></section></div></section><!-- route-seo:end -->
 </body>
 
-</html>
+</html>`;
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#039;",
+  })[char]);
+}
+
+function routeUrl(routePath) {
+  return `${siteUrl}${routePath === "/" ? "/" : routePath}`;
+}
+
+function buildLinks(currentPath) {
+  return routes
+    .filter((route) => route.path !== currentPath)
+    .map((route) => `<a href="${escapeHtml(route.path)}">${escapeHtml(route.label)}</a>`)
+    .join("\n          ");
+}
+
+function buildTrustLinks() {
+  return trustLinks
+    .map(([label, href]) => `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`)
+    .join("\n          ");
+}
+
+function buildFaq(route) {
+  return route.faqs
+    .map(([question, answer]) => `
+        <details>
+          <summary>${escapeHtml(question)}</summary>
+          <p>${escapeHtml(answer)}</p>
+        </details>`)
+    .join("");
+}
+
+function buildSeoSection(route) {
+  const sections = route.sections
+    .map(([heading, body]) => `
+        <section>
+          <h3>${escapeHtml(heading)}</h3>
+          <p>${escapeHtml(body)}</p>
+        </section>`)
+    .join("");
+
+  return `
+  <section class="static-seo-content seo-collapsed" id="seo-content" aria-label="${escapeHtml(route.label)} guide">
+    <button class="static-seo-toggle" type="button" aria-expanded="false" aria-controls="staticSeoInner">
+      <span>${escapeHtml(route.h1)} guide</span>
+      <strong>Expand</strong>
+    </button>
+    <div class="static-seo-inner" id="staticSeoInner">
+      <p class="static-seo-kicker">Safe browser simulation</p>
+      <h1>${escapeHtml(route.h1)}</h1>
+      <p class="static-seo-intro">${escapeHtml(route.intro)}</p>
+      <div class="static-seo-grid">
+        ${sections}
+      </div>
+      <section class="static-seo-faq" aria-label="Frequently asked questions">
+        <h3>Frequently Asked Questions</h3>
+        ${buildFaq(route)}
+      </section>
+      <nav class="static-seo-links" aria-label="Related prank simulators">
+        <strong>Related SimDeck tools</strong>
+        <div>
+          ${buildLinks(route.path)}
+        </div>
+      </nav>
+      <nav class="static-seo-links static-trust-links" aria-label="Trust and safety pages">
+        <strong>Trust and safety</strong>
+        <div>
+          ${buildTrustLinks()}
+        </div>
+      </nav>
+    </div>
+  </section>`;
+}
+
+function schema(route) {
+  const url = routeUrl(route.path);
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        "url": `${siteUrl}/`,
+        "name": "SimDeck",
+        "description": "Safe hacker prank simulation and fake hacking simulator tools for demos, videos, and harmless pranks.",
+        "inLanguage": "en",
+      },
+      {
+        "@type": "WebApplication",
+        "@id": `${url}#app`,
+        "name": route.label,
+        "url": url,
+        "applicationCategory": "EntertainmentApplication",
+        "operatingSystem": "Web",
+        "description": route.description,
+        "isAccessibleForFree": true,
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": `${siteUrl}/` },
+          { "@type": "ListItem", "position": 2, "name": route.label, "item": url },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${url}#faq`,
+        "mainEntity": route.faqs.map(([question, answer]) => ({
+          "@type": "Question",
+          "name": question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": answer,
+          },
+        })),
+      },
+    ],
+  };
+}
+
+function replaceHead(html, route) {
+  const url = routeUrl(route.path);
+  const schemaJson = JSON.stringify(schema(route));
+  const cleaned = html
+    .replace(/(?:\n\s*<meta property="og:image:width"[\s\S]*?>|\n\s*<meta property="og:image:height"[\s\S]*?>|\n\s*<meta property="og:url"[\s\S]*?>)+/gi, "")
+    .replace(/\n\s*<link rel="icon"[\s\S]*?>/gi, "");
+  return cleaned
+    .replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(route.title)}</title>`)
+    .replace(/<meta name="description"[\s\S]*?>/i, `<meta name="description" content="${escapeHtml(route.description)}">`)
+    .replace(/<link rel="canonical"[\s\S]*?>/i, `<link rel="canonical" href="${escapeHtml(url)}">`)
+    .replace(/<link rel="canonical"[\s\S]*?>/i, `<link rel="canonical" href="${escapeHtml(url)}">\n  <link rel="icon" href="/favicon.svg" type="image/svg+xml">`)
+    .replace(/<meta property="og:title"[\s\S]*?>/i, `<meta property="og:title" content="${escapeHtml(route.title)}">`)
+    .replace(/<meta property="og:description"[\s\S]*?>/i, `<meta property="og:description" content="${escapeHtml(route.description)}">`)
+    .replace(/<meta property="og:image"[\s\S]*?>/i, `<meta property="og:image" content="${escapeHtml(ogImage)}">\n  <meta property="og:image:width" content="1200">\n  <meta property="og:image:height" content="630">\n  <meta property="og:url" content="${escapeHtml(url)}">`)
+    .replace(/<meta name="twitter:title"[\s\S]*?>/i, `<meta name="twitter:title" content="${escapeHtml(route.title)}">`)
+    .replace(/<meta name="twitter:description"[\s\S]*?>/i, `<meta name="twitter:description" content="${escapeHtml(route.description)}">`)
+    .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/i, `<script type="application/ld+json">${schemaJson}</script>`);
+}
+
+function buildPage(route) {
+  let html = replaceHead(baseHtml, route);
+  html = html.replace(/<h1 class="brand-name">SimDeck<\/h1>/i, `<div class="brand-name">SimDeck</div>`);
+  html = html.replace("</main>", `</main>\n${buildSeoSection(route)}`);
+  return html;
+}
+
+function writeRoute(route) {
+  const html = buildPage(route);
+  if (route.path === "/") {
+    fs.writeFileSync(path.join(root, "index.html"), html);
+    return;
+  }
+  const dir = path.join(root, route.path.replace(/^\/|\/$/g, ""));
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, "index.html"), html);
+}
+
+routes.forEach(writeRoute);
+
+const sitemapEntries = [
+  ...routes.map((route, index) => ({
+    url: routeUrl(route.path),
+    priority: index === 0 ? "1.0" : index < 3 ? "0.95" : "0.85",
+  })),
+  ...trustLinks.map(([, href]) => ({
+    url: `${siteUrl}${href}`,
+    priority: "0.55",
+  })),
+];
+
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapEntries.map((entry) => `  <url>
+    <loc>${entry.url}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>${entry.priority}</priority>
+  </url>`).join("\n")}
+</urlset>
+`;
+fs.writeFileSync(path.join(root, "sitemap.xml"), sitemap);

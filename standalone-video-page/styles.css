@@ -1,0 +1,82 @@
+:root {
+  color-scheme: dark;
+  background: #020403;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-width: 100%;
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #020403;
+}
+
+body {
+  min-height: 100svh;
+}
+
+.video-stage {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 52% 38%, rgba(29, 255, 120, 0.16), transparent 26rem),
+    linear-gradient(135deg, #020403 0%, #07130d 48%, #010201 100%);
+}
+
+.background-video {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center center;
+  background: #020403;
+}
+
+.loading-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(56, 255, 132, 0.08) 0 1px,
+      transparent 1px 9px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      rgba(56, 255, 132, 0.04) 0 1px,
+      transparent 1px 12px
+    ),
+    #020403;
+  opacity: 0.75;
+}
+
+@media (orientation: portrait) {
+  .background-video {
+    object-position: center center;
+  }
+}
+
+@supports (height: 100dvh) {
+  .video-stage {
+    height: 100dvh;
+  }
+
+  body {
+    min-height: 100dvh;
+  }
+}

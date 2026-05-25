@@ -16,9 +16,13 @@ const scenarios = [
   { id: "ios", name: "iOS Update", desc: "Endless updater with panic mode.", icon: "🍎", category: "scare", tags: ["Mobile", "Loop"], intensity: "Low", isNew: true },
   { id: "android", name: "Android Sim", desc: "Optimizing/repairing loop.", icon: "🤖", category: "phone", tags: ["Mobile"], intensity: "Low" },
   { id: "win11", name: "Windows 11", desc: "Multi-window ops desk.", icon: "🖥️", category: "desktop", tags: ["Desktop", "Cinematic"], intensity: "High" },
+  { id: "windows_os", name: "Windows OS Simulator", desc: "Choose XP or Windows 11 with working apps.", icon: "🪟", category: "desktop", tags: ["Desktop", "OS"], intensity: "High", isNew: true },
   { id: "tv", name: "Cracked Screen", desc: "Prank cracked glass overlay.", icon: "📺", category: "prank", tags: ["Prank"], intensity: "Low" },
   { id: "emailHijack", name: "Email Hijack", desc: "Account recovery theater.", icon: "🔓", category: "email", tags: ["Desktop"], intensity: "Med" },
+  { id: "password", name: "Password Cracker", desc: "Choose a fake password-cracker concept.", icon: "🔐", category: "desktop", tags: ["Vault", "New"], intensity: "Med", isNew: true },
+  { id: "passwordMeter", name: "Password Meter", desc: "Standalone vault meter console.", icon: "🧪", category: "desktop", tags: ["Vault"], intensity: "Med" },
   { id: "fbi", name: "FBI Lock", desc: "Fake lock with countdown timer.", icon: "🚨", category: "scare", tags: ["Prank", "Scare"], intensity: "Med", isHot: true },
+  { id: "cryptoMiner", name: "Crypto Miner", desc: "Dark exchange breach with coin mining console.", icon: "₿", category: "desktop", tags: ["New", "Crypto"], intensity: "High", isNew: true },
   { id: "critical", name: "Critical Data", desc: "Global data heist simulation.", icon: "💾", category: "desktop", tags: ["New", "Cinematic"], intensity: "High", isNew: true },
   { id: "globalnet", name: "Global Network", desc: "Cinematic city-by-city takeover.", icon: "🌐", category: "desktop", tags: ["Cinematic", "New"], intensity: "High", isNew: true },
 ];
@@ -26,28 +30,28 @@ const scenarios = [
 const seoRoutes = {
   "/hacker-prank/": {
     label: "Hacker Prank",
-    title: "Hacker Prank - Fake Hacking Simulator",
-    metaTitle: "Hacker Prank | Fake Hacking Simulator",
-    description: "Open safe fake hacking simulator tools for pranks, videos, demos, and harmless screen effects.",
-    keywords: "hacker prank, fake hacking simulator",
+    title: "Hacker Prank",
+    metaTitle: "Hacker Prank | Fake Hacking Simulator Online",
+    description: "Open a safe hacker prank online with fake hacking screens, cinematic dashboards, phone scans, virus alerts, and harmless prank modes.",
+    keywords: "hacker prank, hacking prank, fake hacker prank, prank hacker, fake hacking prank",
     folder: "Desktop",
-    scenarioIds: ["phone", "email", "virus", "win11", "tv", "fbi", "ios", "android", "critical", "globalnet"],
+    scenarioIds: ["phone", "email", "virus", "windows_os", "win11", "password", "passwordMeter", "tv", "fbi", "ios", "android", "cryptoMiner", "critical", "globalnet"],
   },
   "/fake-phone-hacking/": {
     label: "Fake Phone Hacking",
     title: "Fake Phone Hacking Simulator",
-    metaTitle: "Fake Phone Hacking Simulator | SimDeck",
-    description: "Launch fake phone hacking prank screens including basic scan, phone tracking, terminal, matrix, and forensic-style simulations.",
-    keywords: "fake phone hacking simulator",
+    metaTitle: "Fake Phone Hacking Simulator | Phone Hack Prank",
+    description: "Launch a fake phone hacking simulator with safe phone scan screens, tracking-style visuals, terminal menus, and customizable phone labels.",
+    keywords: "fake phone hacking, phone hack prank, fake phone hacking simulator, fake hacking screen prank",
     folder: "Phone",
     scenarioIds: ["phone_basic", "phone_track", "phone_terminal", "phone_matrix", "phone_corporate", "phone_forensic", "phone_prank", "phone_exfil"],
   },
   "/email-hack-simulator/": {
     label: "Email Hack Simulator",
     title: "Fake Email Hack Simulator",
-    metaTitle: "Fake Email Hack Simulator | Email Prank Simulator",
-    description: "Run safe email prank simulator screens with login, mailbox, recovery, and account-security theater.",
-    keywords: "fake email hack simulator, email prank simulator",
+    metaTitle: "Fake Email Hack Simulator | Email Prank Tool",
+    description: "Run a safe fake email hack simulator with login theater, inbox screens, mailbox folders, recovery alerts, and fictional account activity.",
+    keywords: "email hack simulator, fake email hack, email prank simulator, fake hacking website prank",
     folder: "Email",
     scenarioIds: ["email", "emailHijack"],
   },
@@ -55,53 +59,62 @@ const seoRoutes = {
     label: "Fake Virus Scanner",
     title: "Fake Virus Scanner Prank",
     metaTitle: "Fake Virus Scanner Prank | SimDeck",
-    description: "Start a fake virus scanner prank with fictional threat alerts, progress bars, and cleanup screens.",
-    keywords: "fake virus scanner prank",
+    description: "Start a harmless fake virus scanner prank with fictional threat alerts, scan progress, cleanup screens, and security dashboard visuals.",
+    keywords: "fake virus scanner, virus prank, fake security scan, fake hacking prank",
     folder: "Desktop",
     scenarioIds: ["virus"],
   },
   "/fake-windows-update/": {
     label: "Fake Windows Update",
     title: "Fake Windows Update Prank",
-    metaTitle: "Fake Windows Update Prank | SimDeck",
-    description: "Open a Windows-style fake update and desktop prank simulator for harmless screen jokes and videos.",
-    keywords: "fake Windows update prank",
+    metaTitle: "Fake Windows Update Prank | Fullscreen Update Screen",
+    description: "Open a fake Windows update prank with a realistic update-style screen for harmless jokes, videos, and fullscreen computer pranks.",
+    keywords: "fake Windows update, Windows update prank, fake update screen, computer prank",
     folder: "Desktop",
     scenarioIds: ["win11"],
+  },
+  "/windows-os-simulator/": {
+    label: "Windows OS Simulator",
+    title: "Windows OS Simulator",
+    metaTitle: "Windows OS Simulator | XP and Windows 11 Browser Desktop",
+    description: "Launch a browser-based Windows OS simulator with XP and Windows 11 modes, working windows, Start menus, desktop icons, and taskbar controls.",
+    keywords: "Windows OS simulator, Windows XP simulator, Windows 11 simulator, fake Windows desktop",
+    folder: "Desktop",
+    scenarioIds: ["windows_os", "win11"],
   },
   "/cracked-screen-prank/": {
     label: "Cracked Screen Prank",
     title: "Cracked Screen Prank",
-    metaTitle: "Cracked Screen Prank | Broken Screen Prank",
-    description: "Launch a broken screen prank with fake glass cracks and screen damage effects.",
-    keywords: "cracked screen prank, broken screen prank",
+    metaTitle: "Cracked Screen Prank | Fake Broken Screen Effect",
+    description: "Launch a cracked screen prank with fake broken glass overlays for harmless phone, tablet, and desktop screen jokes.",
+    keywords: "cracked screen prank, broken screen prank, fake cracked screen, screen prank",
     folder: "Pranks",
     scenarioIds: ["tv"],
   },
   "/fake-fbi-lock-screen/": {
     label: "Fake FBI Lock Screen",
     title: "Fake FBI Lock Screen Prank",
-    metaTitle: "Fake FBI Lock Screen Prank | SimDeck",
-    description: "Start a fictional FBI lock screen prank with countdown and warning-screen styling.",
-    keywords: "fake FBI lock screen prank",
+    metaTitle: "Fake FBI Lock Screen Prank | Fictional Lock Warning",
+    description: "Start a fake FBI lock screen prank with fictional warning text, countdown styling, and safe browser-only scare-screen visuals.",
+    keywords: "fake FBI lock screen, FBI lock screen prank, fake lock screen, scare prank",
     folder: "Scares",
     scenarioIds: ["fbi"],
   },
   "/ios-update-prank/": {
     label: "iOS Update Prank",
     title: "Fake iOS Update Prank",
-    metaTitle: "Fake iOS Update Prank | SimDeck",
-    description: "Run a fake iOS update prank that looks like an endless mobile update screen.",
-    keywords: "fake iOS update prank",
+    metaTitle: "Fake iOS Update Prank | Endless iPhone Update Screen",
+    description: "Run a fake iOS update prank with an iPhone-style update loop for harmless mobile jokes and video scenes.",
+    keywords: "iOS update prank, fake iPhone update, fake iOS update, mobile prank",
     folder: "Mobile",
     scenarioIds: ["ios"],
   },
   "/android-optimizing-prank/": {
     label: "Android Optimizing Prank",
     title: "Android Optimizing Prank",
-    metaTitle: "Android Optimizing Prank | SimDeck",
-    description: "Open an Android optimizing prank with repair, cache, and system loop screens.",
-    keywords: "Android optimizing prank",
+    metaTitle: "Android Optimizing Prank | Fake Android Repair Screen",
+    description: "Open a fake Android optimizing prank with repair, cache, system loop, and harmless mobile device visuals.",
+    keywords: "Android optimizing prank, fake Android repair, Android prank, mobile prank",
     folder: "Mobile",
     scenarioIds: ["android"],
   },
@@ -113,6 +126,7 @@ const routeOrder = [
   "/email-hack-simulator/",
   "/fake-virus-scanner/",
   "/fake-windows-update/",
+  "/windows-os-simulator/",
   "/cracked-screen-prank/",
   "/fake-fbi-lock-screen/",
   "/ios-update-prank/",
@@ -132,7 +146,6 @@ const phoneScenarioMeta = {
 
 const miniPrograms = [
   { id: "cam", label: "Camera Feed", note: "Simulated CCTV" },
-  { id: "pwd", label: "Password Meter", note: "Fiction only" },
   { id: "graphs", label: "System Graphs", note: "Randomized" },
   { id: "sat", label: "Satellite Link", note: "Simulated link" },
 ];
@@ -337,6 +350,9 @@ function init() {
       resetStageBtn: document.querySelector("#resetStageBtn"),
       fullscreenBtn: document.querySelector("#fullscreenBtn"),
       toastStack: document.querySelector("#toastStack"),
+      seoGuideTray: document.querySelector("#seoGuideTray"),
+      seoGuideToggle: document.querySelector("#seoGuideToggle"),
+      seoGuideClose: document.querySelector("#seoGuideClose"),
       startPage: document.querySelector("#startPage"),
       startPageVideo: document.querySelector("#startPageVideo"),
       enterSimDeckBtn: document.querySelector("#enterSimDeckBtn"),
@@ -361,6 +377,8 @@ function init() {
     renderTray();
     console.log("Calling bindControls...");
     bindControls();
+    console.log("Calling bindSeoGuide...");
+    bindSeoGuide();
     console.log("Calling bindStartPage...");
     bindStartPage();
     console.log("Calling bindNewDashboard...");
@@ -417,7 +435,52 @@ function bindStartPage() {
     navigateToRoute(row.dataset.route || "/");
   });
 
-  els.startPageVideo?.play?.().catch(() => {});
+  loadStartVideoDeferred();
+}
+
+// Load + play the start-screen background video only AFTER the page is idle, so
+// the multi-MB MP4 never competes with the initial paint / LCP. An optimized
+// Cloudinary poster shows instantly. Skipped for reduced-motion / data-saver.
+function loadStartVideoDeferred() {
+  const v = els.startPageVideo;
+  if (!v) return;
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const saveData = navigator.connection && navigator.connection.saveData;
+  // The animated welcome is the experience, so it loads on mobile too. We only
+  // skip it for users who explicitly opted out (reduced-motion / data-saver),
+  // and it always loads deferred + poster-first so it never blocks the paint.
+  if (reduce || saveData) return;
+
+  const start = () => {
+    if (!v.isConnected) return;
+    const source = v.querySelector("source[data-src]");
+    if (source && !source.getAttribute("src")) {
+      source.setAttribute("src", source.dataset.src);
+      v.load();
+    }
+    v.play && v.play().catch(() => {});
+  };
+
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(start, { timeout: 2500 });
+  } else {
+    setTimeout(start, 1200);
+  }
+}
+
+function toggleSeoGuide(forceOpen) {
+  const tray = els.seoGuideTray || document.getElementById("seoGuideTray");
+  const toggle = els.seoGuideToggle || document.getElementById("seoGuideToggle");
+  if (!tray) return;
+  const open = typeof forceOpen === "boolean" ? forceOpen : !tray.classList.contains("open");
+  tray.classList.toggle("open", open);
+  toggle?.setAttribute("aria-expanded", String(open));
+}
+
+function bindSeoGuide() {
+  if (!els.seoGuideTray || !els.seoGuideToggle) return;
+  els.seoGuideToggle.addEventListener("click", () => toggleSeoGuide());
+  els.seoGuideClose?.addEventListener("click", () => toggleSeoGuide(false));
 }
 
 function renderStartVideoFolders() {
@@ -484,6 +547,7 @@ function updateRouteSeo(route) {
   setMeta("description", description);
   setOg("og:title", title);
   setOg("og:description", description);
+  setOg("og:url", `https://www.hackerprank.online${path === "/" ? "/" : path}`);
   setMeta("twitter:title", title);
   setMeta("twitter:description", description);
   setCanonical(path);
@@ -518,6 +582,9 @@ function resetRouteStage() {
   state.scenario = null;
   state.simHistoryArmed = false;
   clearCrackPrankState();
+  clearEmailHijackState();
+  clearPasswordCrackerState();
+  clearCryptoMinerState();
   document.body.classList.remove("ui-running", "sidebar-hidden");
   document.querySelector(".nav-panel")?.classList.remove("mobile-hidden");
   document.querySelector(".category-sidebar")?.classList.remove("hidden");
@@ -536,6 +603,18 @@ function clearCrackPrankState() {
     "crack-prank-mobile",
     "crack-prank-desktop"
   );
+}
+
+function clearEmailHijackState() {
+  document.body.classList.remove("email-hijack-active", "email-hijack-live");
+}
+
+function clearPasswordCrackerState() {
+  document.body.classList.remove("password-cracker-active", "password-cracker-live", "password-meter-active");
+}
+
+function clearCryptoMinerState() {
+  document.body.classList.remove("crypto-miner-live");
 }
 
 function getScenarioMeta(id) {
@@ -1288,7 +1367,7 @@ function showScenarioSelection() {
   // Ensure stage is visible
   els.scenarioGrid?.classList.add("hidden");
   els.stage.classList.add("active");
-  els.stage.classList.remove("stage-centered");
+  els.stage.classList.remove("stage-centered", "windows-os-stage");
   els.stage.innerHTML = "";
   const optionsContainer = document.createElement("div");
   optionsContainer.className = "scenario-options";
@@ -1572,7 +1651,12 @@ function bindControls() {
   // Exit controls
   els.exitPill?.addEventListener("click", exitToHome);
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") exitToHome();
+    if (e.key !== "Escape") return;
+    if (els.seoGuideTray?.classList.contains("open")) {
+      toggleSeoGuide(false);
+      return;
+    }
+    exitToHome();
   });
   els.stage?.addEventListener("click", handleTapExit);
   els.stage?.addEventListener("touchstart", handleTouchExit);
@@ -1587,12 +1671,18 @@ function bindControls() {
 function openDisclaimer() {
   if (!state.theme) { showToast("Pick a theme first.", "warning"); return; }
   if (!state.scenario) { showToast("Pick a scenario.", "warning"); return; }
+  if (state.scenario === "cryptoMiner") {
+    startScenario();
+    return;
+  }
   els.disclaimerModal.classList.add("show");
 }
 function closeDisclaimer() { els.disclaimerModal.classList.remove("show"); }
 
 function startScenario(force = false) {
   if (!force && !state.scenario) { showToast("Choose a scenario.", "warning"); return; }
+  toggleSeoGuide(false);
+  toggleTray(false);
   resetStage(true);
   armSimulationHistory();
   // resetStage() intentionally stops any previous loop; re-enable for the next run.
@@ -1658,6 +1748,9 @@ function resetStage(keepWatermark = false) {
   state.running = false;
   state.simHistoryArmed = false;
   clearCrackPrankState();
+  clearEmailHijackState();
+  clearPasswordCrackerState();
+  clearCryptoMinerState();
   document.body.classList.remove('ui-running');
   clearTimers();
 
@@ -1814,12 +1907,53 @@ const scenarioRunners = {
   ios: runIOSScenario,
   android: runAndroidScenario,
   win11: runWinScenario,
+  windows_os: runWindowsOSSimulatorScenario,
   tv: runTVScenario,
   emailHijack: runEmailHijackScenario,
+  password: runPasswordCrackerScenario,
+  passwordMeter: runPasswordMeterScenario,
+  cryptoMiner: runCryptoMinerScenario,
   fbi: runFBIScenario,
   critical: runCriticalScenario,
   globalnet: runGlobalNetScenario,
 };
+
+function runWindowsOSSimulatorScenario() {
+  clearStage();
+  els.stage.classList.add("windows-os-stage");
+  els.stage.querySelector(".glitch")?.remove();
+  const shell = document.createElement("section");
+  shell.className = "windows-os-embed";
+  shell.innerHTML = `
+    <div class="windows-os-toolbar">
+      <div>
+        <strong>Windows OS Simulator</strong>
+        <span>Choose XP or Windows 11 inside the simulator.</span>
+      </div>
+      <div class="windows-os-actions">
+        <button class="btn ghost" type="button" id="windowsOsReload">Reload</button>
+        <button class="btn primary" type="button" id="windowsOsFullscreen">Fullscreen</button>
+        <a class="btn ghost" href="/xp-simulator/index.html" target="_blank" rel="noopener">Open tab</a>
+      </div>
+    </div>
+    <iframe
+      class="windows-os-frame"
+      src="/xp-simulator/index.html"
+      title="Windows OS Simulator"
+      allowfullscreen
+    ></iframe>
+  `;
+  els.stage.appendChild(shell);
+
+  const iframe = shell.querySelector(".windows-os-frame");
+  shell.querySelector("#windowsOsReload")?.addEventListener("click", () => {
+    iframe.src = iframe.src;
+  });
+  shell.querySelector("#windowsOsFullscreen")?.addEventListener("click", () => {
+    if (iframe.requestFullscreen) iframe.requestFullscreen();
+    else shell.requestFullscreen?.();
+  });
+}
 
 function runPhonePrankScenario() {
   clearStage();
@@ -1935,6 +2069,13 @@ const fakeEmails = [
     preview: "I've been trying to reach you...",
     body: "Sweetie,\n\nI've called you 5 times this week. Is everything okay?\n\nYour father and I are worried. Please call us.\n\nLove, Mom ❤️"
   }
+];
+
+const emailFolders = [
+  { id: "inbox", label: "Inbox", count: fakeEmails.length },
+  { id: "sent", label: "Sent", count: 4 },
+  { id: "starred", label: "Starred", count: 3 },
+  { id: "trash", label: "Trash", count: 2 },
 ];
 
 function runEmailScenario() {
@@ -2070,22 +2211,46 @@ function runEmailBypassAnimation(container) {
 }
 
 function buildEmailInbox(container) {
+  const alias = state.emailLoginAlias || "shadow.runner";
   container.innerHTML = `
     <div class="email-client">
       <div class="email-sidebar">
-        <div class="email-session">SESSION HIJACKED</div>
-        <div class="email-folder active">Inbox (${fakeEmails.length})</div>
-        <div class="email-folder">Sent</div>
-        <div class="email-folder">Starred</div>
-        <div class="email-folder">Trash</div>
-        <div class="email-recording">Recording session...</div>
+        <div class="email-brand">
+          <span>MX</span>
+          <div>
+            <strong>MailNode</strong>
+            <small>${escapeMarkup(alias)}@mx.local</small>
+          </div>
+        </div>
+        <button class="email-compose" type="button">Compose</button>
+        <nav class="email-folder-list" aria-label="Mailbox folders">
+          ${emailFolders.map((folder, index) => `
+            <button class="email-folder ${index === 0 ? "active" : ""}" type="button" data-folder="${folder.id}">
+              <span>${folder.label}</span>
+              <strong>${folder.count}</strong>
+            </button>
+          `).join("")}
+        </nav>
+        <div class="email-storage">
+          <span>Storage</span>
+          <div><i style="width: 68%"></i></div>
+          <small>8.4 GB of 12 GB used</small>
+        </div>
       </div>
 
       <div class="email-list-container">
+        <div class="email-toolbar">
+          <div class="email-window-dots"><span></span><span></span><span></span></div>
+          <div class="email-search">Search mail</div>
+          <div class="email-toolbar-actions">
+            <button type="button">Archive</button>
+            <button type="button">Report</button>
+          </div>
+        </div>
         <div class="email-mobile-header">
           <div>
-        <div class="email-kicker">Hacking in progress</div>
-        <div class="email-account">Encrypted inbox stream</div>
+            <div class="email-kicker">Inbox</div>
+            <div class="email-account">${escapeMarkup(alias)}@mx.local</div>
           </div>
           <div class="email-count">${fakeEmails.length}</div>
         </div>
@@ -2094,7 +2259,9 @@ function buildEmailInbox(container) {
 
       <div class="email-preview">
         <div class="email-preview-placeholder">
-          Select an email to read
+          <div class="email-empty-icon">✉</div>
+          <strong>Select a message</strong>
+          <span>Choose an email from the inbox to open the reading pane.</span>
         </div>
       </div>
     </div>
@@ -2107,11 +2274,15 @@ function buildEmailInbox(container) {
     item.className = "mail-item";
     item.innerHTML = `
       <div class="mail-item-top">
-        <div class="mail-subject">${email.subject}</div>
+        <div class="mail-sender">${email.from.split("@")[0]}</div>
         <div class="mail-time">${email.time}</div>
       </div>
-      <div class="mail-from">${email.from}</div>
+      <div class="mail-subject">${email.subject}</div>
       <div class="mail-preview-line">${email.preview}</div>
+      <div class="mail-meta-line">
+        <span>${email.from}</span>
+        <i>Unread</i>
+      </div>
     `;
 
     item.addEventListener("click", () => showEmailPreview(container, email));
@@ -2119,19 +2290,31 @@ function buildEmailInbox(container) {
     emailList.appendChild(item);
   });
 
-  showToast("📧 Inbox accessed (5 emails intercepted)", "success");
+  showEmailPreview(container, fakeEmails[0]);
+  showToast("Inbox opened", "success");
 }
 
 function showEmailPreview(container, email) {
   const preview = container.querySelector(".email-preview");
+  container.querySelectorAll(".mail-item").forEach((item) => {
+    item.classList.toggle("active", item.textContent.includes(email.subject));
+    if (item.textContent.includes(email.subject)) {
+      item.querySelector(".mail-meta-line i").textContent = "Opened";
+    }
+  });
   preview.classList.add("active");
   preview.innerHTML = `
     <button class="email-back" type="button">← Inbox</button>
+    <div class="email-reader-actions">
+      <button type="button">Reply</button>
+      <button type="button">Forward</button>
+      <button type="button">Delete</button>
+    </div>
     <div class="email-preview-head">
       <div class="email-preview-subject">${email.subject}</div>
       <div class="email-preview-meta">
         <div class="email-preview-from">
-          <div>${email.from}</div>
+          <div><span>${email.from.slice(0, 1).toUpperCase()}</span>${email.from}</div>
           <span>to: encrypted inbox</span>
         </div>
         <div>${email.time}</div>
@@ -3214,6 +3397,7 @@ function runTVScenario() {
 
 function runEmailHijackScenario() {
   clearStage();
+  document.body.classList.add("email-hijack-active", "email-hijack-live");
   const card = buildEmailHijackUI();
   els.stage.appendChild(card);
   addGlitch();
@@ -3223,6 +3407,1047 @@ function runFBIScenario() {
   clearStage();
   const lock = buildFBILock();
   els.stage.appendChild(lock);
+}
+
+function runPasswordCrackerScenario() {
+  clearStage();
+  document.body.classList.add("ui-running", "password-cracker-active");
+  els.stage.classList.add("stage-centered");
+  els.stage.appendChild(buildPasswordConceptPicker());
+  addGlitch();
+}
+
+function runPasswordMeterScenario() {
+  clearStage();
+  document.body.classList.add("ui-running", "password-meter-active");
+  els.stage.classList.add("stage-centered");
+  openPasswordMeter({ standalone: true });
+  addGlitch();
+}
+
+function buildPasswordConceptPicker() {
+  const wrap = document.createElement("div");
+  wrap.className = "pc-picker";
+  const target = state.customTargetEmail || "MysticFox_99";
+  const data = state.customPasswordData || "Local Import";
+  const concepts = getPasswordConcepts();
+
+  wrap.innerHTML = `
+    <section class="pc-picker-head">
+      <div>
+        <div class="directory-kicker">Password Cracker</div>
+        <h2>Choose a design concept</h2>
+        <p>Load a fake account or data label, open the concept selector, then choose the style you want.</p>
+      </div>
+      <form class="pc-target-form" autocomplete="off">
+        <label>
+          <span>Fake email / target</span>
+          <input name="pcTarget" autocomplete="off" spellcheck="false" value="${escapeMarkup(target)}" placeholder="mysticfox@example.com">
+        </label>
+        <label>
+          <span>Fake data source</span>
+          <input name="pcData" autocomplete="off" spellcheck="false" value="${escapeMarkup(data)}" placeholder="Local Import">
+        </label>
+      </form>
+    </section>
+    <section class="pc-concepts-shell collapsed">
+      <button class="pc-concepts-toggle" type="button" aria-expanded="false">
+        <span>
+          <b>Password Cracker Concepts</b>
+          <small>Click to show all design concepts</small>
+        </span>
+        <i aria-hidden="true">+</i>
+      </button>
+      <div class="pc-concept-grid">
+        ${concepts.map((concept) => `
+          <button class="pc-concept-card ${concept.tint} is-ready" type="button" data-concept="${concept.id}">
+            <span class="pc-concept-label">${concept.label}</span>
+            <strong>${concept.name}</strong>
+            <span class="pc-mini-preview">
+              <span class="pc-mini-top"></span>
+              <span class="pc-mini-body">
+                <span class="pc-mini-ring">${concept.pct}</span>
+                <span class="pc-mini-lines"><i></i><i></i><i></i></span>
+              </span>
+              <span class="pc-mini-nav"><i></i><i></i><i></i></span>
+            </span>
+            <small>Run animated ${concept.name}</small>
+          </button>
+        `).join("")}
+      </div>
+    </section>
+  `;
+
+  wrap.addEventListener("click", (event) => {
+    const toggle = event.target instanceof HTMLElement ? event.target.closest(".pc-concepts-toggle") : null;
+    if (toggle) {
+      const shell = toggle.closest(".pc-concepts-shell");
+      const open = shell?.classList.toggle("collapsed") === false;
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.querySelector("i").textContent = open ? "-" : "+";
+      toggle.querySelector("small").textContent = open ? "Choose one concept below" : "Click to show all design concepts";
+      return;
+    }
+    const card = event.target instanceof HTMLElement ? event.target.closest(".pc-concept-card") : null;
+    if (!card) return;
+    const form = wrap.querySelector(".pc-target-form");
+    const targetInput = form?.elements?.pcTarget;
+    const dataInput = form?.elements?.pcData;
+    state.customTargetEmail = targetInput?.value?.trim() || "MysticFox_99";
+    state.customPasswordData = dataInput?.value?.trim() || "Local Import";
+    launchPasswordConcept(card.dataset.concept || "c");
+  });
+
+  return wrap;
+}
+
+function getPasswordConcepts() {
+  return [
+    { id: "a", label: "Concept A", name: "Retro Terminal", tint: "green", pct: "63", accent: "#21ff58", status: "Testing combinations..." },
+    { id: "b", label: "Concept B", name: "Cyber Dashboard", tint: "blue", pct: "72", accent: "#37b8ff", status: "Testing combinations" },
+    { id: "c", label: "Concept C", name: "Mobile Vault", tint: "purple", pct: "58", accent: "#9b5cff", status: "Scanning..." },
+    { id: "d", label: "Concept D", name: "Red Security Console", tint: "red", pct: "46", accent: "#ff4e45", status: "Testing keyspace..." },
+    { id: "e", label: "Concept E", name: "Arcade Prank Lab", tint: "arcade", pct: "83", accent: "#f6db2d", status: "Guessing combinations..." },
+  ];
+}
+
+function launchPasswordConcept(conceptId = "c") {
+  els.stage.innerHTML = "";
+  document.body.classList.add("password-cracker-live");
+  els.stage.classList.add("stage-centered");
+  if (conceptId === "e") {
+    const lab = buildArcadePrankLab();
+    els.stage.appendChild(lab);
+    startArcadePrankLab(lab);
+    return;
+  }
+  if (conceptId === "a") {
+    const term = buildRetroTerminal();
+    els.stage.appendChild(term);
+    return;
+  }
+  if (conceptId === "b") {
+    const dash = buildCyberDashboard();
+    els.stage.appendChild(dash);
+    return;
+  }
+  const frame = buildPasswordConceptFrame(conceptId);
+  els.stage.appendChild(frame);
+  startPasswordConceptSimulation(frame);
+}
+
+function buildPasswordConceptFrame(conceptId = "c") {
+  const concepts = getPasswordConcepts();
+  const concept = concepts.find((item) => item.id === conceptId) || concepts[2];
+  const frame = document.createElement("div");
+  frame.className = `pc-runtime pc-theme-${concept.id}`;
+  const rawTarget = state.customTargetEmail || "MysticFox_99";
+  const dataLabel = state.customPasswordData || "Local Import";
+  const targetName = rawTarget.includes("@") ? rawTarget.split("@")[0] : rawTarget;
+  const hashTail = makeFakeHash(12);
+  const safeTarget = escapeMarkup(targetName);
+  const safeData = escapeMarkup(dataLabel);
+  const safeHash = escapeMarkup(hashTail);
+
+  frame.innerHTML = `
+    <section class="pc-landscape-shell" aria-label="${escapeMarkup(concept.name)} desktop simulation">
+      <header class="pc-landscape-head">
+        <div>
+          <span>${escapeMarkup(concept.label)} - ${escapeMarkup(concept.name)}</span>
+          <h2>Password Cracker</h2>
+        </div>
+        <strong>SIMULATION MODE</strong>
+      </header>
+
+      <div class="pc-landscape-grid">
+        <aside class="pc-profile-panel">
+          <div class="pc-avatar xl" aria-hidden="true"></div>
+          <div class="pc-panel-title">Target Profile</div>
+          <strong>${safeTarget}</strong>
+          <small>${safeData}</small>
+          <dl>
+            <div><dt>Hash type</dt><dd>FAKE-${concept.id.toUpperCase()}${makeFakeHash(3)}</dd></div>
+            <div><dt>Source</dt><dd>Imported List</dd></div>
+            <div><dt>Safety</dt><dd>Visual only</dd></div>
+          </dl>
+        </aside>
+
+        <main class="pc-work-panel">
+          <div class="pc-panel-title">${concept.id === "e" ? "Guessing combinations..." : "Simulation Progress"}</div>
+          <div class="pc-work-main">
+            <div>
+              <div class="pc-big-pct" data-pc-pct>${concept.pct}%</div>
+              <div class="pc-status-line" data-pc-status>${escapeMarkup(concept.status)}</div>
+              <div class="pc-wide-meter"><span data-pc-bar style="width: ${concept.pct}%"></span></div>
+            </div>
+            <div class="pc-ring-wrap desktop-ring" aria-hidden="true">
+              <div class="pc-ring" data-pc-ring style="--pct: ${concept.pct};">
+                <div class="pc-ring-inner"><span data-pc-pct>${concept.pct}%</span></div>
+              </div>
+              <div class="pc-ring-trails"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+          <div class="pc-step-list">
+            <span class="done">Initializing modules <b>OK</b></span>
+            <span class="done">Loading wordlist <b>OK</b></span>
+            <span class="active" data-pc-status>${escapeMarkup(concept.status)}</span>
+            <span>Finalizing results <b>WAITING</b></span>
+          </div>
+        </main>
+
+        <aside class="pc-live-panel">
+          <div class="pc-panel-title">Live Feed</div>
+          <div class="pc-live-log" data-pc-log>
+            <div><span>10:22:31</span> Module online</div>
+            <div><span>10:22:32</span> Wordlist loaded</div>
+            <div><span>10:22:33</span> Hash captured</div>
+          </div>
+        </aside>
+      </div>
+
+      <footer class="pc-landscape-foot">
+        <span>This is a prank simulation only. No real credentials are used or exposed.</span>
+        <b>No real access</b>
+      </footer>
+    </section>
+
+    <section class="pc-mobile-vault" aria-label="${escapeMarkup(concept.name)} mobile simulation">
+      <div class="pc-phone-screen">
+      <div class="pc-statusbar" aria-hidden="true">
+        <span>10:45</span>
+        <span class="pc-phone-icons"><i></i><b>5G</b><em>89</em></span>
+      </div>
+
+      <header class="pc-vault-header">
+        <div>
+          <h2>Password Cracker</h2>
+        </div>
+        <span>${concept.id === "e" ? "FUN MODE" : "PRANK MODE"}</span>
+      </header>
+
+      <section class="pc-vault-field">
+        <div class="pc-field-title">TARGET ACCOUNT</div>
+        <div class="pc-account-row">
+          <div class="pc-avatar" aria-hidden="true"></div>
+          <div>
+            <strong>${safeTarget}</strong>
+            <small>${safeData}</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="pc-vault-field">
+        <div class="pc-field-title">HASH PREVIEW (FAKE)</div>
+        <div class="pc-hash-pill">a1b2c3d4e5f6...${safeHash}</div>
+      </section>
+
+      <section class="pc-scan-block">
+        <div class="pc-field-title">SCAN STATUS</div>
+        <div class="pc-ring-wrap" aria-hidden="true">
+          <div class="pc-ring" style="--pct: ${concept.pct};">
+            <div class="pc-ring-inner"><span data-pc-pct>${concept.pct}%</span></div>
+          </div>
+          <div class="pc-ring-trails"><i></i><i></i><i></i></div>
+        </div>
+        <div class="pc-scan-copy" data-pc-status>${escapeMarkup(concept.status)}</div>
+      </section>
+
+      <section class="pc-matches">
+        <div class="pc-field-title">POSSIBLE MATCHES</div>
+        <div class="pc-match-row">
+          <span>*******</span>
+          <span>*****3e</span>
+          <span>******7</span>
+        </div>
+      </section>
+
+      <section class="pc-disclaimer">
+        <div class="pc-shield" aria-hidden="true"></div>
+        <p>This is a simulation for fun only.<br>No real hacking. No real access.</p>
+      </section>
+
+      <nav class="pc-vault-nav" aria-label="Password vault tabs">
+        <button class="active" type="button"><span class="pc-nav-lock"></span><b>Vault</b></button>
+        <button type="button"><span class="pc-nav-scan"></span><b>Scan</b></button>
+        <button type="button"><span class="pc-nav-results"></span><b>Results</b></button>
+        <button type="button"><span class="pc-nav-settings"></span><b>Settings</b></button>
+      </nav>
+      </div>
+    </section>
+  `;
+
+  return frame;
+}
+
+function startPasswordConceptSimulation(frame) {
+  const pctEls = [...frame.querySelectorAll("[data-pc-pct]")];
+  const rings = [...frame.querySelectorAll(".pc-ring, [data-pc-ring]")];
+  const statuses = [...frame.querySelectorAll("[data-pc-status]")];
+  const bars = [...frame.querySelectorAll("[data-pc-bar]")];
+  const matches = [...frame.querySelectorAll(".pc-match-row span")];
+  const logs = [...frame.querySelectorAll("[data-pc-log]")];
+  const steps = [
+    { t: 0, pct: 12, copy: "Opening local vault..." },
+    { t: 900, pct: 24, copy: "Loading fake hash..." },
+    { t: 1800, pct: 37, copy: "Testing safe patterns..." },
+    { t: 2800, pct: 49, copy: "Matching preview..." },
+    { t: 3900, pct: 58, copy: "Scanning..." },
+    { t: 5200, pct: 71, copy: "Narrowing matches..." },
+    { t: 6600, pct: 84, copy: "Verifying prank data..." },
+    { t: 8100, pct: 96, copy: "Almost there..." },
+    { t: 9600, pct: 100, copy: "Simulation complete" },
+  ];
+
+  steps.forEach((step, index) => {
+    const timer = setTimeout(() => {
+      if (!state.running || !frame.isConnected) return;
+      pctEls.forEach((el) => el.textContent = `${step.pct}%`);
+      rings.forEach((ring) => ring.style.setProperty("--pct", String(step.pct)));
+      statuses.forEach((status) => status.textContent = step.copy);
+      bars.forEach((bar) => bar.style.width = `${step.pct}%`);
+      matches.forEach((match, matchIndex) => {
+        const gate = 36 + matchIndex * 22;
+        match.classList.toggle("active", step.pct >= gate);
+      });
+      logs.forEach((log) => {
+        const line = document.createElement("div");
+        line.innerHTML = `<span>10:22:${String(34 + index).padStart(2, "0")}</span> ${escapeMarkup(step.copy)}`;
+        log.appendChild(line);
+        log.scrollTop = log.scrollHeight;
+      });
+      frame.dataset.phase = String(index);
+      if (step.pct === 100) showToast("Password Cracker simulation complete.", "success");
+    }, step.t / state.speed);
+    state.timers.push(timer);
+  });
+}
+
+function getArcadeTargetName() {
+  const raw = (state.customTargetEmail || "FunStudent_07").trim();
+  const base = raw.includes("@") ? raw.split("@")[0] : raw;
+  return base.slice(0, 18) || "FunStudent_07";
+}
+
+// Concept E — Arcade Prank Lab. A toy-like, game-show take on the password
+// cracker. Tiles flip from "?" to letters with playful check / X verdicts,
+// then a confetti "POSSIBLE MATCH!" reveal makes the prank land kindly.
+function buildArcadePrankLab() {
+  const frame = document.createElement("div");
+  frame.className = "pc-arcade";
+  const target = escapeMarkup(getArcadeTargetName());
+  const rows = [
+    { id: "r1", chars: ["F", "U", "N", "!", "2", "0", "2", "5"], kind: "alnum" },
+    { id: "r2", chars: ["S", "T", "U", "D", "E", "N", "T", "?"], kind: "alpha" },
+    { id: "r3", chars: ["1", "2", "3", "4", "5", "6", "7", "8"], kind: "num" },
+  ];
+  const tileRow = (row) => `
+    <div class="apl-tile-row" data-row="${row.id}">
+      ${row.chars.map((ch, i) => `
+        <span class="apl-tile" data-tile data-char="${escapeMarkup(ch)}" style="--i:${i}">
+          <b class="apl-tile-face">?</b>
+          <i class="apl-tile-mark" aria-hidden="true"></i>
+        </span>`).join("")}
+    </div>`;
+
+  frame.innerHTML = `
+    <div class="apl-stage" role="group" aria-label="Arcade Prank Lab password cracker simulation">
+      <div class="apl-sparks" aria-hidden="true"></div>
+
+      <header class="apl-top">
+        <div class="apl-logo">
+          <span class="apl-logo-lock" aria-hidden="true">🔒</span>
+          <span class="apl-logo-text"><b>PASSWORD CRACKER</b><i>PRANK LAB</i></span>
+        </div>
+        <div class="apl-top-controls">
+          <button class="apl-sim-pill" type="button" data-apl-mode aria-pressed="true">
+            <span class="apl-dot"></span> SIMULATION MODE
+          </button>
+          <button class="apl-icon-btn" type="button" data-apl-sound aria-label="Toggle sound">🔊</button>
+          <button class="apl-icon-btn" type="button" data-apl-close aria-label="Exit simulation">✕</button>
+        </div>
+      </header>
+
+      <div class="apl-body">
+        <aside class="apl-mascot-col">
+          <div class="apl-mascot" aria-hidden="true">
+            <div class="apl-mascot-shackle"></div>
+            <div class="apl-mascot-face">
+              <span class="apl-eye left"></span>
+              <span class="apl-eye right wink"></span>
+              <span class="apl-keyhole"></span>
+              <span class="apl-smile"></span>
+            </div>
+          </div>
+          <div class="apl-target">
+            <span class="apl-target-k">🎯 TARGET</span>
+            <strong>${target}</strong>
+          </div>
+          <div class="apl-progress">
+            <div class="apl-progress-track"><span class="apl-progress-fill" data-apl-bar></span></div>
+            <div class="apl-progress-pct"><span data-apl-pct>0</span>%</div>
+          </div>
+        </aside>
+
+        <main class="apl-grid-col">
+          <h3 class="apl-grid-title"><span data-apl-status>GUESSING COMBINATIONS</span><i class="apl-ellipsis"><i></i><i></i><i></i></i></h3>
+          <div class="apl-tiles">
+            ${rows.map(tileRow).join("")}
+          </div>
+        </main>
+
+        <aside class="apl-match-col" data-apl-matchcol>
+          <div class="apl-match-title">POSSIBLE MATCH!</div>
+          <div class="apl-match-card">
+            <span class="apl-match-confetti" aria-hidden="true"></span>
+            <span class="apl-match-word" data-apl-reveal>• • • • •</span>
+          </div>
+          <button class="apl-btn reveal" type="button" data-apl-revealbtn disabled>
+            <span data-apl-revealtxt>CRACKING…</span>
+          </button>
+          <button class="apl-btn reset" type="button" data-apl-reset>RESET SIMULATION</button>
+        </aside>
+      </div>
+
+      <footer class="apl-foot" data-apl-foot>
+        <span class="apl-foot-badge" aria-hidden="true">⏳</span>
+        <span data-apl-foottxt>Brute-forcing combinations… keep this window open until the match completes.</span>
+      </footer>
+    </div>
+  `;
+
+  frame.querySelector("[data-apl-close]")?.addEventListener("click", exitToHome);
+  frame.querySelector("[data-apl-mode]")?.addEventListener("click", (e) => {
+    const btn = e.currentTarget;
+    const on = btn.getAttribute("aria-pressed") !== "true";
+    btn.setAttribute("aria-pressed", String(on));
+    showToast(on ? "Simulation mode on (always on — it's fake!)" : "Still a simulation. 100% fake.", "info");
+    btn.setAttribute("aria-pressed", "true");
+  });
+  frame.querySelector("[data-apl-sound]")?.addEventListener("click", (e) => {
+    state.sound = !state.sound;
+    if (els.soundToggle) els.soundToggle.checked = state.sound;
+    e.currentTarget.textContent = state.sound ? "🔊" : "🔇";
+  });
+  frame.querySelector("[data-apl-reset]")?.addEventListener("click", () => {
+    clearTimers();
+    const fresh = buildArcadePrankLab();
+    frame.replaceWith(fresh);
+    startArcadePrankLab(fresh);
+  });
+  frame.querySelector("[data-apl-revealbtn]")?.addEventListener("click", () => {
+    revealArcadePrank(frame);
+  });
+
+  return frame;
+}
+
+function startArcadePrankLab(frame) {
+  const tiles = [...frame.querySelectorAll("[data-tile]")];
+  const bar = frame.querySelector("[data-apl-bar]");
+  const pct = frame.querySelector("[data-apl-pct]");
+  const statusEl = frame.querySelector("[data-apl-status]");
+  // A couple of tiles get a playful red "X" before flipping to a check —
+  // it reads like the cracker briefly guessed wrong, which sells the bit.
+  const wrongIndexes = new Set([11, 15]);
+  const total = tiles.length;
+  const stepGap = 360;
+
+  const statusBeats = ["GUESSING COMBINATIONS", "TRYING SILLY PASSWORDS", "NARROWING IT DOWN", "ALMOST GOT IT"];
+
+  tiles.forEach((tile, idx) => {
+    const t = setTimeout(() => {
+      if (!state.running || !frame.isConnected) return;
+      const wrong = wrongIndexes.has(idx);
+      tile.classList.add(wrong ? "is-wrong" : "is-right");
+      tile.querySelector(".apl-tile-face").textContent = tile.dataset.char;
+      const progress = Math.round(((idx + 1) / total) * 100);
+      if (bar) bar.style.width = `${progress}%`;
+      if (pct) pct.textContent = String(progress);
+      if (statusEl) statusEl.textContent = statusBeats[Math.min(statusBeats.length - 1, Math.floor((idx / total) * statusBeats.length))];
+      playArcadeBlip(wrong);
+      // Wrong tiles correct themselves a beat later — keeps the grid all-green.
+      if (wrong) {
+        const fix = setTimeout(() => {
+          if (!frame.isConnected) return;
+          tile.classList.remove("is-wrong");
+          tile.classList.add("is-right");
+        }, 520 / state.speed);
+        state.timers.push(fix);
+      }
+      if (idx === total - 1) {
+        if (statusEl) statusEl.textContent = "MATCH FOUND";
+        frame.querySelector("[data-apl-matchcol]")?.classList.add("is-armed");
+        // Crack is done — only now can the prank be revealed.
+        const revealBtn = frame.querySelector("[data-apl-revealbtn]");
+        const revealTxt = frame.querySelector("[data-apl-revealtxt]");
+        if (revealBtn) revealBtn.disabled = false;
+        if (revealTxt) revealTxt.textContent = "REVEAL";
+        const footTxt = frame.querySelector("[data-apl-foottxt]");
+        if (footTxt) footTxt.textContent = "Match found. Press REVEAL to show the password.";
+      }
+    }, (idx * stepGap) / state.speed);
+    state.timers.push(t);
+  });
+}
+
+function revealArcadePrank(frame) {
+  const revealBtn = frame.querySelector("[data-apl-revealbtn]");
+  // Reveal is locked until the crack animation has finished.
+  if (revealBtn?.disabled) {
+    showToast("Still cracking… let the match finish first.", "info");
+    return;
+  }
+  const revealEl = frame.querySelector("[data-apl-reveal]");
+  const matchCol = frame.querySelector("[data-apl-matchcol]");
+  if (!revealEl) return;
+  revealEl.textContent = "FUN!2025";
+  matchCol?.classList.add("is-revealed");
+  // The "it's a prank" punchline lands ONLY now — not before.
+  frame.classList.add("is-revealed");
+  const footBadge = frame.querySelector(".apl-foot-badge");
+  const footTxt = frame.querySelector("[data-apl-foottxt]");
+  if (footBadge) footBadge.textContent = "🎉";
+  if (footTxt) footTxt.textContent = "Just a prank! This app is 100% safe and does not access real accounts. 😊";
+  burstArcadeConfetti(frame);
+  showToast("🎉 Gotcha! This is a SimDeck prank — no real password.", "success");
+}
+
+function burstArcadeConfetti(frame) {
+  const host = frame.querySelector(".apl-sparks");
+  if (!host) return;
+  const colors = ["#f6db2d", "#34d36b", "#37b8ff", "#ff5d73", "#b67bff"];
+  for (let i = 0; i < 28; i += 1) {
+    const piece = document.createElement("i");
+    piece.className = "apl-confetti";
+    piece.style.setProperty("--x", `${randomInt(8, 92)}%`);
+    piece.style.setProperty("--d", `${randomInt(700, 1500)}ms`);
+    piece.style.setProperty("--r", `${randomInt(-220, 220)}deg`);
+    piece.style.background = colors[i % colors.length];
+    host.appendChild(piece);
+    const cleanup = setTimeout(() => piece.remove(), 1700);
+    state.timers.push(cleanup);
+  }
+}
+
+function playArcadeBlip(wrong) {
+  if (!state.sound) return;
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    const ctx = (playArcadeBlip._ctx ||= new Ctx());
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = wrong ? "sawtooth" : "triangle";
+    osc.frequency.value = wrong ? 180 : 620 + Math.random() * 180;
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.06, ctx.currentTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.12);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.13);
+  } catch (_) { /* audio is best-effort */ }
+}
+
+// Concept A — Retro Terminal. A green-on-black CRT password cracker that
+// brute-forces character by character like an old-school dictionary attack.
+// It looks real the whole way through; the "it's a prank" line only appears
+// once the crack completes (the punchline).
+function getRetroTargetName() {
+  const raw = (state.customTargetEmail || "CoolDude_23").trim();
+  const base = raw.includes("@") ? raw.split("@")[0] : raw;
+  return base.slice(0, 18) || "CoolDude_23";
+}
+
+function randChar(set) {
+  return set[randomInt(0, set.length - 1)];
+}
+
+function randomRetroSecret() {
+  const pool = ["LOL_GotYou_99", "NachoP@ssw0rd", "Ch1ckenNugget7", "D3finitelyReal!", "S3cur3Panda_42", "Tacos4Lyfe_88"];
+  return pool[randomInt(0, pool.length - 1)];
+}
+
+function buildRetroTerminal() {
+  const frame = document.createElement("div");
+  frame.className = "pc-retro is-idle";
+  const target = escapeMarkup(getRetroTargetName());
+  frame.dataset.target = getRetroTargetName();
+  frame.dataset.recovered = randomRetroSecret();
+
+  frame.innerHTML = `
+    <div class="rt-window" role="group" aria-label="Retro Terminal password cracker simulation">
+      <div class="rt-scanlines" aria-hidden="true"></div>
+      <div class="rt-titlebar">
+        <span class="rt-title">PASSWORD CRACKER 1.0</span>
+        <span class="rt-winbtns" aria-hidden="true">
+          <i>&minus;</i><i>&#9633;</i><b data-rt-close role="button" aria-label="Exit simulation" tabindex="0">&times;</b>
+        </span>
+      </div>
+      <div class="rt-body">
+        <div class="rt-toolbar">
+          <button type="button" class="rt-tb" data-rt-crack>CRACK</button>
+          <button type="button" class="rt-tb" data-rt-reset>RESET</button>
+          <button type="button" class="rt-tb" data-rt-opt>OPTIONS</button>
+          <button type="button" class="rt-tb" data-rt-about>ABOUT</button>
+        </div>
+
+        <div class="rt-info">
+          <div class="rt-info-lines">
+            <div><span>TARGET USER</span><i>:</i> <b data-rt-targetuser>${target}</b></div>
+            <div><span>HASH TYPE</span><i>:</i> SHA-256 (FAKE)</div>
+            <div><span>DICTIONARY</span><i>:</i> 12,345 WORDS</div>
+            <div><span>STATUS</span><i>:</i> <b data-rt-status class="rt-status">IDLE &mdash; AWAITING TARGET</b></div>
+          </div>
+          <div class="rt-lock" data-rt-lock aria-hidden="true">
+            <span class="rt-lock-shackle"></span>
+            <span class="rt-lock-body"><i class="rt-keyhole"></i></span>
+          </div>
+        </div>
+
+        <form class="rt-setup" data-rt-setup autocomplete="off">
+          <div class="rt-setup-title">// ENTER FAKE TARGET DETAILS</div>
+          <label class="rt-field">
+            <span>TARGET USER / HANDLE</span>
+            <input name="rtTarget" maxlength="18" spellcheck="false" placeholder="CoolDude_23" value="${target}">
+          </label>
+          <label class="rt-field">
+            <span>PASSWORD TO "RECOVER"</span>
+            <input name="rtSecret" maxlength="16" spellcheck="false" placeholder="leave blank = random">
+          </label>
+          <button type="submit" class="rt-start">&#9658; START CRACK</button>
+          <p class="rt-setup-note">All details are fake &mdash; nothing leaves this browser. The crack runs for about a minute.</p>
+        </form>
+
+        <div class="rt-run">
+          <div class="rt-section">
+            <div class="rt-section-title">ATTEMPT GRID</div>
+            <div class="rt-grid" data-rt-grid></div>
+          </div>
+
+          <div class="rt-section">
+            <div class="rt-section-title">CRACK PROGRESS <b class="rt-pct" data-rt-pct>0%</b></div>
+            <div class="rt-meter"><span class="rt-meter-fill" data-rt-bar></span></div>
+            <div class="rt-line" data-rt-line>Awaiting start...</div>
+          </div>
+        </div>
+
+        <div class="rt-foot" data-rt-foot>
+          <span class="rt-foot-icon" aria-hidden="true">&gt;</span>
+          <span data-rt-foottxt>Enter fake details above, then press START CRACK to begin the simulation.</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const toIdle = () => {
+    clearTimers();
+    if (frame._rtTick) { clearInterval(frame._rtTick); frame._rtTick = null; }
+    const fresh = buildRetroTerminal();
+    frame.replaceWith(fresh);
+  };
+  const startNow = () => beginRetroCrack(frame);
+
+  const close = frame.querySelector("[data-rt-close]");
+  close?.addEventListener("click", exitToHome);
+  close?.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") exitToHome(); });
+  frame.querySelector("[data-rt-setup]")?.addEventListener("submit", (e) => { e.preventDefault(); startNow(); });
+  frame.querySelector("[data-rt-crack]")?.addEventListener("click", startNow);
+  frame.querySelector("[data-rt-reset]")?.addEventListener("click", toIdle);
+  frame.querySelector("[data-rt-opt]")?.addEventListener("click", () => showToast("Options: dictionary, leetspeak rules, GPU threads (all simulated).", "info"));
+  frame.querySelector("[data-rt-about]")?.addEventListener("click", () => showToast("PASSWORD CRACKER 1.0 — a SimDeck prank. 100% fake.", "info"));
+
+  return frame;
+}
+
+function beginRetroCrack(frame) {
+  const form = frame.querySelector("[data-rt-setup]");
+  let target = (form?.elements?.rtTarget?.value || "").trim();
+  let secret = (form?.elements?.rtSecret?.value || "").trim();
+  if (!target) target = frame.dataset.target || "CoolDude_23";
+  target = target.slice(0, 18);
+  secret = secret.replace(/\s+/g, "").slice(0, 16);
+  if (!secret) secret = frame.dataset.recovered || randomRetroSecret();
+  frame.dataset.target = target;
+  frame.dataset.recovered = secret;
+
+  const targetEl = frame.querySelector("[data-rt-targetuser]");
+  if (targetEl) targetEl.textContent = target;
+  const statusEl = frame.querySelector("[data-rt-status]");
+  if (statusEl) { statusEl.textContent = "RUNNING SIMULATION"; statusEl.classList.remove("granted"); }
+
+  frame.classList.remove("is-idle", "is-cracked");
+  runRetroCrack(frame, secret);
+}
+
+// Duration-driven brute-force. Runs ~60s at 1x (scaled by the speed slider),
+// cycling through believable attack phases the whole time. Stays convincing
+// until 100% — only then does it reveal it was a prank.
+function runRetroCrack(frame, recovered) {
+  const gridEl = frame.querySelector("[data-rt-grid]");
+  const bar = frame.querySelector("[data-rt-bar]");
+  const pct = frame.querySelector("[data-rt-pct]");
+  const statusEl = frame.querySelector("[data-rt-status]");
+  const lineEl = frame.querySelector("[data-rt-line]");
+  const lockEl = frame.querySelector("[data-rt-lock]");
+  const footEl = frame.querySelector("[data-rt-foot]");
+  const footTxt = frame.querySelector("[data-rt-foottxt]");
+  if (!gridEl) return;
+
+  if (frame._rtTick) { clearInterval(frame._rtTick); frame._rtTick = null; }
+
+  // believable running footer (the prank line only appears at completion)
+  footEl?.classList.remove("rt-foot--prank");
+  if (footTxt) footTxt.textContent = "linking to target node... bypassing rate limit... keep this window open.";
+
+  const chars = recovered.split("");
+  const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&_";
+  gridEl.innerHTML = chars.map((_, i) =>
+    `<span class="rt-cell" data-i="${i}"><b class="rt-cell-char">${escapeMarkup(randChar(charset))}</b><i class="rt-cell-mark" aria-hidden="true"></i></span>`
+  ).join("");
+  const cells = [...gridEl.querySelectorAll(".rt-cell")];
+  const wrongFirst = new Set();
+  while (wrongFirst.size < Math.min(2, Math.max(0, cells.length - 1))) {
+    wrongFirst.add(randomInt(1, cells.length - 1));
+  }
+
+  const DURATION = 60000 / (state.speed || 1);
+  const phases = [
+    [0.00, "Loading dictionary (12,345 words)..."],
+    [0.12, "Applying leetspeak rules (a -> @, e -> 3)..."],
+    [0.26, "Hybrid mask attack: ?u ?l ?l ?d ?s ..."],
+    [0.40, "GPU cluster online - 4.2 GH/s..."],
+    [0.55, "Pruning weak keyspace branches..."],
+    [0.70, "Bypassing login rate limiter..."],
+    [0.84, "Reconstructing hash collisions..."],
+    [0.94, "Almost there - locking final bytes..."],
+  ];
+  const fmt = (ms) => {
+    const s = Math.max(0, Math.ceil(ms / 1000));
+    return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+  };
+
+  let attempts = 0;
+  let lockedCount = 0;
+  const started = performance.now();
+
+  const lockCell = (idx) => {
+    const cell = cells[idx];
+    if (!cell) return;
+    const charEl = cell.querySelector(".rt-cell-char");
+    if (wrongFirst.has(idx)) {
+      cell.classList.add("is-wrong");
+      charEl.textContent = randChar(charset);
+      const fix = setTimeout(() => {
+        if (!frame.isConnected) return;
+        cell.classList.remove("is-wrong");
+        cell.classList.add("is-right");
+        charEl.textContent = chars[idx];
+      }, 420 / (state.speed || 1));
+      state.timers.push(fix);
+    } else {
+      cell.classList.add("is-right");
+      charEl.textContent = chars[idx];
+    }
+  };
+
+  const finishRetro = () => {
+    cells.forEach((cell, i) => {
+      cell.classList.remove("is-wrong");
+      cell.classList.add("is-right");
+      cell.querySelector(".rt-cell-char").textContent = chars[i];
+    });
+    if (bar) bar.style.width = "100%";
+    if (pct) pct.textContent = "100%";
+    frame.classList.add("is-cracked");
+    if (statusEl) { statusEl.textContent = "ACCESS GRANTED"; statusEl.classList.add("granted"); }
+    lockEl?.classList.add("is-open");
+    if (lineEl) lineEl.textContent = `RECOVERED: ${recovered}`;
+    if (footEl) footEl.classList.add("rt-foot--prank");
+    if (footTxt) footTxt.innerHTML = "&#9888; THIS IS A PRANK SIMULATION ONLY &#9888;<br>No real passwords are accessed or stored.<br>Have fun. Stay curious. Stay kind.   :)";
+    showToast("Gotcha! Fake crack complete — no real password was touched.", "success");
+  };
+
+  const tick = setInterval(() => {
+    if (!state.running || !frame.isConnected) { clearInterval(tick); frame._rtTick = null; return; }
+    const elapsed = performance.now() - started;
+    const t = Math.min(1, elapsed / DURATION);
+
+    const p = Math.round(t * 100);
+    if (bar) bar.style.width = `${p}%`;
+    if (pct) pct.textContent = `${p}%`;
+
+    const targetLocked = Math.floor(t * chars.length);
+    while (lockedCount < targetLocked) { lockCell(lockedCount); lockedCount += 1; }
+
+    cells.forEach((cell, i) => {
+      if (i >= lockedCount) cell.querySelector(".rt-cell-char").textContent = randChar(charset);
+    });
+
+    attempts += randomInt(400, 3600);
+    let phase = phases[0][1];
+    for (const [thr, msg] of phases) { if (t >= thr) phase = msg; }
+    if (lineEl) {
+      lineEl.textContent = `${phase}   ETA ${fmt(DURATION - elapsed)} · attempts ${attempts.toLocaleString()}`;
+    }
+
+    if (t >= 1) { clearInterval(tick); frame._rtTick = null; finishRetro(); }
+  }, 90);
+  frame._rtTick = tick;
+}
+
+// Concept B — Cyber Dashboard. A clean SOC-style console: target profile,
+// a progress ring with a staged checklist, and a streaming live feed. Looks
+// like a genuine credential-recovery tool — the hash is NOT labelled fake and
+// the "it's a prank" disclaimer only appears once the crack hits 100%.
+function getCyberDefaultUser() {
+  const raw = (state.customTargetEmail || "NightOwl_42").trim();
+  const base = raw.includes("@") ? raw.split("@")[0] : raw;
+  return base.slice(0, 20) || "NightOwl_42";
+}
+
+function buildCyberDashboard() {
+  const frame = document.createElement("div");
+  frame.className = "pc-cyber is-idle";
+  const user = escapeMarkup(getCyberDefaultUser());
+  frame.dataset.user = getCyberDefaultUser();
+  frame.dataset.sec = "Standard";
+  frame.dataset.recovered = randomRetroSecret();
+
+  frame.innerHTML = `
+    <div class="cb-shell" role="group" aria-label="Cyber Dashboard password cracker simulation">
+      <header class="cb-top">
+        <h2 class="cb-brand">PASSWORD CRACKER</h2>
+        <div class="cb-top-right">
+          <span class="cb-mode"><i aria-hidden="true"></i> ENGINE ONLINE</span>
+          <button type="button" class="cb-icon" data-cb-help aria-label="Help">?</button>
+          <button type="button" class="cb-icon" data-cb-settings aria-label="Settings">&#9881;</button>
+        </div>
+      </header>
+
+      <div class="cb-grid">
+        <aside class="cb-panel cb-profile">
+          <div class="cb-panel-title">TARGET PROFILE</div>
+          <div class="cb-avatar" aria-hidden="true"></div>
+          <div class="cb-pf"><span>Username</span><b data-cb-user>${user}</b></div>
+          <div class="cb-pf"><span>Security Level</span><b data-cb-sec>Standard</b></div>
+          <div class="cb-pf"><span>Hash Type</span><b>PBKDF2</b></div>
+          <div class="cb-pf"><span>Source</span><b>Imported List</b></div>
+          <button type="button" class="cb-change" data-cb-change>Change Target</button>
+        </aside>
+
+        <main class="cb-panel cb-center">
+          <div class="cb-panel-title">CRACK PROGRESS</div>
+
+          <form class="cb-setup" data-cb-setup autocomplete="off">
+            <div class="cb-setup-grid">
+              <label class="cb-field">
+                <span>Username / handle</span>
+                <input name="cbUser" maxlength="20" spellcheck="false" placeholder="NightOwl_42" value="${user}">
+              </label>
+              <label class="cb-field">
+                <span>Security level</span>
+                <select name="cbSec">
+                  <option>Low</option>
+                  <option selected>Standard</option>
+                  <option>High</option>
+                  <option>Maximum</option>
+                </select>
+              </label>
+              <label class="cb-field cb-field-wide">
+                <span>Password to recover</span>
+                <input name="cbSecret" maxlength="20" spellcheck="false" placeholder="leave blank = random">
+              </label>
+            </div>
+            <button type="submit" class="cb-start">&#9658; Start</button>
+            <p class="cb-setup-note">Enter fake details for the prank. Nothing is sent anywhere; the crack runs for about a minute.</p>
+          </form>
+
+          <div class="cb-run">
+            <div class="cb-prog-row">
+              <div class="cb-prog-left">
+                <div class="cb-pct" data-cb-pct>0%</div>
+                <div class="cb-eta-k">Estimated time remaining</div>
+                <div class="cb-eta" data-cb-eta>00:01:00</div>
+                <div class="cb-recovered" data-cb-revealwrap>
+                  <span>PASSWORD RECOVERED</span>
+                  <b data-cb-recovered></b>
+                </div>
+              </div>
+              <div class="cb-ring" data-cb-ring style="--pct:0">
+                <div class="cb-ring-core"><span class="cb-lock" data-cb-lock aria-hidden="true">&#128274;</span></div>
+              </div>
+            </div>
+            <ul class="cb-steps">
+              <li data-step="modules" data-state="wait"><i aria-hidden="true"></i> Initializing modules <b>WAITING</b></li>
+              <li data-step="wordlist" data-state="wait"><i aria-hidden="true"></i> Loading wordlist <b>WAITING</b></li>
+              <li data-step="testing" data-state="wait"><i aria-hidden="true"></i> Testing combinations <b>WAITING</b></li>
+              <li data-step="finalizing" data-state="wait"><i aria-hidden="true"></i> Finalizing results <b>WAITING</b></li>
+            </ul>
+          </div>
+        </main>
+
+        <aside class="cb-panel cb-feed">
+          <div class="cb-panel-title">LIVE FEED</div>
+          <div class="cb-log" data-cb-log></div>
+          <div class="cb-session">Session ID: SIM-8842-XX</div>
+        </aside>
+      </div>
+
+      <footer class="cb-disc" data-cb-disc>
+        <div>
+          <div class="cb-disc-title" data-cb-disctitle>SESSION</div>
+          <div class="cb-disc-text" data-cb-disctxt>Secure session standing by. Enter target details, then press Start.</div>
+        </div>
+        <div class="cb-shield" data-cb-shield aria-hidden="true"></div>
+      </footer>
+    </div>
+  `;
+
+  const toIdle = () => {
+    if (frame._cbTick) { clearInterval(frame._cbTick); frame._cbTick = null; }
+    frame.classList.remove("is-cracked");
+    frame.classList.add("is-idle");
+    const disc = frame.querySelector("[data-cb-disc]");
+    disc?.classList.remove("cb-disc--prank");
+    const dt = frame.querySelector("[data-cb-disctitle]");
+    const dx = frame.querySelector("[data-cb-disctxt]");
+    if (dt) dt.textContent = "SESSION";
+    if (dx) dx.textContent = "Secure session standing by. Enter target details, then press Start.";
+  };
+  const startNow = () => beginCyberCrack(frame);
+
+  frame.querySelector("[data-cb-setup]")?.addEventListener("submit", (e) => { e.preventDefault(); startNow(); });
+  frame.querySelector("[data-cb-change]")?.addEventListener("click", toIdle);
+  frame.querySelector("[data-cb-help]")?.addEventListener("click", () => showToast("Cyber Dashboard — a SimDeck prank. 100% safe, nothing is sent anywhere.", "info"));
+  frame.querySelector("[data-cb-settings]")?.addEventListener("click", () => showToast("Settings: wordlist, threads, rules (all local).", "info"));
+
+  return frame;
+}
+
+function beginCyberCrack(frame) {
+  const form = frame.querySelector("[data-cb-setup]");
+  let user = (form?.elements?.cbUser?.value || "").trim();
+  const sec = (form?.elements?.cbSec?.value || "Standard").trim();
+  let secret = (form?.elements?.cbSecret?.value || "").trim();
+  if (!user) user = frame.dataset.user || "NightOwl_42";
+  user = user.slice(0, 20);
+  secret = secret.replace(/\s+/g, "").slice(0, 20);
+  if (!secret) secret = frame.dataset.recovered || randomRetroSecret();
+  frame.dataset.user = user;
+  frame.dataset.sec = sec;
+  frame.dataset.recovered = secret;
+
+  const userEl = frame.querySelector("[data-cb-user]");
+  const secEl = frame.querySelector("[data-cb-sec]");
+  if (userEl) userEl.textContent = user;
+  if (secEl) secEl.textContent = sec;
+
+  frame.classList.remove("is-idle", "is-cracked");
+  runCyberCrack(frame, secret);
+}
+
+function runCyberCrack(frame, recovered) {
+  const pct = frame.querySelector("[data-cb-pct]");
+  const eta = frame.querySelector("[data-cb-eta]");
+  const ring = frame.querySelector("[data-cb-ring]");
+  const lock = frame.querySelector("[data-cb-lock]");
+  const log = frame.querySelector("[data-cb-log]");
+  const discEl = frame.querySelector("[data-cb-disc]");
+  const discTitle = frame.querySelector("[data-cb-disctitle]");
+  const discTxt = frame.querySelector("[data-cb-disctxt]");
+  const recoveredEl = frame.querySelector("[data-cb-recovered]");
+  const revealWrap = frame.querySelector("[data-cb-revealwrap]");
+  const steps = {
+    modules: frame.querySelector('[data-step="modules"]'),
+    wordlist: frame.querySelector('[data-step="wordlist"]'),
+    testing: frame.querySelector('[data-step="testing"]'),
+    finalizing: frame.querySelector('[data-step="finalizing"]'),
+  };
+  if (!ring) return;
+  if (frame._cbTick) { clearInterval(frame._cbTick); frame._cbTick = null; }
+
+  // reset visuals + believable (non-prank) disclaimer for the run
+  discEl?.classList.remove("cb-disc--prank");
+  revealWrap?.classList.remove("show");
+  lock?.classList.remove("is-open");
+  if (lock) lock.innerHTML = "&#128274;";
+  if (log) log.innerHTML = "";
+  if (discTitle) discTitle.textContent = "SESSION";
+  if (discTxt) discTxt.textContent = "Secure session established — keep this window open until the match completes.";
+  Object.values(steps).forEach((el) => { if (el) { el.dataset.state = "wait"; const b = el.querySelector("b"); if (b) b.textContent = "WAITING"; } });
+
+  const pad = (n) => String(n).padStart(2, "0");
+  const DURATION = 60000 / (state.speed || 1);
+  const fmtEta = (ms) => { const s = Math.max(0, Math.ceil(ms / 1000)); return `00:${pad(Math.floor(s / 60))}:${pad(s % 60)}`; };
+
+  const feedEvents = [
+    [0.00, "Module online"], [0.06, "Wordlist loaded"], [0.12, "Hash captured"],
+    [0.19, "Starting engine"], [0.27, "1,000 attempts"], [0.39, "10,000 attempts"],
+    [0.53, "50,000 attempts"], [0.67, "100,000 attempts"], [0.80, "500,000 attempts"],
+    [0.92, "Almost there..."],
+  ];
+  let feedIdx = 0;
+  let clk = 10 * 3600 + 22 * 60 + 31;
+  const fmtClock = () => `${pad(Math.floor(clk / 3600) % 24)}:${pad(Math.floor(clk / 60) % 60)}:${pad(clk % 60)}`;
+  const addFeed = (text) => {
+    if (!log) return;
+    clk += randomInt(1, 4);
+    const d = document.createElement("div");
+    d.innerHTML = `<span>${fmtClock()}</span> ${escapeMarkup(text)}`;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+  };
+
+  const setStep = (el, st) => {
+    if (!el) return;
+    el.dataset.state = st;
+    const b = el.querySelector("b");
+    if (b) b.textContent = st === "ok" ? "OK" : st === "run" ? "RUNNING" : "WAITING";
+  };
+
+  const started = performance.now();
+
+  const finish = () => {
+    frame.classList.add("is-cracked");
+    if (pct) pct.textContent = "100%";
+    if (ring) ring.style.setProperty("--pct", 100);
+    if (eta) eta.textContent = "00:00:00";
+    if (lock) { lock.classList.add("is-open"); lock.innerHTML = "&#128275;"; }
+    setStep(steps.modules, "ok"); setStep(steps.wordlist, "ok"); setStep(steps.testing, "ok"); setStep(steps.finalizing, "ok");
+    if (recoveredEl) recoveredEl.textContent = recovered;
+    revealWrap?.classList.add("show");
+    addFeed("MATCH FOUND");
+    addFeed(`Password recovered: ${recovered}`);
+    discEl?.classList.add("cb-disc--prank");
+    if (discTitle) discTitle.textContent = "DISCLAIMER";
+    if (discTxt) discTxt.textContent = "This is a harmless prank app for entertainment purposes only. No real credentials are used or exposed.";
+    showToast("Gotcha! It was a prank — no real credentials were touched.", "success");
+  };
+
+  const tick = setInterval(() => {
+    if (!state.running || !frame.isConnected) { clearInterval(tick); frame._cbTick = null; return; }
+    const elapsed = performance.now() - started;
+    const t = Math.min(1, elapsed / DURATION);
+    const p = Math.round(t * 100);
+    if (pct) pct.textContent = `${p}%`;
+    if (ring) ring.style.setProperty("--pct", p);
+    if (eta) eta.textContent = fmtEta(DURATION - elapsed);
+
+    while (feedIdx < feedEvents.length && t >= feedEvents[feedIdx][0]) { addFeed(feedEvents[feedIdx][1]); feedIdx += 1; }
+
+    setStep(steps.modules, t >= 0.1 ? "ok" : "run");
+    setStep(steps.wordlist, t >= 0.24 ? "ok" : (t >= 0.1 ? "run" : "wait"));
+    setStep(steps.testing, t >= 0.97 ? "ok" : (t >= 0.24 ? "run" : "wait"));
+    setStep(steps.finalizing, t >= 1 ? "ok" : (t >= 0.9 ? "run" : "wait"));
+
+    if (t >= 1) { clearInterval(tick); frame._cbTick = null; finish(); }
+  }, 110);
+  frame._cbTick = tick;
+}
+
+function makeFakeHash(length = 12) {
+  const chars = "abcdef0123456789";
+  return Array.from({ length }, () => chars[randomInt(0, chars.length - 1)]).join("");
 }
 
 function runShowtime() {
@@ -4633,7 +5858,7 @@ function buildPhoneTerminalFrame() {
         <div class="trm-input">
           <span class="p">Options:</span>
           <input class="trm-opt" id="trmOpt" inputmode="numeric" autocomplete="off" maxlength="2" placeholder="01" />
-          <button class="chip trm-run" id="trmRunBtn">Run</button>
+          <button class="chip trm-run" id="trmRunBtn" type="button">Run</button>
           <span class="trm-cursor" aria-hidden="true"></span>
         </div>
 
@@ -4682,8 +5907,7 @@ function startPhoneTerminalSimulation(frame) {
 
   const runOption = (code) => {
     if (!state.running || !frame.isConnected) return;
-    const c = String(code || "").trim();
-    if (!c) return;
+    const c = String(code || "01").trim() || "01";
     const n = c.padStart(2, "0");
 
     write(``);
@@ -4758,11 +5982,18 @@ function startPhoneTerminalSimulation(frame) {
     }
 
     programs[n]();
+    opt.value = n;
   };
 
-  runBtn.addEventListener("click", () => runOption(opt.value));
+  runBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    runOption(opt.value);
+  });
   opt.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") runOption(opt.value);
+    if (e.key === "Enter") {
+      e.preventDefault();
+      runOption(opt.value);
+    }
   });
 
   // Boot sequence
@@ -5058,10 +6289,10 @@ function buildIOSUpdater() {
 
 function buildAndroidSim() {
   const frame = document.createElement("div");
-  frame.className = "mobile-frame android-ui";
+  frame.className = "mobile-frame android-ui android-sim-frame";
   frame.style.cssText = `
-    border-color: #4ade80;
-    box-shadow: 0 0 60px rgba(74, 222, 128, 0.3);
+    border-color: #10141c;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(255, 255, 255, 0.08);
   `;
 
   const battery = state.customTargetBattery || Math.floor(Math.random() * 60) + 20;
@@ -5088,7 +6319,7 @@ function buildAndroidSim() {
     </div>
 
     <!-- Android Navigation Pills Area -->
-    <div style="background: linear-gradient(180deg, #0a0a0a 0%, #111827 100%); height: 100%; padding: 20px; overflow-y: auto;">
+    <div class="android-content" style="background: linear-gradient(180deg, #0a0a0a 0%, #111827 100%); height: 100%; padding: 20px; overflow-y: auto;">
       
       <!-- Warning Header -->
       <div style="
@@ -5252,7 +6483,7 @@ function buildAndroidSim() {
     </div>
 
     <!-- Android Navigation Bar -->
-    <div style="
+    <div class="android-nav-bar" style="
       display: flex;
       justify-content: center;
       gap: 40px;
@@ -5402,6 +6633,7 @@ function buildCrackPicker() {
 
 function launchCrackOverlay(style) {
   els.stage.innerHTML = "";
+  toggleSeoGuide(false);
   const overlay = buildCrackOverlay(style);
   const mode = overlay.dataset.pattern || "desktop";
   document.body.classList.add("crack-prank-active", "crack-prank-live");
@@ -5437,11 +6669,12 @@ function setCrackPattern(el, style) {
 
 function buildEmailHijackUI() {
   const frame = document.createElement("div");
-  frame.className = "email-hijack-frame";
+  frame.className = "email-hijack-frame ehj-frame";
   frame.style.cssText = `
     width: 100%;
-    max-width: 900px;
-    height: 600px;
+    max-width: min(1180px, calc(100vw - 40px));
+    height: min(680px, calc(100dvh - 118px));
+    min-height: 560px;
     background: #1a1a2e;
     border-radius: 16px;
     overflow: hidden;
@@ -5455,10 +6688,76 @@ function buildEmailHijackUI() {
     (state.customTargetName
       ? `${state.customTargetName.toLowerCase().replace(/\s+/g, '.')}@gmail.com`
       : "target.user@gmail.com");
+  const prankUrl = "https://hackerprank.online/fake-phone-hacking/";
+  const mailboxes = {
+    inbox: [
+      { from: "🏦 Chase Bank", subject: "Your account statement is ready", preview: "Account ending in ****4521 - New statement available...", time: "2 hours ago", tone: "danger" },
+      { from: "🔐 Google Security", subject: "Security alert: New sign-in detected", preview: "We noticed a sign-in from a new device...", time: "5 hours ago", tone: "warn" },
+      { from: "🎭 SimDeck Prank URL", subject: "Your prank link is armed", preview: `${prankUrl} - opens the phone hacking simulation screen.`, time: "8 hours ago", tone: "accent" },
+      { from: "💬 Unknown Sender", subject: "Bro click this before it expires", preview: "One-time simulation link: hackerprank.online/hacker-prank/", time: "Today", tone: "accent" },
+      { from: "💳 PayPal", subject: "You sent $250.00 to John Smith", preview: "Transaction ID: 7XK29401RT...", time: "Yesterday", tone: "normal" },
+      { from: "🛒 Amazon", subject: "Your order has shipped!", preview: "Order #114-2847593-1847293 is on its way...", time: "2 days ago", tone: "normal" },
+      { from: "📱 PhoneSync", subject: "New device paired successfully", preview: "DemoPhone X linked from nearby network node...", time: "2 days ago", tone: "warn" },
+      { from: "🏫 School Portal", subject: "Login code requested", preview: "A six-digit sign-in code was requested for your profile...", time: "3 days ago", tone: "normal" },
+      { from: "🧾 Subscription TV", subject: "Payment failed - action required", preview: "Your plan could not renew. Update billing to continue...", time: "4 days ago", tone: "danger" },
+      { from: "🎮 GameHub", subject: "Your squad invite is live", preview: "Join link copied: hackerprank.online/email-hack-simulator/", time: "5 days ago", tone: "accent" },
+      { from: "📷 Cloud Album", subject: "New shared album invite", preview: "A private album invite was opened from this browser...", time: "6 days ago", tone: "normal" },
+      { from: "🎟️ EventPass", subject: "Ticket transfer pending", preview: "Review the pending transfer before midnight.", time: "Last week", tone: "warn" },
+    ],
+    starred: [
+      { from: "⭐ SimDeck Setup", subject: "Favorite prank links", preview: "Phone hack, email hack, cracked screen, and fake update links saved.", time: "Pinned", tone: "accent" },
+      { from: "🔐 Google Security", subject: "Security alert: New sign-in detected", preview: "Starred for follow-up by account owner.", time: "5 hours ago", tone: "warn" },
+      { from: "🎮 GameHub", subject: "Your squad invite is live", preview: "Funny link saved for later: hackerprank.online/hacker-prank/", time: "5 days ago", tone: "accent" },
+      { from: "🧠 Notes to Self", subject: "Prank timing ideas", preview: "Wait until they unlock the phone, then open the simulation.", time: "Last week", tone: "normal" },
+      { from: "📱 PhoneSync", subject: "New device paired successfully", preview: "Marked important after the staged device alert.", time: "2 days ago", tone: "warn" },
+      { from: "🧾 Subscription TV", subject: "Payment failed - action required", preview: "Saved because it looks dramatic in the inbox.", time: "4 days ago", tone: "danger" },
+      { from: "🛰️ Satellite Link", subject: "Map trace link ready", preview: "Open phone tracking prank with the saved target profile.", time: "Last week", tone: "accent" },
+      { from: "📌 Reminder", subject: "Reveal message after prank", preview: "Tell them it was only a visual simulator after the reaction.", time: "Last month", tone: "normal" },
+    ],
+    sent: [
+      { from: "↗️ me", subject: "Check this phone scanner", preview: `Sent prank URL: ${prankUrl}`, time: "11:42 AM", tone: "accent" },
+      { from: "↗️ me", subject: "Try this broken screen", preview: "https://hackerprank.online/cracked-screen-prank/ - works best fullscreen.", time: "Yesterday", tone: "accent" },
+      { from: "↗️ me", subject: "Do not open this lol", preview: "Fake email hack simulation link sent to group chat.", time: "Yesterday", tone: "warn" },
+      { from: "↗️ me", subject: "Meeting notes", preview: "Totally normal email. Definitely not suspicious.", time: "2 days ago", tone: "normal" },
+      { from: "↗️ me", subject: "Windows update prank", preview: "https://hackerprank.online/fake-windows-update/", time: "3 days ago", tone: "accent" },
+      { from: "↗️ me", subject: "FBI lock timer", preview: "Countdown prank link prepared for desktop mode.", time: "4 days ago", tone: "danger" },
+      { from: "↗️ me", subject: "Email simulator test", preview: "Inbox, sent, drafts, starred, and trash folders all loaded.", time: "5 days ago", tone: "accent" },
+      { from: "↗️ me", subject: "iOS update loop", preview: "Use this one when their phone is already unlocked.", time: "Last week", tone: "normal" },
+      { from: "↗️ me", subject: "Android optimizing screen", preview: "Loop mode makes it look like the phone is repairing apps.", time: "Last week", tone: "normal" },
+      { from: "↗️ me", subject: "Prank reveal", preview: "Relax, no data was touched. It is a browser-only visual prank.", time: "Last month", tone: "accent" },
+    ],
+    trash: [
+      { from: "🗑️ Deleted", subject: "Old recovery code", preview: "Expired demo code moved to trash.", time: "1 hour ago", tone: "danger" },
+      { from: "🗑️ Deleted", subject: "Fake antivirus warning", preview: "Removed prank draft: fake-virus-scanner link.", time: "Yesterday", tone: "warn" },
+      { from: "🗑️ Deleted", subject: "Embarrassing search history", preview: "Simulation-only trash item for dramatic effect.", time: "Yesterday", tone: "danger" },
+      { from: "🗑️ Deleted", subject: "Draft: send prank to class group", preview: "Deleted before sending. Good instincts.", time: "4 days ago", tone: "normal" },
+      { from: "🗑️ Deleted", subject: "Temporary inbox clone", preview: "Old staged mailbox copy removed.", time: "5 days ago", tone: "normal" },
+      { from: "🗑️ Deleted", subject: "Fake password list", preview: "Removed because it looked too obvious.", time: "Last week", tone: "warn" },
+      { from: "🗑️ Deleted", subject: "Broken screen rehearsal", preview: "Practice notes for cracked-screen prank.", time: "Last week", tone: "accent" },
+      { from: "🗑️ Deleted", subject: "Expired tracking pin", preview: "The staged phone tracker pin was archived.", time: "Last month", tone: "normal" },
+    ],
+    drafts: [
+      { from: "📝 Draft", subject: "Subject: urgent system scan", preview: "Hey, open this link and tell me if your phone does this...", time: "Draft", tone: "warn" },
+      { from: "📝 Draft", subject: "Prank reveal message", preview: "Relax, this was only a SimDeck fake hacking simulation.", time: "Draft", tone: "accent" },
+      { from: "📝 Draft", subject: "Cracked screen setup", preview: "Put phone on table, open fullscreen, wait for reaction.", time: "Draft", tone: "normal" },
+      { from: "📝 Draft", subject: "Fake inbox story", preview: "Add a few believable-looking folders so the page feels alive.", time: "Draft", tone: "accent" },
+      { from: "📝 Draft", subject: "School group prank", preview: "Send only after class, then reveal quickly.", time: "Draft", tone: "warn" },
+      { from: "📝 Draft", subject: "Phone tracker setup", preview: "Ask for name, email, and number before opening the map.", time: "Draft", tone: "normal" },
+      { from: "📝 Draft", subject: "Windows update scare", preview: "Switch to fullscreen before handing over the laptop.", time: "Draft", tone: "normal" },
+      { from: "📝 Draft", subject: "Safe reveal line", preview: "No real login, no real data, just a visual browser prank.", time: "Draft", tone: "accent" },
+    ],
+  };
+  const folderMeta = {
+    inbox: { label: "📥 Inbox", count: "1,247", title: "📧 Extracted Emails" },
+    starred: { label: "⭐ Starred", count: mailboxes.starred.length, title: "⭐ Starred Messages" },
+    sent: { label: "📤 Sent", count: mailboxes.sent.length, title: "📤 Sent Prank Links" },
+    drafts: { label: "📝 Drafts", count: mailboxes.drafts.length, title: "📝 Draft Messages" },
+    trash: { label: "🗑️ Trash", count: mailboxes.trash.length, title: "🗑️ Trash Contents" },
+  };
 
   frame.innerHTML = `
     <!-- Browser Bar -->
-    <div style="
+    <div class="ehj-browser" style="
       background: #0f0f1a;
       padding: 10px 15px;
       display: flex;
@@ -5486,10 +6785,10 @@ function buildEmailHijackUI() {
     </div>
 
     <!-- Email Client UI -->
-    <div style="display: flex; flex: 1; overflow: hidden;">
+    <div class="ehj-shell" style="display: flex; flex: 1; overflow: hidden;">
       
       <!-- Sidebar -->
-      <div style="
+      <div class="ehj-sidebar" style="
         width: 200px;
         background: #16213e;
         padding: 15px;
@@ -5508,102 +6807,42 @@ function buildEmailHijackUI() {
         ">✏️ Compose</button>
         
         <div style="color: #94a3b8; font-size: 11px; margin-bottom: 10px;">FOLDERS</div>
-        <div class="folder-item" style="padding: 10px; color: #ef4444; background: rgba(239, 68, 68, 0.1); border-radius: 8px; margin-bottom: 5px; display: flex; justify-content: space-between;">
-          <span>📥 Inbox</span>
-          <span style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 10px; font-size: 10px;">1,247</span>
+        <div class="folder-list">
+          ${Object.entries(folderMeta).map(([key, meta]) => `
+            <button class="folder-item ${key === "inbox" ? "active" : ""}" type="button" data-folder="${key}" style="padding: 10px; color: ${key === "inbox" ? "#ef4444" : "#94a3b8"}; background: ${key === "inbox" ? "rgba(239, 68, 68, 0.1)" : "transparent"}; border: 0; border-radius: 8px; margin-bottom: 5px; display: flex; width: 100%; justify-content: space-between; cursor: pointer; text-align: left; font: inherit;">
+              <span>${meta.label}</span>
+              <span class="folder-count" style="background: ${key === "inbox" ? "#ef4444" : "rgba(255,255,255,0.10)"}; color: white; padding: 2px 8px; border-radius: 10px; font-size: 10px;">${meta.count}</span>
+            </button>
+          `).join("")}
         </div>
-        <div class="folder-item" style="padding: 10px; color: #94a3b8;">⭐ Starred</div>
-        <div class="folder-item" style="padding: 10px; color: #94a3b8;">📤 Sent</div>
-        <div class="folder-item" style="padding: 10px; color: #94a3b8;">📝 Drafts <span style="color: #666;">(3)</span></div>
-        <div class="folder-item" style="padding: 10px; color: #94a3b8;">🗑️ Trash</div>
         
-        <div style="margin-top: 20px; padding: 15px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px;">
+        <div class="ehj-live-card" style="margin-top: 20px; padding: 15px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px;">
           <div style="color: #ef4444; font-size: 10px; font-weight: bold; margin-bottom: 5px;">🔴 LIVE ACCESS</div>
           <div style="color: #94a3b8; font-size: 11px;">${targetEmail}</div>
         </div>
       </div>
 
       <!-- Email List -->
-      <div style="flex: 1; overflow-y: auto; background: #1a1a2e;">
+      <div class="ehj-mail-panel" style="flex: 1; overflow-y: auto; background: #1a1a2e;">
         <!-- Header -->
-        <div style="
+        <div class="ehj-mail-header" style="
           padding: 15px;
           border-bottom: 1px solid rgba(255,255,255,0.1);
           display: flex;
           justify-content: space-between;
           align-items: center;
         ">
-          <div style="color: #fff; font-weight: bold;">📧 Extracted Emails</div>
+          <div style="color: #fff; font-weight: bold;" id="mailboxTitle">📧 Extracted Emails</div>
           <div style="color: #4ade80; font-size: 12px;" id="emailExtractCount">Loading...</div>
         </div>
 
         <!-- Email Items -->
         <div class="email-list" style="padding: 10px;">
-          <div class="email-item" style="
-            padding: 15px;
-            background: rgba(239, 68, 68, 0.05);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            animation: pulse 2s infinite;
-          ">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-              <span style="color: #fff; font-weight: bold;">🏦 Chase Bank</span>
-              <span style="color: #666; font-size: 11px;">2 hours ago</span>
-            </div>
-            <div style="color: #ef4444; font-size: 13px; margin-bottom: 5px;">Your account statement is ready</div>
-            <div style="color: #666; font-size: 11px;">Account ending in ****4521 - New statement available...</div>
-          </div>
-
-          <div class="email-item" style="
-            padding: 15px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            margin-bottom: 10px;
-          ">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-              <span style="color: #fff; font-weight: bold;">🔐 Google Security</span>
-              <span style="color: #666; font-size: 11px;">5 hours ago</span>
-            </div>
-            <div style="color: #fbbf24; font-size: 13px; margin-bottom: 5px;">Security alert: New sign-in detected</div>
-            <div style="color: #666; font-size: 11px;">We noticed a sign-in from a new device...</div>
-          </div>
-
-          <div class="email-item" style="
-            padding: 15px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            margin-bottom: 10px;
-          ">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-              <span style="color: #fff; font-weight: bold;">💳 PayPal</span>
-              <span style="color: #666; font-size: 11px;">Yesterday</span>
-            </div>
-            <div style="color: #fff; font-size: 13px; margin-bottom: 5px;">You sent $250.00 to John Smith</div>
-            <div style="color: #666; font-size: 11px;">Transaction ID: 7XK29401RT...</div>
-          </div>
-
-          <div class="email-item" style="
-            padding: 15px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            margin-bottom: 10px;
-          ">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-              <span style="color: #fff; font-weight: bold;">🛒 Amazon</span>
-              <span style="color: #666; font-size: 11px;">2 days ago</span>
-            </div>
-            <div style="color: #fff; font-size: 13px; margin-bottom: 5px;">Your order has shipped!</div>
-            <div style="color: #666; font-size: 11px;">Order #114-2847593-1847293 is on its way...</div>
-          </div>
         </div>
       </div>
 
       <!-- Attack Panel -->
-      <div style="
+      <div class="ehj-attack-panel" style="
         width: 280px;
         background: #0f0f1a;
         padding: 15px;
@@ -5725,6 +6964,71 @@ function buildEmailHijackUI() {
   const progressBar = frame.querySelector("#hijackBar");
   const progressText = frame.querySelector("#hijackProgress");
   const extractCount = frame.querySelector("#emailExtractCount");
+  const emailList = frame.querySelector(".email-list");
+  const mailboxTitle = frame.querySelector("#mailboxTitle");
+  let activeMailbox = "inbox";
+
+  const renderMailbox = (folder = "inbox") => {
+    activeMailbox = folder;
+    const messages = mailboxes[folder] || mailboxes.inbox;
+    const meta = folderMeta[folder] || folderMeta.inbox;
+    if (mailboxTitle) mailboxTitle.textContent = meta.title;
+    if (extractCount) {
+      extractCount.textContent = folder === "inbox" ? "1247 emails extracted" : `${messages.length} messages`;
+    }
+    if (emailList) {
+      emailList.innerHTML = messages.map((email, index) => {
+        const color = email.tone === "danger"
+          ? "#ef4444"
+          : email.tone === "warn"
+            ? "#fbbf24"
+            : email.tone === "accent"
+              ? "#38bdf8"
+              : "#fff";
+        const border = email.tone === "danger"
+          ? "rgba(239, 68, 68, 0.24)"
+          : email.tone === "accent"
+            ? "rgba(56, 189, 248, 0.24)"
+            : "rgba(255,255,255,0.10)";
+        const bg = index === 0
+          ? "rgba(239, 68, 68, 0.05)"
+          : email.tone === "accent"
+            ? "rgba(56, 189, 248, 0.05)"
+            : "rgba(255,255,255,0.02)";
+        return `
+          <div class="email-item" style="
+            padding: 15px;
+            background: ${bg};
+            border: 1px solid ${border};
+            border-radius: 10px;
+            margin-bottom: 10px;
+            ${folder === "inbox" && index === 0 ? "animation: pulse 2s infinite;" : ""}
+          ">
+            <div style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px;">
+              <span style="color: #fff; font-weight: bold; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeMarkup(email.from)}</span>
+              <span style="color: #666; font-size: 11px; flex: 0 0 auto;">${escapeMarkup(email.time)}</span>
+            </div>
+            <div style="color: ${color}; font-size: 13px; margin-bottom: 5px; font-weight: 700;">${escapeMarkup(email.subject)}</div>
+            <div style="color: #7d8497; font-size: 11px; line-height: 1.35;">${escapeMarkup(email.preview)}</div>
+          </div>
+        `;
+      }).join("");
+    }
+    frame.querySelectorAll(".folder-item").forEach((item) => {
+      const active = item.dataset.folder === folder;
+      item.classList.toggle("active", active);
+      item.style.color = active ? "#ef4444" : "#94a3b8";
+      item.style.background = active ? "rgba(239, 68, 68, 0.1)" : "transparent";
+      const badge = item.querySelector(".folder-count");
+      if (badge) badge.style.background = active ? "#ef4444" : "rgba(255,255,255,0.10)";
+    });
+  };
+
+  frame.querySelectorAll(".folder-item").forEach((item) => {
+    item.addEventListener("click", () => renderMailbox(item.dataset.folder || "inbox"));
+  });
+
+  renderMailbox("inbox");
 
   // Animate email count
   let count = 0;
@@ -5734,7 +7038,7 @@ function buildEmailHijackUI() {
       count = 1247;
       clearInterval(countInterval);
     }
-    extractCount.textContent = `${count} emails extracted`;
+    if (activeMailbox === "inbox") extractCount.textContent = `${count} emails extracted`;
   }, 200);
 
   frame.querySelectorAll(".hijack-btn").forEach(btn => {
@@ -5916,7 +7220,10 @@ function createWindow(title, opts = {}) {
   node.querySelector(".window-title").textContent = title;
   makeDraggable(node);
   node.querySelectorAll(".win-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("mousedown", (event) => event.stopPropagation());
+    btn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       const action = btn.dataset.action;
       if (action === "close") node.remove();
       if (action === "min") node.classList.toggle("minimized");
@@ -6043,15 +7350,170 @@ function openCamFeed() {
   els.stage.appendChild(win);
 }
 
-function openPasswordMeter() {
-  const win = createWindow("Password Meter (Simulated)", { x: randomInt(80, 260), y: randomInt(80, 200), w: 240, h: 160 });
+function openPasswordMeter(options = {}) {
+  const standalone = Boolean(options.standalone);
+  document.querySelectorAll(".pwd-console-window").forEach((node) => node.remove());
+  const win = createWindow("Password Console", { x: standalone ? 0 : randomInt(64, 180), y: standalone ? 0 : randomInt(48, 70), w: 620, h: 560 });
+  win.classList.add("pwd-console-window");
+  if (standalone) win.classList.add("pwd-standalone");
   const body = win.querySelector(".window-body");
-  const bar = document.createElement("div");
-  bar.className = "progress";
-  bar.innerHTML = `<div class="progress-bar"><div class="progress-fill"></div></div><div class="progress-stage">Fiction only</div>`;
-  body.appendChild(bar);
-  els.stage.appendChild(win);
-  animateProgress(bar.querySelector(".progress-fill"), randomInt(20, 95));
+  body.innerHTML = `
+    <div class="pwd-console" role="region" aria-label="Password console">
+      <div class="pwd-console-head">
+        <div>
+          <div class="pwd-kicker">Vault Access Console</div>
+          <h3>Password Console</h3>
+        </div>
+        <div class="pwd-status" data-state="idle">IDLE</div>
+      </div>
+
+      <div class="pwd-form">
+        <label>
+          <span>Fake email / data label</span>
+          <input id="pwdTargetInput" autocomplete="off" spellcheck="false" value="${escapeMarkup(state.customTargetEmail || "student.demo@example.com")}">
+        </label>
+        <label>
+          <span>Profile tag</span>
+          <input id="pwdDataInput" autocomplete="off" spellcheck="false" value="locker-demo-04">
+        </label>
+        <button class="pwd-run" id="pwdRunBtn" type="button">Run</button>
+      </div>
+
+      <div class="pwd-stage">
+        <div class="pwd-column">
+          <div class="pwd-panel-title">Cipher Stream</div>
+          <div class="pwd-hash-list" id="pwdHashList"></div>
+        </div>
+        <div class="pwd-column pwd-vault">
+          <div class="pwd-lock" aria-hidden="true">
+            <span></span>
+          </div>
+          <div class="pwd-meter">
+            <div class="pwd-meter-fill" id="pwdMeterFill"></div>
+          </div>
+          <div class="pwd-percent" id="pwdPercent">0%</div>
+        </div>
+      </div>
+
+      <div class="pwd-log" id="pwdLog" aria-live="polite">
+        <div>> awaiting target profile...</div>
+        <div>> vault engine: idle</div>
+      </div>
+
+      <div class="pwd-foot">LOCAL CONSOLE / READ-ONLY DISPLAY / OFFLINE SESSION</div>
+    </div>
+  `;
+  if (standalone) {
+    els.stage.appendChild(win);
+  } else {
+    document.body.appendChild(win);
+  }
+
+  const hashList = body.querySelector("#pwdHashList");
+  const log = body.querySelector("#pwdLog");
+  const fill = body.querySelector("#pwdMeterFill");
+  const percent = body.querySelector("#pwdPercent");
+  const status = body.querySelector(".pwd-status");
+  const runBtn = body.querySelector("#pwdRunBtn");
+  const targetInput = body.querySelector("#pwdTargetInput");
+  const dataInput = body.querySelector("#pwdDataInput");
+  const lock = body.querySelector(".pwd-lock");
+  let runId = 0;
+
+  const fakeChars = "ABCDEF0123456789";
+  const makeHash = () => Array.from({ length: 24 }, () => fakeChars[randomInt(0, fakeChars.length - 1)]).join("");
+  const drawRows = (activeIndex = -1) => {
+    hashList.innerHTML = Array.from({ length: 9 }, (_, index) => `
+      <div class="pwd-hash-row ${index === activeIndex ? "active" : ""}">
+        <span>${String(index + 1).padStart(2, "0")}</span>
+        <code>${makeHash()}</code>
+        <b>${index < activeIndex ? "OK" : index === activeIndex ? "RUN" : "--"}</b>
+      </div>
+    `).join("");
+  };
+
+  const append = (text) => {
+    const line = document.createElement("div");
+    line.textContent = text;
+    log.appendChild(line);
+    log.scrollTop = log.scrollHeight;
+  };
+
+  drawRows();
+
+  runBtn.addEventListener("click", () => {
+    if (!win.isConnected) return;
+    runId += 1;
+    const currentRun = runId;
+    const fakeTarget = targetInput.value.trim() || "student.demo@example.com";
+    const fakeData = dataInput.value.trim() || "locker-demo-04";
+    let step = 0;
+    fill.style.width = "0%";
+    fill.classList.remove("complete");
+    percent.textContent = "0%";
+    status.textContent = "SCANNING";
+    status.dataset.state = "running";
+    lock.classList.remove("unlocked");
+    lock.classList.add("unlocking");
+    runBtn.disabled = true;
+    log.innerHTML = "";
+    append(`> target.profile = ${fakeTarget}`);
+    append(`> dataset.slot = ${fakeData}`);
+    append("> session: handshake accepted");
+    append("> cipher grid: loading entropy map");
+    append("> vault latch: sealed");
+
+    const phases = [
+      "probing salted index",
+      "rotating mask window",
+      "checking passphrase cadence",
+      "warming rainbow cache",
+      "reading vault banner",
+      "matching digest fragment",
+      "testing keyboard pattern",
+      "rebuilding challenge block",
+      "aligning checksum lane",
+      "scoring candidate phrase",
+      "rejecting weak branch",
+      "opening latch circuit",
+      "stabilizing unlock token",
+    ];
+
+    const tick = () => {
+      if (!win.isConnected || currentRun !== runId) return;
+      step += 1;
+      const pct = Math.min(100, step * 2);
+      drawRows(Math.min(8, step - 1));
+      fill.style.width = `${pct}%`;
+      percent.textContent = `${pct}%`;
+      const phase = phases[(step - 1) % phases.length];
+      const row = makeHash();
+      const port = randomInt(1024, 65535);
+      append(`> pass ${String(step).padStart(2, "0")} :: ${phase} :: ${row.slice(0, 12)}:${port}`);
+      if (step === 18) append("> vault response: partial match");
+      if (step === 31) append("> keyspace narrowed: 004096 lanes");
+      if (step === 42) append("> latch signal: green pending");
+
+      if (pct >= 100 || step >= 50) {
+        drawRows(9);
+        fill.style.width = "100%";
+        fill.classList.add("complete");
+        percent.textContent = "100%";
+        status.textContent = "UNLOCKED";
+        status.dataset.state = "complete";
+        lock.classList.remove("unlocking");
+        lock.classList.add("unlocked");
+        runBtn.disabled = false;
+        append("> vault latch: released");
+        append("> access window: open");
+        append("> session closed cleanly");
+        return;
+      }
+      setTimeout(tick, 1000);
+    };
+
+    setTimeout(tick, 1000);
+  });
 }
 
 function openGraphs() {
@@ -6198,6 +7660,538 @@ function setupMobileTrayToggle() {
 // Initialize the application when the script loads
 init();
 setupMobileTrayToggle();
+
+// ---------- Crypto Miner Scenario ----------
+
+function runCryptoMinerScenario() {
+  clearStage();
+  document.body.classList.add("crypto-miner-live");
+  const frame = buildExchangeBreach();
+  els.stage.appendChild(frame);
+  addGlitch();
+}
+
+// Concept 2 — Dark Exchange Breach. A red-on-black exchange-takeover console:
+// breach log, mining pool routing hub, hash distribution, transaction stream,
+// wallet scanner with a live MONEY GENERATED counter. Press RUN to start it.
+function buildExchangeBreach() {
+  const coins = [
+    { s: "BTC", bal: 0.245812, hash: 36, color: "#f7931a", dp: 6 },
+    { s: "ETH", bal: 1.245931, hash: 22, color: "#7c8cff", dp: 6 },
+    { s: "SOL", bal: 12.48291, hash: 15, color: "#22f7c6", dp: 5 },
+    { s: "DOGE", bal: 5521.44, hash: 10, color: "#d6b554", dp: 2 },
+    { s: "BNB", bal: 2.14532, hash: 6, color: "#f3ba2f", dp: 5 },
+    { s: "XRP", bal: 821.65, hash: 4, color: "#62d6ff", dp: 2 },
+    { s: "ADA", bal: 1322.91, hash: 3, color: "#3cc8ff", dp: 2 },
+    { s: "LTC", bal: 21.882, hash: 2, color: "#b9c7d6", dp: 3 },
+    { s: "USDT", bal: 1850.32, hash: 2, color: "#50af95", dp: 2 },
+  ];
+  const breachLog = [
+    "Scanning exchange firewall...",
+    "Vulnerability found: CVE-2025-042",
+    "Injecting exploit payload...",
+    "Access granted.",
+    "Dumping wallet database...",
+    "Decrypting private keys...",
+    "Routing through anonymizer...",
+    "Redirecting to mining pool...",
+    "Breach active.",
+  ];
+  const blocks = [
+    { s: "BTC", n: 824561, add: "+6 blocks" },
+    { s: "ETH", n: 19245332, add: "+12 blocks" },
+    { s: "BNB", n: 3892114, add: "+5 blocks" },
+    { s: "SOL", n: 243112991, add: "+20 blocks" },
+  ];
+
+  const wrap = document.createElement("div");
+  wrap.className = "xb is-idle";
+
+  // hub node layout (radial)
+  const hubNodes = coins.map((c, i) => {
+    const ang = (-90 + i * (360 / coins.length)) * (Math.PI / 180);
+    const x = 50 + 39 * Math.cos(ang);
+    const y = 50 + 39 * Math.sin(ang);
+    return { ...c, x, y };
+  });
+  const hubLines = hubNodes.map((n) => `<line x1="50" y1="50" x2="${n.x.toFixed(1)}" y2="${n.y.toFixed(1)}"/>`).join("");
+  const hubDots = hubNodes.map((n) =>
+    `<span class="xb-node" style="left:${n.x}%;top:${n.y}%;--c:${n.color}"><b>${n.s.slice(0, 1)}</b><i>${n.s}</i></span>`
+  ).join("");
+
+  wrap.innerHTML = `
+    <div class="xb-shell" role="group" aria-label="Dark Exchange Breach console">
+      <header class="xb-top">
+        <h2 class="xb-title"><span class="xb-num">2</span> DARK EXCHANGE BREACH</h2>
+        <div class="xb-controls">
+          <button type="button" class="xb-run" data-xb-run>&#9658; RUN BREACH</button>
+          <button type="button" class="xb-stop" data-xb-stop disabled>&#9632; STOP</button>
+        </div>
+      </header>
+
+      <div class="xb-statusbar">
+        <span>EXCHANGE NODE: <b>breach.simdeck.exchange</b></span>
+        <span>STATUS: <b data-xb-status class="xb-amber">STANDBY</b></span>
+        <span>ENCRYPTION: <b>AES-256</b></span>
+        <span>FIREWALL: <b data-xb-fw class="xb-amber">ARMED</b></span>
+      </div>
+
+      <div class="xb-grid">
+        <aside class="xb-col">
+          <section class="xb-panel">
+            <div class="xb-panel-title">BREACH CONSOLE</div>
+            <div class="xb-console" data-xb-console></div>
+          </section>
+          <section class="xb-panel">
+            <div class="xb-panel-title">BLOCK CONFIRMATIONS</div>
+            <div class="xb-blocks">
+              ${blocks.map((b) => `
+                <div class="xb-block" data-block="${b.s}">
+                  <span class="xb-block-coin">${b.s}</span>
+                  <b data-block-n>${b.n.toLocaleString()}</b>
+                  <em>${b.add}</em>
+                </div>`).join("")}
+            </div>
+          </section>
+        </aside>
+
+        <main class="xb-col xb-center">
+          <section class="xb-panel xb-hub-panel">
+            <div class="xb-panel-title">MINING POOL ROUTING</div>
+            <div class="xb-hub-row">
+              <div class="xb-hub" data-xb-hub>
+                <svg class="xb-hub-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${hubLines}</svg>
+                <div class="xb-hub-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+                <div class="xb-hub-core">
+                  <span>SIMDECK</span>
+                  <strong>POOL ROUTER</strong>
+                  <small>v9.7</small>
+                </div>
+                ${hubDots}
+              </div>
+              <div class="xb-hash">
+                <div class="xb-hash-title">HASH DISTRIBUTION</div>
+                ${coins.map((c) => `
+                  <div class="xb-hash-row">
+                    <span style="--c:${c.color}">${c.s}</span>
+                    <i><b data-hash="${c.s}" style="--c:${c.color};width:0%"></b></i>
+                    <em>${c.hash}%</em>
+                  </div>`).join("")}
+              </div>
+            </div>
+          </section>
+
+          <section class="xb-panel">
+            <div class="xb-panel-title">TRANSACTION STREAM</div>
+            <div class="xb-tx-head"><span>TXID</span><span>TYPE</span><span>COIN</span><span>AMOUNT</span><span>STATUS</span></div>
+            <div class="xb-tx" data-xb-tx></div>
+          </section>
+        </main>
+
+        <aside class="xb-col">
+          <section class="xb-panel">
+            <div class="xb-panel-title">WALLET SCANNER</div>
+            <div class="xb-scan">
+              <div class="xb-scan-k">ACCOUNTS FOUND</div>
+              <div class="xb-scan-accounts" data-xb-accounts>0</div>
+              <div class="xb-scan-k">MONEY GENERATED</div>
+              <div class="xb-money" data-xb-money>$0.00</div>
+              <div class="xb-scan-graph" aria-hidden="true">${Array.from({ length: 26 }, (_, i) => `<i style="--h:${20 + ((i * 13) % 70)}%"></i>`).join("")}</div>
+              <div class="xb-scan-hash"><span>POOL HASHRATE</span><b data-xb-rate>0 PH/s</b></div>
+            </div>
+          </section>
+          <section class="xb-panel xb-withdraw">
+            <div class="xb-panel-title">WITHDRAW FUNDS</div>
+            <form class="xb-wd-form" data-xb-wdform autocomplete="off">
+              <input name="wallet" spellcheck="false" maxlength="48" placeholder="paste destination wallet address">
+              <button type="submit" class="xb-wd-btn">WITHDRAW</button>
+            </form>
+            <div class="xb-wd-note" data-xb-wdnote>Enter a wallet, then withdraw the generated funds.</div>
+          </section>
+          <section class="xb-panel">
+            <div class="xb-panel-title">LIVE WALLET BALANCES</div>
+            <div class="xb-wallets">
+              ${coins.map((c) => `
+                <div class="xb-wrow" style="--c:${c.color}">
+                  <span class="xb-wmark">${c.s.slice(0, 1)}</span>
+                  <span class="xb-wsym">${c.s}</span>
+                  <b data-wallet="${c.s}">${c.bal.toLocaleString(undefined, { minimumFractionDigits: c.dp, maximumFractionDigits: c.dp })}</b>
+                </div>`).join("")}
+            </div>
+          </section>
+          <section class="xb-panel xb-safe">
+            <div class="xb-panel-title">SAFE PRANK MODE</div>
+            <p>This is a fake breach for fun. No real systems are accessed. No data is stored or transmitted.</p>
+          </section>
+        </aside>
+      </div>
+    </div>
+  `;
+
+  const consoleEl = wrap.querySelector("[data-xb-console]");
+  const txEl = wrap.querySelector("[data-xb-tx]");
+  const statusEl = wrap.querySelector("[data-xb-status]");
+  const fwEl = wrap.querySelector("[data-xb-fw]");
+  const accEl = wrap.querySelector("[data-xb-accounts]");
+  const moneyEl = wrap.querySelector("[data-xb-money]");
+  const rateEl = wrap.querySelector("[data-xb-rate]");
+  const runBtn = wrap.querySelector("[data-xb-run]");
+  const stopBtn = wrap.querySelector("[data-xb-stop]");
+
+  const fmtMoney = (n) => `$${n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const hex = (len) => Array.from({ length: len }, () => "0123456789abcdef"[randomInt(0, 15)]).join("");
+  let clk = 15 * 3600 + 52 * 60 + 11;
+  const pad = (n) => String(n).padStart(2, "0");
+  const stamp = () => { clk += randomInt(1, 3); return `${pad(Math.floor(clk / 3600) % 24)}:${pad(Math.floor(clk / 60) % 60)}:${pad(clk % 60)}`; };
+
+  const addLog = (msg, danger) => {
+    if (!consoleEl) return;
+    const d = document.createElement("div");
+    if (danger) d.className = "danger";
+    d.innerHTML = `<span>[${stamp()}]</span> ${escapeMarkup(msg)}`;
+    consoleEl.appendChild(d);
+    while (consoleEl.children.length > 12) consoleEl.removeChild(consoleEl.firstElementChild);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+  };
+  const addTx = () => {
+    if (!txEl) return;
+    const c = coins[randomInt(0, coins.length - 1)];
+    const type = ["DEPOSIT", "WITHDRAW", "DEPOSIT", "ROUTE"][randomInt(0, 3)];
+    const amt = (Math.random() * (c.dp > 3 ? 0.5 : 90)).toFixed(c.dp > 3 ? 6 : 2);
+    const stat = Math.random() > 0.3 ? "CONFIRMED" : "PENDING";
+    const row = document.createElement("div");
+    row.className = "xb-tx-row";
+    row.innerHTML = `<span>0x${hex(6)}...</span><span>${type}</span><span>${c.s}</span><span>+${amt}</span><span class="${stat === "CONFIRMED" ? "ok" : "pend"}">${stat}</span>`;
+    txEl.insertBefore(row, txEl.firstChild);
+    while (txEl.children.length > 6) txEl.removeChild(txEl.lastElementChild);
+  };
+
+  let running = false;
+  let accounts = 0;
+  let money = 0;
+
+  const stop = () => {
+    running = false;
+    runBtn.disabled = false;
+    runBtn.textContent = "▶ RESUME";
+    stopBtn.disabled = true;
+    if (statusEl) { statusEl.textContent = "PAUSED"; statusEl.className = "xb-amber"; }
+    addLog("Operator paused the breach. Wallet frozen.");
+  };
+
+  const run = () => {
+    if (running) return;
+    running = true;
+    runBtn.disabled = true;
+    runBtn.textContent = "▶ RUNNING";
+    stopBtn.disabled = false;
+    wrap.classList.remove("is-idle");
+    if (statusEl) { statusEl.textContent = "CONNECTED"; statusEl.className = "xb-green"; }
+    if (fwEl) { fwEl.textContent = "BYPASSED"; fwEl.className = "xb-green"; }
+
+    // reveal breach log sequentially
+    breachLog.forEach((line, i) => {
+      const t = setTimeout(() => {
+        if (!state.running || !wrap.isConnected) return;
+        addLog(line, /granted|Breach active|Dumping|Decrypting/i.test(line));
+        wrap.querySelectorAll("[data-hash]").forEach((b) => {
+          const c = coins.find((x) => x.s === b.dataset.hash);
+          b.style.width = `${Math.min(100, (c.hash) * ((i + 1) / breachLog.length) * 2.6)}%`;
+        });
+      }, (i * 420) / Math.max(0.5, state.speed));
+      state.timers.push(t);
+    });
+
+    const interval = setInterval(() => {
+      if (!running || !state.running || !wrap.isConnected) return;
+      money += Math.random() * 240 + 60;
+      if (moneyEl) moneyEl.textContent = fmtMoney(money);
+      if (accounts < 127) { accounts = Math.min(127, accounts + randomInt(3, 11)); if (accEl) accEl.textContent = accounts.toLocaleString(); }
+      if (rateEl) rateEl.textContent = `${(180 + Math.random() * 90).toFixed(1)} PH/s`;
+      addTx();
+      if (Math.random() > 0.55) addLog(`${coins[randomInt(0, 8)].s} share routed :: ${hex(4)}`);
+      wrap.querySelectorAll("[data-wallet]").forEach((b) => {
+        const c = coins.find((x) => x.s === b.dataset.wallet);
+        const inc = c.dp > 3 ? Math.random() * 0.002 : Math.random() * 4;
+        const cur = parseFloat(b.textContent.replace(/,/g, "")) + inc;
+        b.textContent = cur.toLocaleString(undefined, { minimumFractionDigits: c.dp, maximumFractionDigits: c.dp });
+      });
+      wrap.querySelectorAll(".xb-block [data-block-n]").forEach((b) => {
+        if (Math.random() > 0.7) b.textContent = (parseInt(b.textContent.replace(/,/g, ""), 10) + randomInt(1, 4)).toLocaleString();
+      });
+    }, 760 / Math.max(0.5, state.speed));
+    state.timers.push(interval);
+  };
+
+  const wdForm = wrap.querySelector("[data-xb-wdform]");
+  const wdNote = wrap.querySelector("[data-xb-wdnote]");
+  wdForm?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const addr = (wdForm.elements.wallet.value || "").trim();
+    if (!addr) { showToast("Paste a destination wallet address first.", "warning"); return; }
+    if (money < 1) { showToast("No funds generated yet — press RUN BREACH.", "warning"); return; }
+    const amount = money;
+    const shortAddr = addr.length > 14 ? `${addr.slice(0, 8)}…${addr.slice(-4)}` : addr;
+    // record the withdrawal in the stream + console, then zero the counter (it keeps climbing)
+    if (txEl) {
+      const row = document.createElement("div");
+      row.className = "xb-tx-row";
+      row.innerHTML = `<span>${escapeMarkup(shortAddr)}</span><span>WITHDRAW</span><span>USD</span><span>${escapeMarkup(fmtMoney(amount))}</span><span class="ok">SENT</span>`;
+      txEl.insertBefore(row, txEl.firstChild);
+      while (txEl.children.length > 6) txEl.removeChild(txEl.lastElementChild);
+    }
+    addLog(`Withdrawing ${fmtMoney(amount)} -> ${shortAddr}`, true);
+    money = 0;
+    if (moneyEl) moneyEl.textContent = fmtMoney(money);
+    if (wdNote) wdNote.textContent = `Sent ${fmtMoney(amount)} to ${shortAddr}. Funds keep generating.`;
+    wdForm.elements.wallet.value = "";
+    showToast(`Withdrew ${fmtMoney(amount)} to ${shortAddr} (prank — no real funds).`, "success");
+  });
+
+  runBtn.addEventListener("click", run);
+  stopBtn.addEventListener("click", stop);
+  addLog("Breach console ready. Press RUN BREACH to start.");
+
+  return wrap;
+}
+
+function buildCryptoMinerUI() {
+  const coins = [
+    { symbol: "BTC", name: "Bitcoin", color: "#f7931a", balance: 0.0184, rate: "486.9 TH/s", change: "+2.4%" },
+    { symbol: "ETH", name: "Ethereum", color: "#7c8cff", balance: 0.7421, rate: "224.6 GH/s", change: "+1.8%" },
+    { symbol: "SOL", name: "Solana", color: "#22f7c6", balance: 18.62, rate: "91.4 GH/s", change: "+6.2%" },
+    { symbol: "DOGE", name: "Dogecoin", color: "#d6b554", balance: 8402.18, rate: "63.2 GH/s", change: "+3.1%" },
+    { symbol: "BNB", name: "BNB", color: "#f3ba2f", balance: 4.71, rate: "52.8 GH/s", change: "+0.9%" },
+    { symbol: "XRP", name: "XRP", color: "#62d6ff", balance: 1220.5, rate: "39.6 GH/s", change: "+4.7%" },
+    { symbol: "ADA", name: "Cardano", color: "#3cc8ff", balance: 516.9, rate: "31.7 GH/s", change: "+2.9%" },
+    { symbol: "LTC", name: "Litecoin", color: "#b9c7d6", balance: 22.48, rate: "28.4 GH/s", change: "+1.2%" },
+    { symbol: "USDT", name: "Tether", color: "#50af95", balance: 936.45, rate: "stable route", change: "SYNC" },
+  ];
+  const logs = [
+    "exchange mirror mounted on ghost node",
+    "BTC pool route accepted",
+    "ETH validator shadow synced",
+    "SOL burst channel warmed",
+    "DOGE auxiliary pool online",
+    "BNB settlement queue sampled",
+    "XRP ledger pulse verified",
+    "ADA epoch window simulated",
+    "USDT balance rail masked",
+    "wallet vault updated locally",
+  ];
+
+  const wrap = document.createElement("div");
+  wrap.className = "crypto-miner";
+  wrap.style.setProperty("--active-coin", coins[0].color);
+  wrap.innerHTML = `
+    <div class="cm-bg-grid"></div>
+    <div class="cm-bg-radar"></div>
+    <header class="cm-header">
+      <div>
+        <div class="cm-kicker">SimDeck Miner</div>
+        <h2>Dark Exchange Breach</h2>
+      </div>
+      <div class="cm-header-badges">
+        <span>EXCHANGE NODE</span>
+        <span>WALLET SYNC</span>
+      </div>
+    </header>
+
+    <section class="cm-coin-strip" aria-label="Crypto coins">
+      ${coins.map((coin, index) => `
+        <button class="cm-coin ${index === 0 ? "active" : ""}" type="button" data-coin="${coin.symbol}" style="--coin:${coin.color}">
+          <span class="cm-coin-mark">${coin.symbol.slice(0, 1)}</span>
+          <span><strong>${coin.symbol}</strong><small>${coin.name}</small></span>
+          <em>${coin.change}</em>
+        </button>
+      `).join("")}
+    </section>
+
+    <main class="cm-layout">
+      <section class="cm-panel cm-terminal-panel">
+        <div class="cm-panel-head">
+          <span>Mining Console</span>
+          <strong class="cm-state">IDLE</strong>
+        </div>
+        <div class="cm-terminal" aria-live="polite">
+          <p><span class="cm-log-tag">BOOT</span> awaiting operator command...</p>
+          <p><span class="cm-log-tag">VAULT</span> wallet vault mounted</p>
+          <p><span class="cm-log-tag">POOL</span> encrypted pool bridge standing by</p>
+        </div>
+      </section>
+
+      <section class="cm-core">
+        <div class="cm-controls">
+          <button class="cm-main-action" type="button">Start Mining</button>
+          <button class="cm-stop-action" type="button" disabled>Stop</button>
+          <button class="cm-wallet-action" type="button">Refresh Wallet</button>
+        </div>
+        <div class="cm-core-map">
+          <div class="cm-core-scan"></div>
+          <div class="cm-core-ring ring-a"></div>
+          <div class="cm-core-ring ring-b"></div>
+          <div class="cm-core-orb">
+            <span>EX</span>
+            <strong>POOL</strong>
+          </div>
+          <div class="cm-core-readout">
+            <span>ACTIVE ROUTE</span>
+            <strong class="cm-active-symbol">BTC</strong>
+          </div>
+          <div class="cm-core-chip chip-a">HASHFLOW</div>
+          <div class="cm-core-chip chip-b">CHAINLOCK</div>
+          ${coins.slice(0, 8).map((coin, index) => `
+            <button class="cm-node node-${index + 1}" type="button" data-coin="${coin.symbol}" style="--coin:${coin.color}">
+              <span>${coin.symbol}</span>
+            </button>
+          `).join("")}
+          <svg class="cm-lines" viewBox="0 0 500 330" aria-hidden="true">
+            <path d="M250 165 L85 80 M250 165 L250 42 M250 165 L415 80 M250 165 L454 181 M250 165 L350 292 M250 165 L250 314 M250 165 L92 250 M250 165 L46 171" />
+          </svg>
+        </div>
+        <div class="cm-progress-wrap">
+          <div class="cm-progress-meta"><span>Routing shares</span><strong class="cm-progress-value">0%</strong></div>
+          <div class="cm-progress"><span></span></div>
+        </div>
+      </section>
+
+      <aside class="cm-panel cm-wallet-panel">
+        <div class="cm-panel-head">
+          <span>Wallet</span>
+          <strong>SYNC</strong>
+        </div>
+        <div class="cm-vault-focus" style="--coin:${coins[0].color}">
+          <span class="cm-vault-mark">B</span>
+          <div>
+            <small>ACTIVE VAULT</small>
+            <strong class="cm-vault-symbol">BTC</strong>
+          </div>
+          <em class="cm-vault-change">${coins[0].change}</em>
+        </div>
+        <div class="cm-wallet-list">
+          ${coins.map((coin) => `
+            <div class="cm-wallet-row" data-coin="${coin.symbol}" style="--coin:${coin.color}">
+              <span>${coin.symbol}</span>
+              <strong>${coin.balance.toLocaleString(undefined, { maximumFractionDigits: 4 })}</strong>
+              <small>${coin.rate}</small>
+            </div>
+          `).join("")}
+        </div>
+      </aside>
+    </main>
+
+    <footer class="cm-footer">
+      <div><span class="cm-label">Hash Rate</span><strong class="cm-hash">0.0 TH/s</strong></div>
+      <div><span class="cm-label">Accepted</span><strong class="cm-accepted">0</strong></div>
+      <div><span class="cm-label">Rejected</span><strong class="cm-rejected">0</strong></div>
+      <div><span class="cm-label">GPU Rigs</span><strong class="cm-gpus">0/12</strong></div>
+      <div class="cm-mini-graph" aria-hidden="true">${Array.from({ length: 28 }, (_, i) => `<i style="--h:${22 + ((i * 17) % 58)}%"></i>`).join("")}</div>
+    </footer>
+  `;
+
+  let running = false;
+  let tick = 0;
+  let activeCoin = "BTC";
+  const terminal = wrap.querySelector(".cm-terminal");
+  const stateLabel = wrap.querySelector(".cm-state");
+  const startBtn = wrap.querySelector(".cm-main-action");
+  const stopBtn = wrap.querySelector(".cm-stop-action");
+  const walletBtn = wrap.querySelector(".cm-wallet-action");
+  const progressFill = wrap.querySelector(".cm-progress span");
+  const progressValue = wrap.querySelector(".cm-progress-value");
+  const hashValue = wrap.querySelector(".cm-hash");
+  const acceptedValue = wrap.querySelector(".cm-accepted");
+  const rejectedValue = wrap.querySelector(".cm-rejected");
+  const gpuValue = wrap.querySelector(".cm-gpus");
+  const activeSymbol = wrap.querySelector(".cm-active-symbol");
+  const vaultFocus = wrap.querySelector(".cm-vault-focus");
+  const vaultMark = wrap.querySelector(".cm-vault-mark");
+  const vaultSymbol = wrap.querySelector(".cm-vault-symbol");
+  const vaultChange = wrap.querySelector(".cm-vault-change");
+
+  const appendMinerLog = (message, tag = "HASH") => {
+    const p = document.createElement("p");
+    p.innerHTML = `<span class="cm-log-tag">${escapeMarkup(tag)}</span> ${escapeMarkup(message)}`;
+    terminal.appendChild(p);
+    while (terminal.children.length > 12) terminal.removeChild(terminal.firstElementChild);
+    terminal.scrollTop = terminal.scrollHeight;
+  };
+
+  const setActiveCoin = (symbol) => {
+    const coin = coins.find((item) => item.symbol === symbol) || coins[0];
+    activeCoin = symbol;
+    wrap.style.setProperty("--active-coin", coin.color);
+    wrap.querySelectorAll("[data-coin]").forEach((el) => el.classList.toggle("active", el.dataset.coin === symbol));
+    if (activeSymbol) activeSymbol.textContent = symbol;
+    if (vaultFocus) vaultFocus.style.setProperty("--coin", coin.color);
+    if (vaultMark) vaultMark.textContent = symbol.slice(0, 1);
+    if (vaultSymbol) vaultSymbol.textContent = symbol;
+    if (vaultChange) vaultChange.textContent = coin.change;
+    appendMinerLog(`${symbol} route selected for mining`, "ROUTE");
+  };
+
+  wrap.querySelectorAll(".cm-coin, .cm-node").forEach((btn) => {
+    btn.addEventListener("click", () => setActiveCoin(btn.dataset.coin));
+  });
+
+  startBtn.addEventListener("click", () => {
+    if (running) return;
+    running = true;
+    tick = 0;
+    wrap.classList.add("running");
+    stateLabel.textContent = "RUNNING";
+    startBtn.textContent = "Mining Running";
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    appendMinerLog("dark exchange breach started", "CORE");
+    appendMinerLog("routing shares across BTC, ETH, SOL, DOGE, BNB, XRP", "POOL");
+
+    const interval = setInterval(() => {
+      if (!running) return;
+      tick += 1;
+      const pct = Math.min(99, Math.round((tick * 7) % 100));
+      const accepted = 900 + tick * 37 + Math.floor(Math.random() * 21);
+      const rejected = Math.floor(tick / 3) + Math.floor(Math.random() * 3);
+      const hash = (340 + tick * 18 + Math.random() * 45).toFixed(1);
+
+      progressFill.style.width = `${pct}%`;
+      progressValue.textContent = `${pct}%`;
+      hashValue.textContent = `${hash} TH/s`;
+      acceptedValue.textContent = accepted.toLocaleString();
+      rejectedValue.textContent = rejected.toLocaleString();
+      gpuValue.textContent = `${Math.min(12, 2 + Math.floor(tick / 2))}/12`;
+
+      const walletRows = wrap.querySelectorAll(".cm-wallet-row");
+      walletRows.forEach((row, index) => {
+        const value = row.querySelector("strong");
+        const base = coins[index].balance + tick * (index === 0 ? 0.0003 : index === 1 ? 0.006 : 0.18);
+        value.textContent = base.toLocaleString(undefined, { maximumFractionDigits: index < 2 ? 4 : 2 });
+      });
+
+      const tags = ["POOL", "HASH", "CHAIN", "GPU", "VAULT"];
+      appendMinerLog(`${activeCoin} ${logs[tick % logs.length]} :: share ${String(accepted).slice(-4)} accepted`, tags[tick % tags.length]);
+    }, 900 / Math.max(0.5, state.speed));
+    state.timers.push(interval);
+  });
+
+  stopBtn.addEventListener("click", () => {
+    running = false;
+    wrap.classList.remove("running");
+    stateLabel.textContent = "STOPPED";
+    startBtn.textContent = "Resume Mining";
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    appendMinerLog("operator stopped miner; wallet frozen", "CORE");
+  });
+
+  walletBtn.addEventListener("click", () => {
+    appendMinerLog("wallet refreshed from local vault cache", "VAULT");
+    wrap.querySelector(".cm-wallet-panel").classList.add("pulse");
+    setTimeout(() => wrap.querySelector(".cm-wallet-panel")?.classList.remove("pulse"), 700);
+  });
+
+  return wrap;
+}
 
 // ---------- Critical Data Scenario ----------
 

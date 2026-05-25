@@ -24,3 +24,10 @@ backups/
 .env
 .env.*
 !.env.example
+
+# Local tooling / preview
+.claude/
+.playwright-mcp/
+
+# Dev screenshots at repo root (keep assets/*.png)
+/*.png

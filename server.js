@@ -1,6 +1,8 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const seoConfig = require('./seo-pages.config');
+const { routes } = seoConfig;
 
 const USER_SPECIFIED_PORT = Boolean(process.env.PORT || process.argv[2]);
 const DEFAULT_PORT = Number.parseInt(process.env.PORT || process.argv[2] || '8000', 10);
@@ -21,6 +23,8 @@ const ROUTED_PAGES = new Set([
   '/fake-virus-scanner/',
   '/fake-windows-update',
   '/fake-windows-update/',
+  '/windows-os-simulator',
+  '/windows-os-simulator/',
   '/cracked-screen-prank',
   '/cracked-screen-prank/',
   '/fake-fbi-lock-screen',
@@ -32,56 +36,15 @@ const ROUTED_PAGES = new Set([
 ]);
 
 const ROUTE_META = {
-  '/': {
-    title: 'Hacker Prank Software | SimDeck Fake Hacking Simulation',
-    description: 'SimDeck is safe hacker prank software: a fake hacking simulation UI for demos, videos, and pranks. Works in your browser. No real hacking or data access.',
-    canonical: 'https://www.hackerprank.online/',
-  },
-  '/hacker-prank/': {
-    title: 'Hacker Prank | Fake Hacking Simulator',
-    description: 'Open safe hacker prank tools and fake hacking simulator screens for pranks, videos, demos, and harmless visual effects.',
-    canonical: 'https://www.hackerprank.online/hacker-prank/',
-  },
-  '/fake-phone-hacking/': {
-    title: 'Fake Phone Hacking Simulator | SimDeck',
-    description: 'Launch fake phone hacking prank screens including basic scan, phone tracking, terminal, matrix, and forensic-style simulations.',
-    canonical: 'https://www.hackerprank.online/fake-phone-hacking/',
-  },
-  '/email-hack-simulator/': {
-    title: 'Fake Email Hack Simulator | Email Prank Simulator',
-    description: 'Run safe email prank simulator screens with login, mailbox, recovery, and account-security theater.',
-    canonical: 'https://www.hackerprank.online/email-hack-simulator/',
-  },
-  '/fake-virus-scanner/': {
-    title: 'Fake Virus Scanner Prank | SimDeck',
-    description: 'Start a fake virus scanner prank with fictional threat alerts, progress bars, and cleanup screens.',
-    canonical: 'https://www.hackerprank.online/fake-virus-scanner/',
-  },
-  '/fake-windows-update/': {
-    title: 'Fake Windows Update Prank | SimDeck',
-    description: 'Open a Windows-style fake update and desktop prank simulator for harmless screen jokes and videos.',
-    canonical: 'https://www.hackerprank.online/fake-windows-update/',
-  },
-  '/cracked-screen-prank/': {
-    title: 'Cracked Screen Prank | Broken Screen Prank',
-    description: 'Launch a broken screen prank with fake glass cracks and screen damage effects.',
-    canonical: 'https://www.hackerprank.online/cracked-screen-prank/',
-  },
-  '/fake-fbi-lock-screen/': {
-    title: 'Fake FBI Lock Screen Prank | SimDeck',
-    description: 'Start a fictional FBI lock screen prank with countdown and warning-screen styling.',
-    canonical: 'https://www.hackerprank.online/fake-fbi-lock-screen/',
-  },
-  '/ios-update-prank/': {
-    title: 'Fake iOS Update Prank | SimDeck',
-    description: 'Run a fake iOS update prank that looks like an endless mobile update screen.',
-    canonical: 'https://www.hackerprank.online/ios-update-prank/',
-  },
-  '/android-optimizing-prank/': {
-    title: 'Android Optimizing Prank | SimDeck',
-    description: 'Open an Android optimizing prank with repair, cache, and system loop screens.',
-    canonical: 'https://www.hackerprank.online/android-optimizing-prank/',
-  },
+  ...Object.fromEntries(routes.map((route) => [route.path, {
+    title: route.title,
+    description: route.description,
+    canonical: `https://www.hackerprank.online${route.path === '/' ? '/' : route.path}`,
+    h1: route.h1 || route.label || route.title,
+    intro: route.intro || '',
+    sections: route.sections || [],
+    faqs: route.faqs || [],
+  }])),
 };
 
 function normalizeRoutePath(pathname) {
@@ -99,21 +62,72 @@ function escapeHtml(value) {
   })[char]);
 }
 
+// Static internal-links nav so crawlers can traverse every prank page (and to
+// pass link equity between routes). Rendered on every route.
+function renderRouteLinks(currentPath) {
+  const links = routes
+    .filter((r) => normalizeRoutePath(r.path) !== currentPath)
+    .map((r) => `<li><a href="${escapeHtml(r.path)}">${escapeHtml(r.label || r.title)}</a></li>`)
+    .join('');
+  const trust = (seoConfig.trustLinks || [])
+    .map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`)
+    .join('');
+  return `<nav class="route-links" aria-label="Prank simulator pages">
+      <h2>Explore more prank simulators</h2>
+      <ul class="route-links-list">${links}</ul>
+      ${trust ? `<ul class="route-links-trust">${trust}</ul>` : ''}
+    </nav>`;
+}
+
+// Unique, crawlable body content per route (intro + sections + FAQs + links).
+// This is what makes each route distinct rather than a duplicate of index.html.
+function renderRouteContent(meta, currentPath) {
+  if (!meta) return '';
+  const sections = (meta.sections || [])
+    .map(([h, p]) => `<section class="route-sec"><h2>${escapeHtml(h)}</h2><p>${escapeHtml(p)}</p></section>`)
+    .join('');
+  const faqItems = (meta.faqs || [])
+    .map(([q, a]) => `<div class="route-faq"><h3>${escapeHtml(q)}</h3><p>${escapeHtml(a)}</p></div>`)
+    .join('');
+  // FAQ schema omitted on purpose (base @graph already includes FAQPage).
+  return `<section class="route-seo" aria-label="About this prank simulator">
+      <div class="route-seo-inner">
+        ${meta.intro ? `<p class="route-intro">${escapeHtml(meta.intro)}</p>` : ''}
+        ${sections}
+        ${faqItems ? `<section class="route-faqs"><h2>Frequently asked questions</h2>${faqItems}</section>` : ''}
+        ${renderRouteLinks(currentPath)}
+      </div>
+    </section>`;
+}
+
 function applyRouteMeta(html, pathname) {
-  const meta = ROUTE_META[normalizeRoutePath(pathname)];
+  const routePath = normalizeRoutePath(pathname);
+  const meta = ROUTE_META[routePath];
   if (!meta) return html;
   const title = escapeHtml(meta.title);
   const description = escapeHtml(meta.description);
   const canonical = escapeHtml(meta.canonical);
+  const h1 = escapeHtml(meta.h1);
 
-  return html
+  let out = html
     .replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`)
     .replace(/<meta name="description"[\s\S]*?>/i, `<meta name="description" content="${description}">`)
     .replace(/<link rel="canonical"[\s\S]*?>/i, `<link rel="canonical" href="${canonical}">`)
     .replace(/<meta property="og:title"[\s\S]*?>/i, `<meta property="og:title" content="${title}">`)
     .replace(/<meta property="og:description"[\s\S]*?>/i, `<meta property="og:description" content="${description}">`)
+    .replace(/<meta property="og:url"[\s\S]*?>/i, `<meta property="og:url" content="${canonical}">`)
     .replace(/<meta name="twitter:title"[\s\S]*?>/i, `<meta name="twitter:title" content="${title}">`)
-    .replace(/<meta name="twitter:description"[\s\S]*?>/i, `<meta name="twitter:description" content="${description}">`);
+    .replace(/<meta name="twitter:description"[\s\S]*?>/i, `<meta name="twitter:description" content="${description}">`)
+    // Per-route H1 so each page leads with its own target keyword.
+    .replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/i, `<h1>${h1}</h1>`);
+
+  // Inject unique crawlable content before </body> (idempotent: skip if the
+  // static file was already pre-built with the block by build-seo-content.js).
+  if (!out.includes('class="route-seo"') && out.includes('</body>')) {
+    const block = renderRouteContent(meta, routePath);
+    out = out.replace('</body>', `${block}\n</body>`);
+  }
+  return out;
 }
 
 const MIME_TYPES = {
@@ -169,7 +183,32 @@ const server = http.createServer((req, res) => {
   }
 
   const requestPath = req.url ? req.url.split('?')[0] : '/';
-  let filePath = requestPath === '/' || ROUTED_PAGES.has(requestPath) ? '/index.html' : requestPath;
+  const legacyRedirects = {
+    '/fake-hacker-prank-software': '/hacker-prank/',
+    '/fake-hacker-prank-software/': '/hacker-prank/',
+    '/blog/fake-hacker-prank-software': '/hacker-prank/',
+    '/blog/fake-hacker-prank-software/': '/hacker-prank/',
+  };
+  if (legacyRedirects[requestPath]) {
+    res.writeHead(308, { Location: legacyRedirects[requestPath] });
+    res.end();
+    return;
+  }
+  if (ROUTED_PAGES.has(requestPath) && requestPath !== '/' && !requestPath.endsWith('/')) {
+    res.writeHead(308, { Location: `${requestPath}/` });
+    res.end();
+    return;
+  }
+  let filePath = requestPath === '/' ? '/index.html' : requestPath;
+  if (ROUTED_PAGES.has(requestPath)) {
+    const routeDir = normalizeRoutePath(requestPath).replace(/^\/|\/$/g, '');
+    const routeIndex = path.join(PUBLIC_DIR, routeDir, 'index.html');
+    filePath = fs.existsSync(routeIndex) ? path.join(routeDir, 'index.html') : '/index.html';
+  } else if (requestPath.endsWith('/')) {
+    const routeDir = requestPath.replace(/^\/|\/$/g, '');
+    const routeIndex = path.join(PUBLIC_DIR, routeDir, 'index.html');
+    if (routeDir && fs.existsSync(routeIndex)) filePath = path.join(routeDir, 'index.html');
+  }
   filePath = path.join(PUBLIC_DIR, filePath);
 
   const extname = path.extname(filePath).toLowerCase();
@@ -234,7 +273,13 @@ const server = http.createServer((req, res) => {
           content = Buffer.from(applyRouteMeta(content.toString('utf-8'), requestPath), 'utf-8');
         }
         console.log(`200: ${filePath}`);
-        res.writeHead(200, { 'Content-Type': contentType });
+        res.writeHead(200, {
+          'Content-Type': `${contentType}${contentType.startsWith('text/') ? '; charset=utf-8' : ''}`,
+          'X-Content-Type-Options': 'nosniff',
+          'X-Frame-Options': 'SAMEORIGIN',
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+          'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+        });
         res.end(content, 'utf-8');
       }
     });
