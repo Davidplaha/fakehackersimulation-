@@ -4629,18 +4629,25 @@ input:focus-visible,
 
 body.ui-running .seo-guide-toggle,
 body.ui-running .seo-guide-tray,
+body.ui-running .static-seo-content,
 body.crack-prank-live .seo-guide-toggle,
 body.crack-prank-live .seo-guide-tray,
+body.crack-prank-live .static-seo-content,
 body.email-hijack-live .seo-guide-toggle,
 body.email-hijack-live .seo-guide-tray,
+body.email-hijack-live .static-seo-content,
 body.password-cracker-live .seo-guide-toggle,
 body.password-cracker-live .seo-guide-tray,
+body.password-cracker-live .static-seo-content,
 body.password-meter-active .seo-guide-toggle,
 body.password-meter-active .seo-guide-tray,
+body.password-meter-active .static-seo-content,
 body.crypto-miner-live .seo-guide-toggle,
 body.crypto-miner-live .seo-guide-tray,
+body.crypto-miner-live .static-seo-content,
 body.sidebar-hidden .seo-guide-toggle,
-body.sidebar-hidden .seo-guide-tray {
+body.sidebar-hidden .seo-guide-tray,
+body.sidebar-hidden .static-seo-content {
   display: none !important;
 }
 
